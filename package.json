@@ -1,0 +1,41 @@
+{
+	"bugs": "https://github.com/cedx/cli/issues",
+	"description": "Command line interface of Cédric Belin, full stack developer.",
+	"homepage": "https://github.com/cedx/cli",
+	"license": "UNLICENSED",
+	"name": "@cedx/cli",
+	"repository": "cedx/cli",
+	"type": "module",
+	"version": "1.0.0",
+	"author": {
+		"email": "cedric@belin.io",
+		"name": "Cédric Belin",
+		"url": "https://belin.io"
+	},
+	"bin": {
+		"cli": "bin/cli.js"
+	},
+	"dependencies": {
+		"decompress": "^4.2.1",
+		"mariadb": "^3.4.0",
+		"text-extensions": "^3.1.0"
+	},
+	"devDependencies": {
+		"@coffeelint/cli": "^5.2.11",
+		"@types/node": "^22.9.0",
+		"coffeescript": "^2.7.0"
+	},
+	"engines": {
+		"node": ">=22.0.0"
+	},
+	"keywords": [
+		"cli",
+		"database",
+		"iconv",
+		"mariadb",
+		"utility"
+	],
+	"scripts": {
+		"start": "node bin/cli.js"
+	}
+}
