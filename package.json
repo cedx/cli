@@ -28,6 +28,10 @@
 	"engines": {
 		"node": ">=22.0.0"
 	},
+	"exports": {
+		"types": "./lib/index.d.ts",
+		"default": "./lib/index.js"
+	},
 	"keywords": [
 		"cli",
 		"database",

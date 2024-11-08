@@ -26,3 +26,18 @@ export class Table
 		name: record.TABLE_NAME
 		schema: record.TABLE_SCHEMA
 		type: record.TABLE_TYPE
+
+# Defines the storage engine of a table.
+export TableEngine = Object.freeze
+
+	# The table does not use any storage engine.
+	none: ""
+
+	# The storage engine is Aria.
+	aria: "Aria"
+
+	# The storage engine is InnoDB.
+	innoDb: "InnoDB"
+
+	# The storage engine is MyISAM.
+	myIsam: "MyISAM"
