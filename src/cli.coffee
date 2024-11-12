@@ -24,6 +24,7 @@ Commands:
 	iconv [options] <fileOrDirectory>       Convert the encoding of input files.
 	jdk [options]                           Download and install the latest OpenJDK release.
 	node [options]                          Download and install the latest Node.js release.
+	nssm install|remove <directory>         Register a Node.js application as a Windows service.
 	php [options]                           Download and install the latest PHP release.
 """
 

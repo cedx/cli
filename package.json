@@ -36,7 +36,10 @@
 		"cli",
 		"database",
 		"iconv",
+		"jdk",
 		"mariadb",
+		"node",
+		"php",
 		"utility"
 	],
 	"scripts": {

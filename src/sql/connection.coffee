@@ -1,4 +1,7 @@
 import mariadb from "mariadb"
+import {Column} from "../data/column.js"
+import {Schema} from "../data/schema.js"
+import {Table} from "../data/table.js"
 
 # Creates a new MariaDB connection.
 export createConnection = (connectionUri) ->
