@@ -42,7 +42,7 @@ export class JdkCommand
 	run: ->
 		path = await @_downloadArchive()
 		await @_extractArchive path
-		console.log (await run "java", ["--version"]).stdout
+		console.log (await run join(@output, "bin/java"), ["--version"]).stdout
 
 	# Downloads the OpenJDK release corresponding to the requested Java version.
 	_downloadArchive: ->

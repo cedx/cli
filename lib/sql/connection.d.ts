@@ -13,7 +13,7 @@ export function createConnection(connectionUri: URL): Promise<Connection & Conne
 /**
  * Provides methods for inspecting the information schema.
  */
-export type ConnectionMixin = Readonly<{
+export type ConnectionMixin = {
 
 	/**
 	 * Gets the list of columns contained in the specified table.
@@ -34,4 +34,4 @@ export type ConnectionMixin = Readonly<{
 	 * @returns The tables contained in the specified schema.
 	 */
 	getTables(schema: Schema): Promise<Array<Table>>;
-}>;
+};

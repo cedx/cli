@@ -39,8 +39,8 @@ try
 
 	# Print the usage.
 	if values.version
-		pkg = await import("../package.json", with: {type: "json"})
-		console.log pkg.default.version
+		{default: {version}} = await import("../package.json", with: {type: "json"})
+		console.log version
 		process.exit()
 
 	if not positionals.length or (values.help and not positionals.length)
