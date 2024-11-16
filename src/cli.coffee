@@ -39,7 +39,7 @@ try
 
 	# Print the usage.
 	if values.version
-		{default: {version}} = await import("../package.json", with: {type: "json"})
+		{default: {version}} = await import("../package.json", with: type: "json")
 		console.log version
 		process.exit()
 
