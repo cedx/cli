@@ -1,6 +1,7 @@
 import console from "node:console"
+import {execFile} from "node:child_process"
 import {readdir, stat} from "node:fs/promises"
-import {extname, parse, resolve} from "node:path"
+import {extname, join, parse, resolve} from "node:path"
 import {parseArgs, promisify} from "node:util"
 
 # The usage information.
@@ -46,7 +47,7 @@ export class DbRestoreCommand
 		await run "mariadb", [
 			(if hosts.has @dsn.hostname then [] else ["--compress"])...
 			"--default-character-set=#{@dsn.searchParams.get("charset") or "utf8mb4"}"
-			"--execute=USE #{entity.split(".").at 0}; SOURCE #{file.replaceAll "\\", "/"}"
+			"--execute=USE #{entity.split(".").at 0}; SOURCE #{file.replaceAll "\\", "/"};"
 			"--host=#{@dsn.hostname}"
 			"--password=#{decodeURIComponent @dsn.password}"
 			"--port=#{@dsn.port or 3306}"

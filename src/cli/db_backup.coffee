@@ -1,4 +1,5 @@
 import {Buffer} from "node:buffer"
+import {execFile} from "node:child_process"
 import console from "node:console"
 import {mkdir, open} from "node:fs/promises"
 import {EOL} from "node:os"
@@ -105,7 +106,10 @@ export class DbBackupCommand
 	# Optionally serializes binary data into data URLs.
 	_replacer: (key, value) ->
 		isBuffer = (val) -> typeof val is "object" and val and val.type is "Buffer"
-		if isBuffer value then "data:application/octet-stream;base64,#{Buffer.from(value.data).toString "base64"}" else value
+		switch
+			when typeof value is "bigint" then Number value
+			when isBuffer value then "data:application/octet-stream;base64,#{Buffer.from(value.data).toString "base64"}"
+			else value
 
 # Backups a set of MariaDB tables.
 export default (args) ->
