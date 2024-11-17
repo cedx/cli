@@ -58,9 +58,11 @@ export class NodeCommand
 	_detachProcess: ->
 		console.log "This command will run in detached mode."
 		output = join tmpdir(), basename(execPath)
-		await cp execPath, output
+		logFile = "#{output}.log"
+		console.log "Logging to file \"#{logFile}\"..."
 
-		handle = await open join(import.meta.dirname, "../../var/node.log"), "w"
+		await cp execPath, output
+		handle = await open logFile, "w"
 		spawn output, argv[1..], detached: yes, stdio: ["ignore", handle.fd, handle.fd]
 			.on "close", -> handle.close()
 			.unref()
