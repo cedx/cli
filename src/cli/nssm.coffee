@@ -42,11 +42,8 @@ export class NssmCommand
 	installService: ->
 		throw Error "This command only supports the Windows platform." unless platform is "win32"
 
-		pkgUri = @_getFileUri "package.json"
-		try await access pkgUri
+		try {default: pkg} = await import((@_getFileUri "package.json").href, with: type: "json")
 		catch then throw Error 'Unable to access the "package.json" file.'
-
-		{default: pkg} = await import(pkgUri.href, with: type: "json")
 		binaries = Object.values pkg.bin ? {}
 		throw Error "Unable to determine the application entry point." unless binaries.length
 
