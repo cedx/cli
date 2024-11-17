@@ -16,6 +16,7 @@ Options:
 	-v, --version                           Output the version number.
 
 Commands:
+	db-charset [options] <collation>        Alter the character set of MariaDB tables.
 	iconv [options] <fileOrDirectory>       Convert the encoding of input files.
 	jdk [options]                           Download and install the latest OpenJDK release.
 	node [options]                          Download and install the latest Node.js release.
@@ -45,7 +46,7 @@ try
 	# Run the requested command.
 	try
 		[command] = positionals
-		path = "../lib/cli/#{command}.js"
+		path = "../lib/cli/#{command.replaceAll "-", "_"}.js"
 		await access join import.meta.dirname, path
 	catch
 		console.error "Unknown command \"#{command}\"."

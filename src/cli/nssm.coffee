@@ -1,7 +1,6 @@
 import {which} from "@cedx/which"
 import {execFile} from "node:child_process"
 import console from "node:console"
-import {access} from "node:fs/promises"
 import {join, resolve} from "node:path"
 import {env, platform} from "node:process"
 import {pathToFileURL} from "node:url"

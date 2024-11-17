@@ -42,7 +42,7 @@ export class IconvCommand
 
 	# Runs this command.
 	run: (input) ->
-		if (await stat input).isFile() then await @_transcodeFile resolve input
+		unless (await stat input).isDirectory() then await @_transcodeFile resolve input
 		else
 			files = await readdir input, recursive: @recursive, withFileTypes: yes
 			await @_transcodeFile join file.parentPath, file.name for await file from files when file.isFile()
