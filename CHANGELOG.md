@@ -1,4 +1,4 @@
 # Changelog
 
 ## Version 1.0.0
-- Initial release.
+- Provides the `jdk`, `node`, `nssm` and `php` commands.
