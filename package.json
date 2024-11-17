@@ -2,7 +2,7 @@
 	"bugs": "https://github.com/cedx/cli/issues",
 	"description": "Command line interface of Cédric Belin, full stack developer.",
 	"homepage": "https://github.com/cedx/cli",
-	"license": "UNLICENSED",
+	"license": "MIT",
 	"name": "@cedx/cli",
 	"repository": "cedx/cli",
 	"type": "module",
@@ -36,6 +36,10 @@
 		"types": "./src/index.d.ts",
 		"default": "./lib/index.js"
 	},
+	"files": [
+		"lib/",
+		"src/"
+	],
 	"keywords": [
 		"cli",
 		"database",
