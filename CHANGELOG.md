@@ -1,8 +1,8 @@
 # Changelog
 
 ## Version [1.1.0](https://github.com/cedx/cli/compare/v1.0.1...v1.1.0)
+- Provide the `db-charset`, `db-engine` and `iconv` command.
 - Fixed the log file path for `node` command.
-- Provide the `db-charset` and `iconv` command.
 
 ## Version [1.0.1](https://github.com/cedx/cli/compare/v1.0.0...v1.0.1)
 - Fixed the packaging.
