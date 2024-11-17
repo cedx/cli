@@ -43,7 +43,7 @@ export class DbRestoreCommand
 		console.log "Importing: #{entity}"
 
 		hosts = new Set ["::1", "127.0.0.1", "localhost"]
-		await run "mysql", [
+		await run "mariadb", [
 			(if hosts.has @dsn.hostname then [] else ["--compress"])...
 			"--default-character-set=#{@dsn.searchParams.get("charset") or "utf8mb4"}"
 			"--execute=USE #{entity.split(".").at 0}; SOURCE #{file.replaceAll "\\", "/"}"
