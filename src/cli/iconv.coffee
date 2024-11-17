@@ -45,7 +45,7 @@ export class IconvCommand
 		unless (await stat input).isDirectory() then await @_transcodeFile resolve input
 		else
 			files = await readdir input, recursive: @recursive, withFileTypes: yes
-			await @_transcodeFile join file.parentPath, file.name for await file from files when file.isFile()
+			await @_transcodeFile join file.parentPath, file.name for file from files when file.isFile()
 
 	# Converts the encoding of the specified file.
 	_transcodeFile: (file) ->
