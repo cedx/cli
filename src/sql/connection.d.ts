@@ -5,10 +5,10 @@ import {Table} from "../data/table.js";
 
 /**
  * Creates a new MariaDB connection.
- * @param connectionUri The connection string of the data source.
+ * @param dsn The connection string of the data source.
  * @returns The newly created connection.
  */
-export function createConnection(connectionUri: URL): Promise<Connection & ConnectionMixin>;
+export function createConnection(dsn: URL): Promise<Connection & ConnectionMixin>;
 
 /**
  * Provides methods for inspecting the information schema.

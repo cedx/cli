@@ -4,8 +4,8 @@ import {Schema} from "../data/schema.js"
 import {Table} from "../data/table.js"
 
 # Creates a new MariaDB connection.
-export createConnection = (connectionUri) ->
-	connection = await mariadb.createConnection connectionUri.href
+export createConnection = (dsn) ->
+	connection = await mariadb.createConnection dsn.href
 	Object.assign connection,
 		getColumns: getColumns.bind connection
 		getSchemas: getSchemas.bind connection
@@ -18,8 +18,8 @@ getColumns = (table) ->
 		WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?
 		ORDER BY ORDINAL_POSITION"
 
-	rows = await @query query, [table.schema, table.name]
-	rows.map (row) -> Column.ofRecord row
+	recordset = await @query query, [table.schema, table.name]
+	recordset.map (record) -> Column.ofRecord record
 
 # Gets the list of schemas hosted by a database.
 getSchemas = ->
@@ -28,8 +28,8 @@ getSchemas = ->
 		WHERE SCHEMA_NAME NOT IN ('information_schema', 'mysql', 'performance_schema', 'sys')
 		ORDER BY SCHEMA_NAME"
 
-	rows = await @query query
-	rows.map (row) -> Schema.ofRecord row
+	recordset = await @query query
+	recordset.map (record) -> Schema.ofRecord record
 
 # Gets the list of tables contained in the specified schema.
 getTables = (schema) ->
@@ -38,5 +38,5 @@ getTables = (schema) ->
 		WHERE TABLE_SCHEMA = ? AND TABLE_TYPE = 'BASE TABLE'
 		ORDER BY TABLE_NAME"
 
-	rows = await @query query, schema.name
-	rows.map (row) -> Table.ofRecord row
+	recordset = await @query query, schema.name
+	recordset.map (record) -> Table.ofRecord record
