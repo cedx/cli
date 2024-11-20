@@ -14,7 +14,8 @@ export createConnection = (dsn) ->
 # Gets the list of columns contained in the specified table.
 getColumns = (table) ->
 	query = "
-		SELECT * FROM information_schema.COLUMNS
+		SELECT *
+		FROM information_schema.COLUMNS
 		WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?
 		ORDER BY ORDINAL_POSITION"
 
@@ -24,7 +25,8 @@ getColumns = (table) ->
 # Gets the list of schemas hosted by a database.
 getSchemas = ->
 	query = "
-		SELECT * FROM information_schema.SCHEMATA
+		SELECT *
+		FROM information_schema.SCHEMATA
 		WHERE SCHEMA_NAME NOT IN ('information_schema', 'mysql', 'performance_schema', 'sys')
 		ORDER BY SCHEMA_NAME"
 
@@ -34,7 +36,8 @@ getSchemas = ->
 # Gets the list of tables contained in the specified schema.
 getTables = (schema) ->
 	query = "
-		SELECT * FROM information_schema.TABLES
+		SELECT *
+		FROM information_schema.TABLES
 		WHERE TABLE_SCHEMA = ? AND TABLE_TYPE = 'BASE TABLE'
 		ORDER BY TABLE_NAME"
 
