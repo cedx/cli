@@ -65,7 +65,7 @@ export class JdkCommand
 	_extractArchive: (path) ->
 		console.log "Extracting file \"#{basename path}\" into directory \"#{resolve @output}\"..."
 		if path.toLowerCase().endsWith ".zip" then decompress path, @output, strip: 1
-		else execFile "tar", ["--directory=#{@output}", "--extract", "--file=#{path}", "--strip-components=1"]
+		else run "tar", ["--directory=#{@output}", "--extract", "--file=#{path}", "--strip-components=1"]
 
 # Downloads and installs the latest OpenJDK release.
 export default (args) ->

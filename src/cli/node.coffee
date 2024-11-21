@@ -85,7 +85,7 @@ export class NodeCommand
 		console.log "Extracting file \"#{basename(path)}\" into directory \"#{resolve(@output)}\"..."
 		await @_stopServices()
 		if path.toLowerCase().endsWith ".zip" then await decompress path, @output, strip: 1
-		else await execFile "tar", ["--directory=#{@output}", "--extract", "--file=#{path}", "--strip-components=1"]
+		else await run "tar", ["--directory=#{@output}", "--extract", "--file=#{path}", "--strip-components=1"]
 		await rm file for file from ["CHANGELOG.md", "LICENSE", "README.md"].map (file) => join @output, file unless platform is "win32"
 		await @_startServices()
 
@@ -105,7 +105,7 @@ export class NodeCommand
 		else
 			console.log "Stopping the NSSM services..."
 			net = join env.windir ? "C:/Windows", "System32/net.exe"
-			await execFile net, ["stop", id], windowsHide: yes for id from @_applications
+			await run net, ["stop", id], windowsHide: yes for id from @_applications
 
 	# Starts all hosted NSSM services.
 	_startServices: ->
@@ -113,7 +113,7 @@ export class NodeCommand
 		else
 			console.log "Starting the NSSM services..."
 			net = join env.windir ? "C:/Windows", "System32/net.exe"
-			await execFile net, ["start", id], windowsHide: yes for id from @_applications
+			await run net, ["start", id], windowsHide: yes for id from @_applications
 
 # Downloads and installs the latest Node.js release.
 export default (args) ->
