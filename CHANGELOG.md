@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [1.2.1](https://github.com/cedx/cli/compare/v1.2.0...v1.2.1)
+- Fixed the the `jdk` and `node` commands.
+
 ## Version [1.2.0](https://github.com/cedx/cli/compare/v1.1.0...v1.2.0)
 - Provide the `db-backup` and `db-restore` commands.
 
