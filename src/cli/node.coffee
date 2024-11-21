@@ -105,7 +105,7 @@ export class NodeCommand
 		else
 			console.log "Stopping the NSSM services..."
 			net = join env.windir ? "C:/Windows", "System32/net.exe"
-			await execFile net, ["stop", id] for id from @_applications
+			await execFile net, ["stop", id], windowsHide: yes for id from @_applications
 
 	# Starts all hosted NSSM services.
 	_startServices: ->
@@ -113,7 +113,7 @@ export class NodeCommand
 		else
 			console.log "Starting the NSSM services..."
 			net = join env.windir ? "C:/Windows", "System32/net.exe"
-			await execFile net, ["start", id] for id from @_applications
+			await execFile net, ["start", id], windowsHide: yes for id from @_applications
 
 # Downloads and installs the latest Node.js release.
 export default (args) ->
