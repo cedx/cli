@@ -6,6 +6,7 @@ import {tmpdir} from "node:os"
 import {basename, join, resolve} from "node:path"
 import {env, platform} from "node:process"
 import {parseArgs, promisify} from "node:util"
+import semver from "semver"
 
 # The usage information.
 usage = """
@@ -47,9 +48,11 @@ export class PhpCommand
 	# Downloads the PHP release corresponding to the specified version.
 	_downloadArchive: (version) ->
 		{default: pkg} = await import("../../package.json", with: type: "json")
-		path = join tmpdir(), "php-#{version}-nts-Win32-vs16-x64.zip"
-		file = basename path
 		userAgent = "#{navigator.userAgent} | Belin.io/#{pkg.version}"
+
+		vs = if semver.gte version, "8.4.0" then "vs17" else "vs16"
+		path = join tmpdir(), "php-#{version}-nts-Win32-#{vs}-x64.zip"
+		file = basename path
 
 		console.log "Downloading file \"#{file}\"..."
 		response = await fetch "https://windows.php.net/downloads/releases/#{file}", headers: {"user-agent": userAgent}
