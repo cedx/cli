@@ -50,7 +50,7 @@ try
 	# Run the requested command.
 	try
 		[command] = positionals
-		path = "../lib/cli/#{command.replaceAll "-", "_"}.js"
+		path = "./cli/#{command.replaceAll "-", "_"}.js"
 		await access join import.meta.dirname, path
 	catch
 		console.error "Unknown command \"#{command}\"."
