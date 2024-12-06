@@ -47,7 +47,7 @@ export class NssmCommand
 		throw Error "Unable to determine the application entry point." unless binaries.length
 
 		config = await @_loadConfiguration()
-		[node, nssm] = await Promise.all [which("node").first(), which("nssm").first()]
+		[node, nssm] = await Promise.all [which("node").first, which("nssm").first]
 		await run nssm, ["install", config.id, node, join(@_directory, binaries[0])]
 		await run nssm, ["set", config.id, key, value] for [key, value] from [
 			["AppDirectory", @_directory]
@@ -64,7 +64,7 @@ export class NssmCommand
 		throw Error "This command only supports the Windows platform." unless platform is "win32"
 
 		config = await @_loadConfiguration()
-		nssm = await which("nssm").first()
+		nssm = await which("nssm").first
 		await run join(env.windir ? "C:/Windows", "System32/net.exe"), ["stop", config.id]
 		await run nssm, ["remove", config.id, "confirm"]
 

@@ -16,7 +16,7 @@
 		"cli": "bin/cli.js"
 	},
 	"dependencies": {
-		"@cedx/which": "^10.0.0",
+		"@cedx/which": "^11.0.0",
 		"decompress": "^4.2.1",
 		"mariadb": "^3.4.0",
 		"semver": "^7.6.3",
