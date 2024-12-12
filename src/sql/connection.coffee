@@ -5,11 +5,12 @@ import {Table} from "../data/table.js"
 
 # Creates a new MariaDB connection.
 export createConnection = (dsn) ->
-	connection = await mariadb.createConnection dsn.href
-	Object.assign connection,
-		getColumns: getColumns.bind connection
-		getSchemas: getSchemas.bind connection
-		getTables: getTables.bind connection
+	dsn.searchParams.set "connectionLimit", "1" unless dsn.searchParams.has "connectionLimit"
+	pool = mariadb.createPool dsn.href
+	Promise.resolve Object.assign pool,
+		getColumns: getColumns.bind pool
+		getSchemas: getSchemas.bind pool
+		getTables: getTables.bind pool
 
 # Gets the list of columns contained in the specified table.
 getColumns = (table) ->

@@ -9,6 +9,15 @@ import {Schema} from "../data/schema.js"
 import {Table} from "../data/table.js"
 import {createConnection} from "../sql/connection.js"
 
+# Defines the format of the output files.
+export BackupFormat = Object.freeze
+
+	# The JSON Lines format.
+	jsonLines: "jsonl"
+
+	# The SQL format.
+	sqlDump: "sql"
+
 # The usage information.
 usage = """
 Backup a set of MariaDB tables.
@@ -21,7 +30,7 @@ Arguments:
 
 Options:
 	-d, --dsn <uri>        The connection string.
-	-f, --format <format>  The format of the output files.
+	-f, --format <format>  The format of the output files. Choices: #{Object.values(BackupFormat).map(JSON.stringify).join ", "}.
 	-s, --schema <name>    The schema name.
 	-t, --table <name>     The table names (requires a schema).
 	-h, --help             Display this help.
@@ -29,15 +38,6 @@ Options:
 
 # Spawns a new process using the specified command.
 run = promisify execFile
-
-# Defines the format of the output files.
-export BackupFormat = Object.freeze
-
-	# The JSON Lines format.
-	jsonLines: "jsonl"
-
-	# The SQL format.
-	sqlDump: "sql"
 
 # Backups a set of MariaDB tables.
 export class DbBackupCommand

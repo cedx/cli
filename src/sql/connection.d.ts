@@ -1,4 +1,4 @@
-import {Connection} from "mariadb";
+import {Pool} from "mariadb";
 import {Column} from "../data/column.js";
 import {Schema} from "../data/schema.js";
 import {Table} from "../data/table.js";
@@ -8,7 +8,7 @@ import {Table} from "../data/table.js";
  * @param dsn The connection string of the data source.
  * @returns The newly created connection.
  */
-export function createConnection(dsn: URL): Promise<Connection & ConnectionMixin>;
+export function createConnection(dsn: URL): Promise<Pool & ConnectionMixin>;
 
 /**
  * Provides methods for inspecting the information schema.
