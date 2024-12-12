@@ -47,7 +47,7 @@ export class NodeCommand
 		if resolve(@output) is dirname(execPath) then await @_detachProcess()
 		else
 			if @config?
-				{default: config} = await import(@config.href)
+				{default: config} = await import(@config.href, with: type: "json")
 				host = hostname()
 				@_applications.push ...config[host] if host of config
 
