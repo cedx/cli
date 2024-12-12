@@ -14,7 +14,7 @@ task "dist", "Packages the application.", ->
 	invoke script for script from ["clean", "build"]
 
 task "lint", "Performs the static analysis of source code.", ->
-	npx "coffeelint", "--file=etc/coffeelint.json", "src"
+	npx "coffeelint", "--file=etc/coffeelint.json", "build.coffee", "src"
 
 task "publish", "Publishes the package.", ->
 	invoke "dist"
