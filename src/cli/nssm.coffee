@@ -74,7 +74,7 @@ export class NssmCommand
 	# Reads the configuration file of the Node.js application.
 	_loadConfiguration: ->
 		for folder from ["lib/server", "lib", "src/server", "src"]
-			try return (await import(@_getFileUri("#{folder}/config.g.js").href)).default catch
+			try return (await import(@_getFileUri("#{folder}/config.g.js").href)).default
 		throw Error "Unable to find the application configuration file."
 
 # Registers a Node.js application as a Windows service.
