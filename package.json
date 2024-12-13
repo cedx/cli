@@ -25,7 +25,7 @@
 	"devDependencies": {
 		"@coffeelint/cli": "^5.2.11",
 		"@types/decompress": "^4.2.7",
-		"@types/node": "^22.10.1",
+		"@types/node": "^22.10.2",
 		"@types/semver": "^7.5.8",
 		"coffeescript": "^2.7.0"
 	},
