@@ -1,6 +1,9 @@
 # Provides the metadata of a database table.
 export class Table
 
+	# The name of the database table associated with this class.
+	@table = "TABLES"
+
 	# Creates a new table.
 	constructor: (options = {}) ->
 

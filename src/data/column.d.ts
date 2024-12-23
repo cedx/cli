@@ -4,6 +4,11 @@
 export class Column {
 
 	/**
+	 * The name of the database table associated with this class.
+	 */
+	static readonly table: string;
+
+	/**
 	 * The column name.
 	 */
 	name: string;

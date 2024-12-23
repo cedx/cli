@@ -4,6 +4,11 @@
 export class Schema {
 
 	/**
+	 * The name of the database table associated with this class.
+	 */
+	static readonly table: string;
+
+	/**
 	 * The default character set.
 	 */
 	charset: string;

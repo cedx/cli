@@ -4,6 +4,11 @@
 export class Table {
 
 	/**
+	 * The name of the database table associated with this class.
+	 */
+	static readonly table: string;
+
+	/**
 	 * The default collation.
 	 */
 	collation: string;

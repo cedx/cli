@@ -1,6 +1,9 @@
 # Provides the metadata of a table column.
 export class Column
 
+	# The name of the database table associated with this class.
+	@table = "COLUMNS"
+
 	# Creates a new column.
 	constructor: (options = {}) ->
 
