@@ -20,7 +20,7 @@ export class Table
 		@schema = options.schema ? ""
 
 		# The table type.
-		@type = options.type ? "BASE TABLE"
+		@type = options.type ? TableType.baseTable
 
 	# Creates a new table from the specified database record.
 	@ofRecord: (record) -> new @
@@ -44,3 +44,12 @@ export TableEngine = Object.freeze
 
 	# The storage engine is MyISAM.
 	myIsam: "MyISAM"
+
+# Defines the type of a table.
+export TableType = Object.freeze
+
+	# A base table.
+	baseTable: "BASE TABLE"
+
+	# A view.
+	view: "VIEW"

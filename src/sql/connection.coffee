@@ -1,7 +1,7 @@
 import mariadb from "mariadb"
 import {Column} from "../data/column.js"
 import {Schema} from "../data/schema.js"
-import {Table} from "../data/table.js"
+import {Table, TableType} from "../data/table.js"
 
 # Creates a new MariaDB connection.
 export createConnection = (dsn) ->
@@ -39,8 +39,8 @@ getTables = (schema) ->
 	query = "
 		SELECT *
 		FROM information_schema.TABLES
-		WHERE TABLE_SCHEMA = ? AND TABLE_TYPE = 'BASE TABLE'
+		WHERE TABLE_SCHEMA = ? AND TABLE_TYPE = ?
 		ORDER BY TABLE_NAME"
 
-	recordset = await @query query, schema.name
+	recordset = await @query query, [schema.name, TableType.baseTable]
 	recordset.map (record) -> Table.ofRecord record
