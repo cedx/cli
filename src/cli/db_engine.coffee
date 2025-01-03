@@ -57,7 +57,7 @@ export class DbEngineCommand
 
 	# Alters the specified database table.
 	_alterTable: (table, engine) ->
-		qualifiedName = "#{@_db.escapeId table.schema}.#{@_db.escapeId table.name}"
+		qualifiedName = table.qualifiedName (identifier) => @_db.escapeId identifier
 		console.log "Processing: #{qualifiedName}"
 		await @_db.query "ALTER TABLE #{qualifiedName} ENGINE = #{engine}"
 

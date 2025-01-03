@@ -22,6 +22,9 @@ export class Table
 		# The table type.
 		@type = options.type ? TableType.baseTable
 
+	# Gets the fully qualified name.
+	qualifiedName: (escape = (identifier) -> identifier) -> "#{escape @schema}.#{escape @name}"
+
 	# Creates a new table from the specified database record.
 	@ofRecord: (record) -> new @
 		collation: record.TABLE_COLLATION

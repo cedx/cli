@@ -51,7 +51,7 @@ export class DbOptimizeCommand
 
 	# Optimizes the specified database table.
 	_optimizeTable: (table) ->
-		qualifiedName = "#{@_db.escapeId table.schema}.#{@_db.escapeId table.name}"
+		qualifiedName = table.qualifiedName (identifier) => @_db.escapeId identifier
 		console.log "Optimizing: #{qualifiedName}"
 		await @_db.query "OPTIMIZE TABLE #{qualifiedName}"
 

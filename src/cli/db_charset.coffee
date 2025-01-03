@@ -57,7 +57,7 @@ export class DbCharsetCommand
 
 	# Alters the specified database table.
 	_alterTable: (table, collation) ->
-		qualifiedName = "#{@_db.escapeId table.schema}.#{@_db.escapeId table.name}"
+		qualifiedName = table.qualifiedName (identifier) => @_db.escapeId identifier
 		console.log "Processing: #{qualifiedName}"
 		await @_db.query "ALTER TABLE #{qualifiedName} CONVERT TO CHARACTER SET #{collation.split("_").at 0} COLLATE #{collation}"
 
