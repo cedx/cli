@@ -50,6 +50,9 @@
 		"php",
 		"utility"
 	],
+	"publishConfig": {
+		"access": "public"
+	},
 	"scripts": {
 		"start": "node bin/cli.js"
 	}
