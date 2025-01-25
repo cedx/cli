@@ -1,8 +1,8 @@
 # Belin.io CLI
-![Node.js](https://badgen.net/npm/node/@cedx/cli) ![npm](https://badgen.net/npm/v/@cedx/cli) ![License](https://badgen.net/npm/license/@cedx/cli) ![Downloads](https://badgen.net/npm/dt/@cedx/cli)
+![.NET](https://badgen.net/badge/.NET/%3E%3D8.0/green) ![NuGet](https://badgen.net/nuget/v/Belin.Cli) ![License](https://badgen.net/badge/license/MIT/blue) ![Downloads](https://badgen.net/nuget/dt/Belin.Cli)
 
 Command line interface of [Cédric Belin](https://belin.io), full stack developer,
-implemented in [CoffeeScript](https://coffeescript.org).
+implemented in [C#](https://learn.microsoft.com/en-us/dotnet/csharp).
 
 ## Documentation
 - [User guide](https://github.com/cedx/cli/wiki)
