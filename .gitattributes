@@ -1,14 +1,16 @@
 * text=auto
 .* text
 
-*.cjs text
+*.cake text
+*.cs text diff=csharp
+*.csproj text
 *.css text diff=css
 *.html text diff=html
 *.http text
+*.info text
 *.js text
 *.json text
 *.md text diff=markdown
-*.mjs text
 *.ps1 text
 *.sql text
 *.svg text
