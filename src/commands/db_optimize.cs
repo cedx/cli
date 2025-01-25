@@ -1,3 +1,5 @@
+namespace Belin.Cli.Commands;
+
 /// <summary>
 ///
 /// </summary>
