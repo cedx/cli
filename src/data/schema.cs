@@ -8,5 +8,5 @@ public class Schema {
 	/// <summary>
 	/// The name of the database table associated with this class.
 	/// </summary>
-	public const string Table = "SCHEMATA";
+	public const string TableName = "SCHEMATA";
 }

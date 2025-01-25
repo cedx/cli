@@ -8,5 +8,5 @@ public class Table {
 	/// <summary>
 	/// The name of the database table associated with this class.
 	/// </summary>
-	public const string Table = "TABLES";
+	public const string TableName = "TABLES";
 }
