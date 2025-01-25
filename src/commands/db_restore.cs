@@ -1,8 +1,9 @@
 namespace Belin.Cli.Commands;
 
 /// <summary>
-///
+/// Restores a set of MariaDB/MySQL tables.
 /// </summary>
-internal class DbRestoreCommand: Command {
+/// <param name="name">The command name.</param>
+internal class DbRestoreCommand(string name): Command(name, "Restore a set of MariaDB/MySQL tables.") {
 
 }

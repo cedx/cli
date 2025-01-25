@@ -1,8 +1,9 @@
 namespace Belin.Cli.Commands;
 
 /// <summary>
-///
+/// Alters the character set of MariaDB/MySQL tables.
 /// </summary>
-internal class DbCharsetCommand: Command {
+/// <param name="name">The command name.</param>
+internal class DbCharsetCommand(string name): Command(name, "Alter the character set of MariaDB/MySQL tables.") {
 
 }

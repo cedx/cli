@@ -6,7 +6,7 @@ import {createConnection} from "../sql/connection.js"
 
 # The usage information.
 usage = """
-Alter the storage engine of MariaDB tables.
+Alter the storage engine of MariaDB/MySQL tables.
 
 Usage:
 	npx @cedx/cli db-engine [options] <engine>
@@ -21,7 +21,7 @@ Options:
 	-h, --help           Display this help.
 """
 
-# Alters the storage engine of MariaDB tables.
+# Alters the storage engine of MariaDB/MySQL tables.
 export class DbEngineCommand
 
 	# Creates a new command.
@@ -61,7 +61,7 @@ export class DbEngineCommand
 		console.log "Processing: #{qualifiedName}"
 		await @_db.query "ALTER TABLE #{qualifiedName} ENGINE = #{engine}"
 
-# Alters the storage engine of MariaDB tables.
+# Alters the storage engine of MariaDB/MySQL tables.
 export default (args) ->
 	{positionals, values} = parseArgs allowPositionals: yes, args: args, options:
 		dsn: {short: "d", type: "string"}

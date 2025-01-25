@@ -1,8 +1,9 @@
 namespace Belin.Cli.Commands;
 
 /// <summary>
-///
+/// Alters the storage engine of MariaDB/MySQL tables.
 /// </summary>
-internal class DbEngineCommand: Command {
+/// <param name="name">The command name.</param>
+internal class DbEngineCommand(string name): Command(name, "Alter the storage engine of MariaDB/MySQL tables.") {
 
 }

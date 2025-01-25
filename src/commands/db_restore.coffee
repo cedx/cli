@@ -6,7 +6,7 @@ import {parseArgs, promisify} from "node:util"
 
 # The usage information.
 usage = """
-Restore a set of MariaDB tables.
+Restore a set of MariaDB/MySQL tables.
 
 Usage:
 	npx @cedx/cli db-restore [options] <fileOrDirectory>
@@ -22,7 +22,7 @@ Options:
 # Spawns a new process using the specified command.
 run = promisify execFile
 
-# Restores a set of MariaDB tables.
+# Restores a set of MariaDB/MySQL tables.
 export class DbRestoreCommand
 
 	# Creates a new command.
@@ -54,7 +54,7 @@ export class DbRestoreCommand
 			"--user=#{decodeURIComponent @dsn.username}"
 		]
 
-# Restores a set of MariaDB tables.
+# Restores a set of MariaDB/MySQL tables.
 export default (args) ->
 	{positionals, values} = parseArgs allowPositionals: yes, args: args, options:
 		dsn: {short: "d", type: "string"}
