@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -23,5 +23,6 @@
 
 	<ItemGroup>
 	  <PackageReference Include="MySqlConnector" Version="2.*"/>
+	  <PackageReference Include="System.CommandLine" Version="2.*-*"/>
 	</ItemGroup>
 </Project>
