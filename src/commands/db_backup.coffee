@@ -20,7 +20,7 @@ export BackupFormat = Object.freeze
 
 # The usage information.
 usage = """
-Backup a set of MariaDB tables.
+Backup a set of MariaDB/MySQL tables.
 
 Usage:
 	npx @cedx/cli db-backup [options] <directory>
@@ -39,7 +39,7 @@ Options:
 # Spawns a new process using the specified command.
 run = promisify execFile
 
-# Backups a set of MariaDB tables.
+# Backups a set of MariaDB/MySQL tables.
 export class DbBackupCommand
 
 	# Creates a new command.
@@ -111,7 +111,7 @@ export class DbBackupCommand
 			when isBuffer value then "data:application/octet-stream;base64,#{Buffer.from(value.data).toString "base64"}"
 			else value
 
-# Backups a set of MariaDB tables.
+# Backups a set of MariaDB/MySQL tables.
 export default (args) ->
 	{positionals, values} = parseArgs allowPositionals: yes, args: args, options:
 		dsn: {short: "d", type: "string"}

@@ -1,8 +1,9 @@
 namespace Belin.Cli.Commands;
 
 /// <summary>
-///
+/// Downloads and installs the latest Node.js release.
 /// </summary>
-internal class NodeCommand: Command {
+/// <param name="name">The command name.</param>
+internal class NodeCommand(string name): Command(name, "Download and install the latest Node.js release.") {
 
 }

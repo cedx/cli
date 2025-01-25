@@ -1,8 +1,9 @@
 namespace Belin.Cli.Commands;
 
 /// <summary>
-///
+/// Converts the encoding of input files.
 /// </summary>
-internal class IconvCommand: Command {
+/// <param name="name">The command name.</param>
+internal class IconvCommand(string name): Command(name, "Convert the encoding of input files.") {
 
 }

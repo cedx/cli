@@ -16,11 +16,11 @@ Options:
 	-v, --version                           Output the version number.
 
 Commands:
-	db-backup [options] <directory>         Backup a set of MariaDB tables.
-	db-charset [options] <collation>        Alter the character set of MariaDB tables.
-	db-engine [options] <engine>            Alter the storage engine of MariaDB tables.
-	db-optimize [options]                   Optimize a set of MariaDB tables.
-	db-restore [options] <fileOrDirectory>  Restore a set of MariaDB tables.
+	db-backup [options] <directory>         Backup a set of MariaDB/MySQL tables.
+	db-charset [options] <collation>        Alter the character set of MariaDB/MySQL tables.
+	db-engine [options] <engine>            Alter the storage engine of MariaDB/MySQL tables.
+	db-optimize [options]                   Optimize a set of MariaDB/MySQL tables.
+	db-restore [options] <fileOrDirectory>  Restore a set of MariaDB/MySQL tables.
 	iconv [options] <fileOrDirectory>       Convert the encoding of input files.
 	jdk [options]                           Download and install the latest OpenJDK release.
 	node [options]                          Download and install the latest Node.js release.

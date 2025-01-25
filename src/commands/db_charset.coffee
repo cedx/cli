@@ -6,7 +6,7 @@ import {createConnection} from "../sql/connection.js"
 
 # The usage information.
 usage = """
-Alter the character set of MariaDB tables.
+Alter the character set of MariaDB/MySQL tables.
 
 Usage:
 	npx @cedx/cli db-charset [options] <collation>
@@ -21,7 +21,7 @@ Options:
 	-h, --help           Display this help.
 """
 
-# Alters the character set of MariaDB tables.
+# Alters the character set of MariaDB/MySQL tables.
 export class DbCharsetCommand
 
 	# Creates a new command.
@@ -61,7 +61,7 @@ export class DbCharsetCommand
 		console.log "Processing: #{qualifiedName}"
 		await @_db.query "ALTER TABLE #{qualifiedName} CONVERT TO CHARACTER SET #{collation.split("_").at 0} COLLATE #{collation}"
 
-# Alters the character set of MariaDB tables.
+# Alters the character set of MariaDB/MySQL tables.
 export default (args) ->
 	{positionals, values} = parseArgs allowPositionals: yes, args: args, options:
 		dsn: {short: "d", type: "string"}

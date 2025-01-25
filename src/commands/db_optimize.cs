@@ -1,8 +1,9 @@
 namespace Belin.Cli.Commands;
 
 /// <summary>
-///
+/// Optimizes a set of MariaDB/MySQL tables.
 /// </summary>
-internal class DbOptimizeCommand: Command {
+/// <param name="name">The command name.</param>
+internal class DbOptimizeCommand(string name): Command(name, "Optimize a set of MariaDB/MySQL tables.") {
 
 }

@@ -6,7 +6,7 @@ import {createConnection} from "../sql/connection.js"
 
 # The usage information.
 usage = """
-Optimize a set of MariaDB tables.
+Optimize a set of MariaDB/MySQL tables.
 
 Usage:
 	npx @cedx/cli db-optimize [options]
@@ -18,7 +18,7 @@ Options:
 	-h, --help           Display this help.
 """
 
-# Optimizes a set of MariaDB tables.
+# Optimizes a set of MariaDB/MySQL tables.
 export class DbOptimizeCommand
 
 	# Creates a new command.
@@ -55,7 +55,7 @@ export class DbOptimizeCommand
 		console.log "Optimizing: #{qualifiedName}"
 		await @_db.query "OPTIMIZE TABLE #{qualifiedName}"
 
-# Optimizes a set of MariaDB tables.
+# Optimizes a set of MariaDB/MySQL tables.
 export default (args) ->
 	{values} = parseArgs args: args, options:
 		dsn: {short: "d", type: "string"}
