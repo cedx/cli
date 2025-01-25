@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AssemblyName>Belin.Cli</AssemblyName>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<OutDir>bin</OutDir>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<VersionPrefix>2.0.0</VersionPrefix>
+
+		<!-- TODO
+		<PackageOutputPath>var/nuget</PackageOutputPath>
+		<PackAsTool>true</PackAsTool>
+		<ToolCommandName>belin-cli</ToolCommandName>
+		-->
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Using Include="System.CommandLine"/>
+	</ItemGroup>
+</Project>
