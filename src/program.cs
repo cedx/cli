@@ -3,7 +3,7 @@ using Belin.Cli.Commands;
 var toto = new DbBackupCommand("db-backup");
 toto.SetHandler(() => Console.WriteLine("handler"));
 
-new RootCommand("Command line interface of Cédric Belin, full stack developer.") {
+return new RootCommand("Command line interface of Cédric Belin, full stack developer.") {
 	new DbBackupCommand("db-backup"),
 	new DbCharsetCommand("db-charset"),
 	new DbEngineCommand("db-engine"),
