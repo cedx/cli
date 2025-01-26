@@ -11,8 +11,7 @@ Task("build")
 
 Task("clean")
 	.Description("Deletes all generated files.")
-	.Does(() => EnsureDirectoryDoesNotExist("bin"))
-	.DoesForEach(GetDirectories("*/obj"), dir => EnsureDirectoryDoesNotExist(dir, new() { Recursive = true }))
+	.DoesForEach(["bin", "obj"], dir => EnsureDirectoryDoesNotExist(dir, new() { Recursive = true }))
 	.Does(() => CleanDirectory("var", fileSystemInfo => fileSystemInfo.Path.Segments[^1] != ".gitkeep"));
 
 Task("format")
