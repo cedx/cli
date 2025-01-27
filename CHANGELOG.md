@@ -2,6 +2,7 @@
 
 ## Version [2.0.0](https://github.com/cedx/cli/compare/v1.2.3...v2.0.0)
 - Breaking change: ported the source code to [C#](https://learn.microsoft.com/en-us/dotnet/csharp).
+- Ported the build system to [Cake](https://cakebuild.net).
 
 ## Version [1.2.3](https://github.com/cedx/cli/compare/v1.2.2...v1.2.3)
 - Fixed the `node` command: the [NSSM](https://nssm.cc) configuration file is now in [JSON](https://www.json.org) format.
