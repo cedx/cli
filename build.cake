@@ -7,16 +7,17 @@ var version = Context.Configuration.GetValue("package_version");
 
 Task("build")
 	.Description("Builds the project.")
-	.Does(() => DotNetBuild("cli.csproj", new() { Configuration = release ? "Release" : "Debug" }));
+	.Does(() => DotNetBuild("cli.sln", new() { Configuration = release ? "Release" : "Debug" }));
 
 Task("clean")
 	.Description("Deletes all generated files.")
-	.DoesForEach(["bin", "obj"], dir => EnsureDirectoryDoesNotExist(dir, new() { Recursive = true }))
+	.Does(() => EnsureDirectoryDoesNotExist("bin"))
+	.DoesForEach(GetDirectories("*/obj"), EnsureDirectoryDoesNotExist)
 	.Does(() => CleanDirectory("var", fileSystemInfo => fileSystemInfo.Path.Segments[^1] != ".gitkeep"));
 
 Task("format")
 	.Description("Formats the source code.")
-	.Does(() => DotNetFormat("cli.csproj"));
+	.Does(() => DotNetFormat("cli.sln"));
 
 Task("publish")
 	.Description("Publishes the package.")
@@ -30,6 +31,10 @@ Task("version")
 		var pattern = new Regex(@"<Version>\d+(\.\d+){2}</Version>");
 		WriteAllText(file.FullPath, pattern.Replace(ReadAllText(file.FullPath), $"<Version>{version}</Version>"));
 	});
+
+Task("watch")
+	.Description("Watches for file changes.")
+	.Does(() => StartProcess("dotnet", new ProcessSettings { Arguments = "watch build", WorkingDirectory = "src" }));
 
 Task("default")
 	.Description("The default task.")
