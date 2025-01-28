@@ -9,6 +9,7 @@ public class PhpCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public PhpCommand(): base("php", "Download and install the latest PHP release.") {
+		Add(new OutputOption(OperatingSystem.IsWindows() ? @"C:\Program Files\PHP" : "/usr/local"));
 		this.SetHandler(Run);
 	}
 
