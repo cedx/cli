@@ -8,15 +8,15 @@ public class OptimizeCommand: Command {
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public OptimizeCommand(): base("db-optimize", "Optimize a set of MariaDB/MySQL tables.") {
-		Add(new DsnOption());
-		this.SetHandler(Execute);
+	public OptimizeCommand(DsnOption dsnOption): base("db-optimize", "Optimize a set of MariaDB/MySQL tables.") {
+		this.SetHandler(Execute, dsnOption);
 	}
 
 	/// <summary>
 	/// Executes this command.
 	/// </summary>
-	public void Execute() {
+	/// <param name="dsn">The connection string.</param>
+	private void Execute(Uri dsn) {
 
 	}
 }

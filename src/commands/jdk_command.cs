@@ -16,7 +16,7 @@ public class JdkCommand: Command {
 	/// <summary>
 	/// Executes this command.
 	/// </summary>
-	public void Execute() {
+	private void Execute() {
 
 	}
 }

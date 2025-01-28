@@ -8,12 +8,10 @@ public class CharsetCommand: Command {
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public CharsetCommand(): base("db-charset", "Alter the character set of MariaDB/MySQL tables.") {
-		var dsnOption = new DsnOption();
+	public CharsetCommand(DsnOption dsnOption): base("db-charset", "Alter the character set of MariaDB/MySQL tables.") {
 		var schemaOption = new SchemaOption();
 		var tableOption = new TableOption();
 
-		Add(dsnOption);
 		Add(schemaOption);
 		Add(tableOption);
 
@@ -23,7 +21,8 @@ public class CharsetCommand: Command {
 	/// <summary>
 	/// Executes this command.
 	/// </summary>
-	public void Execute(Uri dsn, string? schema, string[] tables) {
+	/// <param name="dsn">The connection string.</param>
+	private void Execute(Uri dsn, string? schema, string[] tables) {
 
 	}
 }

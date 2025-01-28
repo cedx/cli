@@ -1,5 +1,7 @@
 namespace Belin.Cli.Commands;
 
+using System.Text.Json;
+
 /// <summary>
 /// Downloads and installs the latest PHP release.
 /// </summary>
@@ -23,18 +25,23 @@ public class PhpCommand: Command {
 	/// Executes this command.
 	/// </summary>
 	/// <exception cref="PlatformNotSupportedException">This command only supports the Windows platform.</exception>
-	public void Execute(string output) {
+	private void Execute(string output) {
 		if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("This command only supports the Windows platform.");
 
-		using var http = new HttpClient();
+		using var httpClient = new HttpClient();
 	}
 
 	/// <summary>
 	/// Fetches the latest version number of the PHP releases.
 	/// </summary>
-	private string FetchLatestVersion() {
+	/// <param name="httpClient">The HTTP client.</param>
+	private async Task<string> FetchLatestVersion(HttpClient httpClient) {
 		Console.WriteLine("Fetching the list of PHP releases...");
 
+		using var json = JsonDocument.Parse(await httpClient.GetStringAsync("https://www.php.net/releases/?json"));
+		var property = json.RootElement.EnumerateObject().FirstOrDefault();
+		Console.WriteLine(property);
+		//if (property is null) throw new Exception("Unable to fetch the list of PHP releases.");
 
 		return "TODO";
 	}

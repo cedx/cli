@@ -15,7 +15,7 @@ public class InstallCommand: Command {
 	/// <summary>
 	/// Executes this command.
 	/// </summary>
-	public void Execute() {
+	private void Execute() {
 
 	}
 }

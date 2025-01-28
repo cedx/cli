@@ -8,15 +8,15 @@ public class RestoreCommand: Command {
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public RestoreCommand(): base("db-restore", "Restore a set of MariaDB/MySQL tables.") {
-		Add(new DsnOption());
-		this.SetHandler(Execute);
+	public RestoreCommand(DsnOption dsnOption): base("db-restore", "Restore a set of MariaDB/MySQL tables.") {
+		this.SetHandler(Execute, dsnOption);
 	}
 
 	/// <summary>
 	/// Executes this command.
 	/// </summary>
-	public void Execute() {
+	/// <param name="dsn">The connection string.</param>
+	private void Execute(Uri dsn) {
 
 	}
 }
