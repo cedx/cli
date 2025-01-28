@@ -9,6 +9,7 @@ public class JdkCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public JdkCommand(): base("jdk", "Download and install the latest OpenJDK release.") {
+		Add(new OutputOption(OperatingSystem.IsWindows() ? @"C:\Program Files\OpenJDK" : "/opt/openjdk"));
 		this.SetHandler(Run);
 	}
 
