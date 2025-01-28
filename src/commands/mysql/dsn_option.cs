@@ -1,4 +1,4 @@
-namespace Belin.Cli.Commands;
+namespace Belin.Cli.Commands.MySql;
 
 /// <summary>
 /// Provides the connection string of a data source.
