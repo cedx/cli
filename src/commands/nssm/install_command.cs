@@ -9,13 +9,13 @@ public class InstallCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public InstallCommand(): base("install", "Register the Windows service.") {
-		this.SetHandler(Run);
+		this.SetHandler(Execute);
 	}
 
 	/// <summary>
-	/// Runs this command.
+	/// Executes this command.
 	/// </summary>
-	private void Run() {
+	public void Execute() {
 
 	}
 }

@@ -31,7 +31,7 @@ export class DbRestoreCommand
 		# The connection string.
 		@dsn = new URL if dsn.startsWith("mariadb:") then dsn else "mariadb://#{dsn}"
 
-	# Runs this command.
+	# Executes this command.
 	run: (input) ->
 		unless (await stat input).isDirectory() then await @_importFile resolve input
 		else

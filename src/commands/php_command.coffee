@@ -35,7 +35,7 @@ export class PhpCommand
 		# The path to the output directory.
 		@output = options.output ? defaultDirectory
 
-	# Runs this command.
+	# Executes this command.
 	run: ->
 		throw Error "This command only supports the Windows platform." unless platform is "win32"
 

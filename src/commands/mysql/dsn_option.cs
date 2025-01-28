@@ -3,7 +3,7 @@ namespace Belin.Cli.Commands.MySql;
 /// <summary>
 /// Provides the connection string of a data source.
 /// </summary>
-public class DsnOption: Option<string> {
+public class DsnOption: Option<Uri> {
 
 	/// <summary>
 	/// Creates a new option.
