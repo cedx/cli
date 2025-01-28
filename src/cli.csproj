@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
+		<Copyright>Cédric Belin. All rights reserved.</Copyright>
+		<Product>Belin.io Server</Product>
+		<Version>2.0.0</Version>
+	</PropertyGroup>
+
+	<PropertyGroup>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<ApplicationIcon>../res/favicon.ico</ApplicationIcon>
 		<AssemblyName>Belin.Cli</AssemblyName>
@@ -10,7 +16,6 @@
 		<OutputType>Exe</OutputType>
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 		<TargetFramework>net8.0</TargetFramework>
-		<Version>2.0.0</Version>
 
 		<!-- TODO
 		<PackageOutputPath>var/nuget</PackageOutputPath>

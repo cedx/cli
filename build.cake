@@ -11,8 +11,7 @@ Task("build")
 
 Task("clean")
 	.Description("Deletes all generated files.")
-	.Does(() => EnsureDirectoryDoesNotExist("bin"))
-	.DoesForEach(GetDirectories("*/obj"), EnsureDirectoryDoesNotExist)
+	.DoesForEach(["bin", "src/obj"], folder => EnsureDirectoryDoesNotExist(folder))
 	.Does(() => CleanDirectory("var", fileSystemInfo => fileSystemInfo.Path.Segments[^1] != ".gitkeep"));
 
 Task("format")
@@ -27,7 +26,7 @@ Task("publish")
 
 Task("version")
 	.Description("Updates the version number in the sources.")
-	.DoesForEach(GetFiles("*/*.csproj"), file => {
+	.DoesForEach(GetFiles("src/*.csproj"), file => {
 		var pattern = new Regex(@"<Version>\d+(\.\d+){2}</Version>");
 		WriteAllText(file.FullPath, pattern.Replace(ReadAllText(file.FullPath), $"<Version>{version}</Version>"));
 	});
