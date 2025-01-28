@@ -41,7 +41,7 @@ export class DbEngineCommand
 		# The database connection.
 		@_db = null
 
-	# Runs this command.
+	# Executes this command.
 	run: (engine) ->
 		@_db = await createConnection new URL "/information_schema", @dsn
 		schemas = if @schema then [new Schema name: @schema] else await @_db.getSchemas()

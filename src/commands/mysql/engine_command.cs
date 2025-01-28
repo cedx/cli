@@ -9,14 +9,21 @@ public class EngineCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public EngineCommand(): base("db-engine", "Alter the storage engine of MariaDB/MySQL tables.") {
-		Add(new DsnOption());
-		this.SetHandler(Run);
+		var dsnOption = new DsnOption();
+		var schemaOption = new SchemaOption();
+		var tableOption = new TableOption();
+
+		Add(dsnOption);
+		Add(schemaOption);
+		Add(tableOption);
+
+		this.SetHandler(Execute, dsnOption, schemaOption, tableOption);
 	}
 
 	/// <summary>
-	/// Runs this command.
+	/// Executes this command.
 	/// </summary>
-	private void Run() {
+	public void Execute(Uri dsn, string? schema, string[] tables) {
 
 	}
 }

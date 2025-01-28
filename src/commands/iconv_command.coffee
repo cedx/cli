@@ -40,7 +40,7 @@ export class IconvCommand
 		# The text file extensions.
 		@_textExtensions = new Set textExtensions
 
-	# Runs this command.
+	# Executes this command.
 	run: (input) ->
 		unless (await stat input).isDirectory() then await @_transcodeFile resolve input
 		else

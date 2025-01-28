@@ -6,13 +6,10 @@ import {createConnection} from "../sql/connection.js"
 
 # The usage information.
 usage = """
-Alter the character set of MariaDB/MySQL tables.
+Optimize a set of MariaDB/MySQL tables.
 
 Usage:
-	npx @cedx/cli db-charset [options] <collation>
-
-Arguments:
-	collation            The name of the new character set.
+	npx @cedx/cli db-optimize [options]
 
 Options:
 	-d, --dsn <uri>      The connection string.
@@ -21,8 +18,8 @@ Options:
 	-h, --help           Display this help.
 """
 
-# Alters the character set of MariaDB/MySQL tables.
-export class DbCharsetCommand
+# Optimizes a set of MariaDB/MySQL tables.
+export class DbOptimizeCommand
 
 	# Creates a new command.
 	constructor: (options = {}) ->
@@ -41,29 +38,26 @@ export class DbCharsetCommand
 		# The database connection.
 		@_db = null
 
-	# Runs this command.
-	run: (collation) ->
+	# Executes this command.
+	run: ->
 		@_db = await createConnection new URL "/information_schema", @dsn
 		schemas = if @schema then [new Schema name: @schema] else await @_db.getSchemas()
 		tables = await Promise.all schemas.map (schema) =>
 			if @table.length then Promise.resolve @table.map (item) -> new Table name: item, schema: schema.name
 			else @_db.getTables schema
 
-		normalizedCollation = collation.toLowerCase()
-		await @_db.query "SET foreign_key_checks = 0"
-		await @_alterTable table, collation for table from tables.flat() when table.collation.toLowerCase() isnt normalizedCollation
-		await @_db.query "SET foreign_key_checks = 1"
+		await @_optimizeTable table for table from tables.flat()
 		await @_db.end()
 
-	# Alters the specified database table.
-	_alterTable: (table, collation) ->
+	# Optimizes the specified database table.
+	_optimizeTable: (table) ->
 		qualifiedName = table.qualifiedName (identifier) => @_db.escapeId identifier
-		console.log "Processing: #{qualifiedName}"
-		await @_db.query "ALTER TABLE #{qualifiedName} CONVERT TO CHARACTER SET #{collation.split("_").at 0} COLLATE #{collation}"
+		console.log "Optimizing: #{qualifiedName}"
+		await @_db.query "OPTIMIZE TABLE #{qualifiedName}"
 
-# Alters the character set of MariaDB/MySQL tables.
+# Optimizes a set of MariaDB/MySQL tables.
 export default (args) ->
-	{positionals, values} = parseArgs allowPositionals: yes, args: args, options:
+	{values} = parseArgs args: args, options:
 		dsn: {short: "d", type: "string"}
 		help: {short: "h", type: "boolean", default: off}
 		schema: {short: "s", type: "string", default: ""}
@@ -71,7 +65,6 @@ export default (args) ->
 
 	switch
 		when values.help then return Promise.resolve console.log usage.replaceAll "\t", "  "
-		when not positionals.length then throw Error 'The required argument "collation" is missing.'
 		when not values.dsn then throw Error 'The required option "--dsn" is missing.'
 
-	new DbCharsetCommand(values).run positionals[0]
+	new DbOptimizeCommand(values).run()

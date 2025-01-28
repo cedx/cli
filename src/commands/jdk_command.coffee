@@ -38,7 +38,7 @@ export class JdkCommand
 		# The path to the output directory.
 		@output = options.output ? defaultDirectory
 
-	# Runs this command.
+	# Executes this command.
 	run: ->
 		path = await @_downloadArchive()
 		await @_extractArchive path

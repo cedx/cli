@@ -9,13 +9,13 @@ public class RemoveCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public RemoveCommand(): base("remove", "Unregister the Windows service.") {
-		this.SetHandler(Run);
+		this.SetHandler(Execute);
 	}
 
 	/// <summary>
-	/// Runs this command.
+	/// Executes this command.
 	/// </summary>
-	private void Run() {
+	public void Execute() {
 
 	}
 }

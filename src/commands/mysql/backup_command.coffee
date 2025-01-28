@@ -62,7 +62,7 @@ export class DbBackupCommand
 		# The database connection.
 		@_db = null
 
-	# Runs this command.
+	# Executes this command.
 	run: (output) ->
 		console.log 'Warning: the "JSON Lines" format does not export INVISIBLE columns.' if @format is BackupFormat.jsonLines
 		@_db = await createConnection new URL "/information_schema", @dsn

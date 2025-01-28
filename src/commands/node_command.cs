@@ -10,13 +10,13 @@ public class NodeCommand: Command {
 	/// </summary>
 	public NodeCommand(): base("node", "Download and install the latest Node.js release.") {
 		Add(new OutputOption(OperatingSystem.IsWindows() ? @"C:\Program Files\Node.js" : "/usr/local"));
-		this.SetHandler(Run);
+		this.SetHandler(Execute);
 	}
 
 	/// <summary>
-	/// Runs this command.
+	/// Executes this command.
 	/// </summary>
-	private void Run() {
+	public void Execute() {
 
 	}
 }

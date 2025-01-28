@@ -42,7 +42,7 @@ export class NodeCommand
 		# The identifiers of the applications to restart.
 		@_applications = []
 
-	# Runs this command.
+	# Executes this command.
 	run: ->
 		if resolve(@output) is dirname(execPath) then await @_detachProcess()
 		else
