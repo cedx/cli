@@ -12,11 +12,14 @@ public class MySqlCommand: Command {
 	/// </summary>
 	public MySqlCommand(): base("mysql", "TODO") {
 		AddAlias("mariadb");
-		AddGlobalOption(new DsnOption());
-		Add(new BackupCommand());
-		Add(new CharsetCommand());
-		Add(new EngineCommand());
-		Add(new OptimizeCommand());
-		Add(new RestoreCommand());
+
+		var dsnOption = new DsnOption();
+		AddGlobalOption(dsnOption);
+
+		Add(new BackupCommand(dsnOption));
+		Add(new CharsetCommand(dsnOption));
+		Add(new EngineCommand(dsnOption));
+		Add(new OptimizeCommand(dsnOption));
+		Add(new RestoreCommand(dsnOption));
 	}
 }

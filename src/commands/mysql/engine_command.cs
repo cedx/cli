@@ -8,12 +8,10 @@ public class EngineCommand: Command {
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public EngineCommand(): base("db-engine", "Alter the storage engine of MariaDB/MySQL tables.") {
-		var dsnOption = new DsnOption();
+	public EngineCommand(DsnOption dsnOption): base("db-engine", "Alter the storage engine of MariaDB/MySQL tables.") {
 		var schemaOption = new SchemaOption();
 		var tableOption = new TableOption();
 
-		Add(dsnOption);
 		Add(schemaOption);
 		Add(tableOption);
 
@@ -23,7 +21,8 @@ public class EngineCommand: Command {
 	/// <summary>
 	/// Executes this command.
 	/// </summary>
-	public void Execute(Uri dsn, string? schema, string[] tables) {
+	/// <param name="dsn">The connection string.</param>
+	private void Execute(Uri dsn, string? schema, string[] tables) {
 
 	}
 }
