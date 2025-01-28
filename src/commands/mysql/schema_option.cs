@@ -1,4 +1,4 @@
-namespace Belin.Cli.Commands;
+namespace Belin.Cli.Commands.MySql;
 
 /// <summary>
 /// Provides the name of a database schema.
