@@ -9,6 +9,7 @@ public class DsnOption: Option<Uri> {
 	/// Creates a new option.
 	/// </summary>
 	public DsnOption(): base(["-d", "--dsn"], "The connection string.") {
+		ArgumentHelpName = "uri";
 		IsRequired = true;
 	}
 }
