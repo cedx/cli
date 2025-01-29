@@ -11,11 +11,8 @@ public class MySqlCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public MySqlCommand(): base("mysql", "TODO") {
-		AddAlias("mariadb");
-
 		var dsnOption = new DsnOption();
 		AddGlobalOption(dsnOption);
-
 		Add(new BackupCommand(dsnOption));
 		Add(new CharsetCommand(dsnOption));
 		Add(new EngineCommand(dsnOption));
