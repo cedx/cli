@@ -1,5 +1,7 @@
 namespace Belin.Cli.Commands;
 
+using Belin.Diagnostics;
+using Belin.Net.Http;
 using System.Diagnostics;
 using System.IO.Compression;
 
@@ -23,14 +25,13 @@ public class JdkCommand: Command {
 	/// Executes this command.
 	/// </summary>
 	private async Task Execute(int java, DirectoryInfo output) {
-		using var httpClient = new HttpClient();
+		using var httpClient = HttpClientFactory.CreateClient();
 		var path = await DownloadArchive(httpClient, java);
 		ExtractArchive(path, output);
 
-		var startInfo = new ProcessStartInfo("bin/java", ["--version"]) { CreateNoWindow = true, RedirectStandardOutput = true, WorkingDirectory = output.FullName };
-		using var process = Process.Start(startInfo) ?? throw new Exception(@"The ""java --version"" process could not be started.");
-		Console.WriteLine(process.StandardOutput.ReadToEnd().Trim());
-		process.WaitForExit();
+		using var process = new Process() { StartInfo = { FileName = Path.Join(output.FullName, "bin/java.exe") } };
+		Console.WriteLine(process.GetVersion());
+		return 0;
 	}
 
 	/// <summary>

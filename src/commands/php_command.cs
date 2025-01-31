@@ -1,5 +1,6 @@
 namespace Belin.Cli.Commands;
 
+using Belin.Diagnostics;
 using Belin.Net.Http;
 using Microsoft.Win32;
 using System.Diagnostics;
@@ -33,10 +34,9 @@ public class PhpCommand: Command {
 		ExtractArchive(path, output);
 		RegisterEventLog(version, output);
 
-		var startInfo = new ProcessStartInfo("php", ["--version"]) { CreateNoWindow = true, RedirectStandardOutput = true, WorkingDirectory = output.FullName };
-		using var process = Process.Start(startInfo) ?? throw new Exception(@"The ""php --version"" process could not be started.");
-		Console.WriteLine(process.StandardOutput.ReadToEnd().Trim());
-		process.WaitForExit();
+		using var process = new Process() { StartInfo = { FileName = Path.Join(output.FullName, "php.exe") } };
+		Console.WriteLine(process.GetVersion());
+		return 0;
 	}
 
 	/// <summary>
