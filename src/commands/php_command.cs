@@ -1,5 +1,6 @@
 namespace Belin.Cli.Commands;
 
+using Belin.Net.Http;
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.IO.Compression;
@@ -29,11 +30,7 @@ public class PhpCommand: Command {
 	private async Task Execute(DirectoryInfo output) {
 		if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("This command only supports the Windows platform.");
 
-		using var httpClient = new HttpClient();
-		var fileVersion = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>();
-		var userAgent = $".NET/{Environment.Version} | Belin.io/{new Version(fileVersion!.Version).ToString(3)}";
-		httpClient.DefaultRequestHeaders.Add("user-agent", userAgent);
-
+		using var httpClient = HttpClientFactory.CreateClient();
 		var version = await FetchLatestVersion(httpClient);
 		var path = await DownloadArchive(httpClient, version);
 		ExtractArchive(path, output);
