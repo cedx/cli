@@ -24,6 +24,12 @@ Task("publish")
 	.IsDependentOn("default")
 	.DoesForEach(["tag", "push origin"], action => StartProcess("git", $"{action} v{version}"));
 
+Task("setup")
+	.Description("Builds the Windows installer.")
+	.WithCriteria(release, @"the ""Release"" configuration must be enabled")
+	.IsDependentOn("default")
+	.Does(() => InnoSetup("res/setup.iss"));
+
 Task("version")
 	.Description("Updates the version number in the sources.")
 	.Does(() => ReplaceInFile("res/setup.iss", @"version ""\d+(\.\d+){2}""", $"version \"{version}\""))
