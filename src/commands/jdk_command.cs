@@ -13,7 +13,7 @@ public class JdkCommand: Command {
 	/// </summary>
 	public JdkCommand(): base("jdk", "Download and install the latest OpenJDK release.") {
 		var javaOption = new Option<int>(["-j", "--java"], () => 21, "The major version of the Java development kit.") { ArgumentHelpName = "version" };
-		var outputOption = new OutputOption(new DirectoryInfo(OperatingSystem.IsWindows() ? @"C:\Program Files\OpenJDK" : "/opt/openjdk"));
+		var outputOption = new OutputOption(new DirectoryInfo(@"C:\Program Files\OpenJDK"));
 		Add(javaOption);
 		Add(outputOption);
 		this.SetHandler(Execute, javaOption.FromAmong(["21", "17", "11", "8"]), outputOption);
@@ -63,7 +63,15 @@ public class JdkCommand: Command {
 	/// <param name="output">The path to the output directory.</param>
 	private static void ExtractArchive(string path, DirectoryInfo output) {
 		Console.WriteLine($"Extracting file \"{Path.GetFileName(path)}\" into directory \"{output.FullName}\"...");
-		using var zipArchive = ZipFile.OpenRead(path);
-		zipArchive.ExtractToDirectory(output.FullName, overwriteFiles: true);
+
+		if (string.Equals(Path.GetExtension(path), ".zip", StringComparison.InvariantCultureIgnoreCase)) {
+			using var zipArchive = ZipFile.OpenRead(path);
+			zipArchive.ExtractToDirectory(output.FullName, overwriteFiles: true);
+		}
+		else {
+			var args = new[] { $"--directory={output.FullName}", "--extract", $"--file={path}", "--strip-components=1" };
+			using var process = Process.Start("tar", args) ?? throw new Exception(@"The ""tar"" process could not be started.");
+			process.WaitForExit(); // TODO ExitCode != 0 throw Exception
+		}
 	}
 }
