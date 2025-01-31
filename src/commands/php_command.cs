@@ -27,7 +27,12 @@ public class PhpCommand: Command {
 	/// Executes this command.
 	/// </summary>
 	/// <param name="output">The path to the output directory.</param>
-	private async Task Execute(DirectoryInfo output) {
+	private async Task<int> Execute(DirectoryInfo output) {
+		if (!Environment.IsPrivilegedProcess) {
+			Console.WriteLine("You must run this command in an elevated prompt.");
+			return 1;
+		}
+
 		using var httpClient = HttpClientFactory.CreateClient();
 		var version = await FetchLatestVersion(httpClient);
 		var path = await DownloadArchive(httpClient, version);

@@ -24,7 +24,12 @@ public class JdkCommand: Command {
 	/// <summary>
 	/// Executes this command.
 	/// </summary>
-	private async Task Execute(int java, DirectoryInfo output) {
+	private async Task<int> Execute(int java, DirectoryInfo output) {
+		if (!Environment.IsPrivilegedProcess) {
+			Console.WriteLine("You must run this command in an elevated prompt.");
+			return 1;
+		}
+
 		using var httpClient = HttpClientFactory.CreateClient();
 		var path = await DownloadArchive(httpClient, java);
 		ExtractArchive(path, output);
