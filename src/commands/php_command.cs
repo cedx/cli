@@ -40,7 +40,7 @@ public class PhpCommand: Command {
 		RegisterEventLog(version, output);
 
 		var startInfo = new ProcessStartInfo("php", ["--version"]) { CreateNoWindow = true, RedirectStandardOutput = true, WorkingDirectory = output.FullName };
-		using var process = Process.Start(startInfo) ?? throw new Exception(@"The ""php.exe"" process could not be started.");
+		using var process = Process.Start(startInfo) ?? throw new Exception(@"The ""php --version"" process could not be started.");
 		var stdout = process.StandardOutput.ReadToEnd().Trim();
 		await process.WaitForExitAsync();
 		Console.WriteLine(stdout);
