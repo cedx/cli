@@ -26,10 +26,8 @@ Task("publish")
 
 Task("version")
 	.Description("Updates the version number in the sources.")
-	.DoesForEach(GetFiles("src/*.csproj"), file => {
-		var pattern = new Regex(@"<Version>\d+(\.\d+){2}</Version>");
-		WriteAllText(file.FullPath, pattern.Replace(ReadAllText(file.FullPath), $"<Version>{version}</Version>"));
-	});
+	.Does(() => ReplaceInFile("res/setup.iss", @"version ""\d+(\.\d+){2}""", $"version \"{version}\""))
+	.DoesForEach(GetFiles("src/*.csproj"), file => ReplaceInFile(file, @"<Version>\d+(\.\d+){2}</Version>", $"<Version>{version}</Version>"));
 
 Task("watch")
 	.Description("Watches for file changes.")
@@ -42,3 +40,14 @@ Task("default")
 	.IsDependentOn("build");
 
 RunTarget(target);
+
+/// <summary>
+/// Replaces the specified pattern in a given file.
+/// </summary>
+/// <param name="file">The path of the file to be processed.</param>
+/// <param name="pattern">The regular expression to find.</param>
+/// <param name="replacement">The replacement text.</param>
+/// <param name="options">The regular expression options to use.</param>
+void ReplaceInFile(FilePath file, string pattern, string replacement, RegexOptions options = RegexOptions.None) {
+	WriteAllText(file.FullPath, new Regex(pattern, options).Replace(ReadAllText(file.FullPath), replacement));
+}
