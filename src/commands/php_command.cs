@@ -17,7 +17,7 @@ public class PhpCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public PhpCommand(): base("php", "Download and install the latest PHP release.") {
-		var outputOption = new OutputOption(new DirectoryInfo(OperatingSystem.IsWindows() ? @"C:\Program Files\PHP" : "/usr/local"));
+		var outputOption = new OutputOption(new DirectoryInfo(@"C:\Program Files\PHP"));
 		Add(outputOption);
 		this.SetHandler(Execute, outputOption);
 	}
@@ -26,10 +26,7 @@ public class PhpCommand: Command {
 	/// Executes this command.
 	/// </summary>
 	/// <param name="output">The path to the output directory.</param>
-	/// <exception cref="PlatformNotSupportedException">This command only supports the Windows platform.</exception>
 	private async Task Execute(DirectoryInfo output) {
-		if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("This command only supports the Windows platform.");
-
 		using var httpClient = HttpClientFactory.CreateClient();
 		var version = await FetchLatestVersion(httpClient);
 		var path = await DownloadArchive(httpClient, version);
