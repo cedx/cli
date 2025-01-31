@@ -9,14 +9,15 @@ public class JdkCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public JdkCommand(): base("jdk", "Download and install the latest OpenJDK release.") {
-		Add(new OutputOption(new DirectoryInfo(OperatingSystem.IsWindows() ? @"C:\Program Files\OpenJDK" : "/opt/openjdk")));
-		this.SetHandler(Execute);
+		var outputOption = new OutputOption(new DirectoryInfo(OperatingSystem.IsWindows() ? @"C:\Program Files\OpenJDK" : "/opt/openjdk"));
+		Add(outputOption);
+		this.SetHandler(Execute, outputOption);
 	}
 
 	/// <summary>
 	/// Executes this command.
 	/// </summary>
-	private void Execute() {
-
+	private async Task Execute(DirectoryInfo output) {
+		using var httpClient = new HttpClient();
 	}
 }
