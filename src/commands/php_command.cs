@@ -1,6 +1,7 @@
 namespace Belin.Cli.Commands;
 
 using Microsoft.Win32;
+using System.Diagnostics;
 using System.IO.Compression;
 using System.Reflection;
 using System.ServiceProcess;
@@ -16,7 +17,7 @@ public class PhpCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public PhpCommand(): base("php", "Download and install the latest PHP release.") {
-		var outputOption = new OutputOption(OperatingSystem.IsWindows() ? @"C:\Program Files\PHP" : "/usr/local");
+		var outputOption = new OutputOption(new DirectoryInfo(OperatingSystem.IsWindows() ? @"C:\Program Files\PHP" : "/usr/local"));
 		Add(outputOption);
 		this.SetHandler(Execute, outputOption);
 	}
@@ -25,19 +26,24 @@ public class PhpCommand: Command {
 	/// Executes this command.
 	/// </summary>
 	/// <exception cref="PlatformNotSupportedException">This command only supports the Windows platform.</exception>
-	private async Task Execute(string output) {
+	private async Task Execute(DirectoryInfo output) {
 		if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("This command only supports the Windows platform.");
 
+		using var httpClient = new HttpClient();
 		var fileVersion = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>();
 		var userAgent = $".NET/{Environment.Version} | Belin.io/{new Version(fileVersion!.Version).ToString(3)}";
-
-		using var httpClient = new HttpClient();
 		httpClient.DefaultRequestHeaders.Add("user-agent", userAgent);
 
 		var version = await FetchLatestVersion(httpClient);
 		var path = await DownloadArchive(httpClient, version);
 		ExtractArchive(path, output);
 		RegisterEventLog(version, output);
+
+		var startInfo = new ProcessStartInfo("php", ["--version"]) { CreateNoWindow = true, RedirectStandardOutput = true, WorkingDirectory = output.FullName };
+		using var process = Process.Start(startInfo) ?? throw new Exception(@"The ""php.exe"" process could not be started.");
+		var stdout = process.StandardOutput.ReadToEnd().Trim();
+		await process.WaitForExitAsync();
+		Console.WriteLine(stdout);
 	}
 
 	/// <summary>
@@ -46,7 +52,7 @@ public class PhpCommand: Command {
 	/// <param name="httpClient">The HTTP client.</param>
 	/// <param name="version">The version number of the PHP release to download.</param>
 	/// <returns>The path to the downloaded ZIP archive.</returns>
-	private async Task<string> DownloadArchive(HttpClient httpClient, Version version) {
+	private static async Task<string> DownloadArchive(HttpClient httpClient, Version version) {
 		var vs = version >= new Version("8.4.0") ? "vs17" : "vs16";
 		var path = Path.Join(Path.GetTempPath(), $"php-{version}-nts-Win32-{vs}-x64.zip");
 		var file = Path.GetFileName(path);
@@ -62,12 +68,14 @@ public class PhpCommand: Command {
 	/// </summary>
 	/// <param name="path">The path to the downloaded ZIP archive.</param>
 	/// <param name="output">The path to the output directory.</param>
-	private void ExtractArchive(string path, string output) {
+	private static void ExtractArchive(string path, DirectoryInfo output) {
 		using var serviceController = new ServiceController("W3SVC");
 		StopWebServer(serviceController);
-		Console.WriteLine($"Extracting file \"{Path.GetFileName(path)}\" into directory \"{Path.GetFullPath(output)}\"...");
-		// TODO ???? remove the destination directory??? Beware of customizations: php.ini, *.ps1 files, etc....
-		ZipFile.ExtractToDirectory(path, output);
+
+		Console.WriteLine($"Extracting file \"{Path.GetFileName(path)}\" into directory \"{output.FullName}\"...");
+		using var zipArchive = ZipFile.OpenRead(path);
+		zipArchive.ExtractToDirectory(output.FullName, overwriteFiles: true);
+
 		StartWebServer(serviceController);
 	}
 
@@ -76,7 +84,7 @@ public class PhpCommand: Command {
 	/// </summary>
 	/// <param name="httpClient">The HTTP client.</param>
 	/// <returns>The version number of the latest PHP release.</returns>
-	private async Task<Version> FetchLatestVersion(HttpClient httpClient) {
+	private static async Task<Version> FetchLatestVersion(HttpClient httpClient) {
 		Console.WriteLine("Fetching the list of PHP releases...");
 		using var jsonDocument = JsonDocument.Parse(await httpClient.GetStringAsync("https://www.php.net/releases/?json"));
 		return new Version(jsonDocument.RootElement.EnumerateObject().FirstOrDefault().Value.GetProperty("version").ToString());
@@ -87,10 +95,10 @@ public class PhpCommand: Command {
 	/// </summary>
 	/// <param name="version">The version number of the PHP release to register.</param>
 	/// <param name="output">The path to the output directory.</param>
-	private void RegisterEventLog(Version version, string output) {
+	private static void RegisterEventLog(Version version, DirectoryInfo output) {
 		Console.WriteLine("Registering the PHP interpreter with the event log...");
-		var key = $"HKLM\\SYSTEM\\CurrentControlSet\\Services\\Eventlog\\Application\\PHP-{version}";
-		Registry.SetValue(key, "EventMessageFile", Path.Join(output, $"php{version.Major}.dll"), RegistryValueKind.String);
+		var key = $"HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\EventLog\\Application\\PHP-{version}";
+		Registry.SetValue(key, "EventMessageFile", Path.Join(output.FullName, $"php{version.Major}.dll"), RegistryValueKind.String);
 		Registry.SetValue(key, "TypesSupported", 7, RegistryValueKind.DWord);
 	}
 
@@ -98,8 +106,9 @@ public class PhpCommand: Command {
 	/// Starts the IIS web server.
 	/// </summary>
 	/// <param name="serviceController">The service controller.</param>
-	private void StartWebServer(ServiceController serviceController) {
-		if (serviceController.Status != ServiceControllerStatus.Stopped) {
+	private static void StartWebServer(ServiceController serviceController) {
+		if (serviceController.Status == ServiceControllerStatus.Stopped) {
+			Console.WriteLine("Starting the IIS web server...");
 			serviceController.Start();
 			serviceController.WaitForStatus(ServiceControllerStatus.Running);
 		}
@@ -109,8 +118,8 @@ public class PhpCommand: Command {
 	/// Stops the IIS web server.
 	/// </summary>
 	/// <param name="serviceController">The service controller.</param>
-	private void StopWebServer(ServiceController serviceController) {
-		if (serviceController.Status != ServiceControllerStatus.Running) {
+	private static void StopWebServer(ServiceController serviceController) {
+		if (serviceController.Status == ServiceControllerStatus.Running) {
 			Console.WriteLine("Stopping the IIS web server...");
 			serviceController.Stop();
 			serviceController.WaitForStatus(ServiceControllerStatus.Stopped);
