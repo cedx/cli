@@ -4,7 +4,6 @@ using Belin.Net.Http;
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.IO.Compression;
-using System.Reflection;
 using System.ServiceProcess;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -26,6 +25,7 @@ public class PhpCommand: Command {
 	/// <summary>
 	/// Executes this command.
 	/// </summary>
+	/// <param name="output">The path to the output directory.</param>
 	/// <exception cref="PlatformNotSupportedException">This command only supports the Windows platform.</exception>
 	private async Task Execute(DirectoryInfo output) {
 		if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("This command only supports the Windows platform.");
