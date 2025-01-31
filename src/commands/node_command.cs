@@ -9,7 +9,7 @@ public class NodeCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public NodeCommand(): base("node", "Download and install the latest Node.js release.") {
-		Add(new OutputOption(OperatingSystem.IsWindows() ? @"C:\Program Files\Node.js" : "/usr/local"));
+		Add(new OutputOption(new DirectoryInfo(OperatingSystem.IsWindows() ? @"C:\Program Files\Node.js" : "/usr/local")));
 		this.SetHandler(Execute);
 	}
 
