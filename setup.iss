@@ -24,7 +24,7 @@ WizardStyle = modern
 
 [Files]
 Source: "*.md"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\*"; DestDir: "{app}\bin"; Excludes: "*.pdb"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "bin\*"; DestDir: "{app}\bin"; Excludes: "*.pdb"; Flags: ignoreversion recursesubdirs
 
 [Icons]
 Name: "{autoprograms}\{#name}"; Filename: "{app}\bin\{#executable}"
