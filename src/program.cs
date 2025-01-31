@@ -14,8 +14,8 @@ var program = new RootCommand("Command line interface of Cédric Belin, full sta
 program.SetHandler(() => {
 	var assembly = Assembly.GetExecutingAssembly();
 	var product = assembly.GetCustomAttribute<AssemblyProductAttribute>();
-	var version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-	Console.Write($"{product!.Product} {version!.InformationalVersion}");
+	var version = assembly.GetCustomAttribute<AssemblyFileVersionAttribute>();
+	Console.Write($"{product!.Product} {new Version(version!.Version).ToString(3)}");
 });
 
 // Start the application.
