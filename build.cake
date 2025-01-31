@@ -28,11 +28,11 @@ Task("setup")
 	.Description("Builds the Windows installer.")
 	.WithCriteria(release, @"the ""Release"" configuration must be enabled")
 	.IsDependentOn("default")
-	.Does(() => InnoSetup("res/setup.iss"));
+	.Does(() => InnoSetup("setup.iss"));
 
 Task("version")
 	.Description("Updates the version number in the sources.")
-	.Does(() => ReplaceInFile("res/setup.iss", @"version ""\d+(\.\d+){2}""", $"version \"{version}\""))
+	.Does(() => ReplaceInFile("setup.iss", @"version ""\d+(\.\d+){2}""", $"version \"{version}\""))
 	.DoesForEach(GetFiles("src/*.csproj"), file => ReplaceInFile(file, @"<Version>\d+(\.\d+){2}</Version>", $"<Version>{version}</Version>"));
 
 Task("watch")
