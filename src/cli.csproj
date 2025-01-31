@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Copyright>Cédric Belin. All rights reserved.</Copyright>
+		<Copyright>Cédric Belin</Copyright>
 		<Product>Belin.io Server</Product>
 		<Version>2.0.0</Version>
 	</PropertyGroup>
@@ -15,7 +15,7 @@
 		<OutDir>../bin</OutDir>
 		<OutputType>Exe</OutputType>
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net8.0-windows</TargetFramework>
 
 		<!-- TODO
 		<PackageOutputPath>var/nuget</PackageOutputPath>
@@ -31,5 +31,6 @@
 	<ItemGroup>
 	  <PackageReference Include="MySqlConnector" Version="2.*"/>
 	  <PackageReference Include="System.CommandLine" Version="2.*-*"/>
+	  <PackageReference Include="System.ServiceProcess.ServiceController" Version="9.*"/>
 	</ItemGroup>
 </Project>
