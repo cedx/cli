@@ -1,4 +1,4 @@
-using Belin.Cli.Commands;
+using Belin.Cli.CommandLine;
 
 // Configure the command line.
 var program = new RootCommand("Command line interface of Cédric Belin, full stack developer.") {

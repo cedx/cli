@@ -1,14 +1,14 @@
-namespace Belin.Cli.Commands.MySql;
+namespace Belin.Cli.CommandLine.MySql;
 
 /// <summary>
-/// Optimizes a set of MariaDB/MySQL tables.
+/// Restores a set of MariaDB/MySQL tables.
 /// </summary>
-public class OptimizeCommand: Command {
+public class RestoreCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public OptimizeCommand(DsnOption dsnOption): base("db-optimize", "Optimize a set of MariaDB/MySQL tables.") {
+	public RestoreCommand(DsnOption dsnOption): base("db-restore", "Restore a set of MariaDB/MySQL tables.") {
 		this.SetHandler(Execute, dsnOption);
 	}
 

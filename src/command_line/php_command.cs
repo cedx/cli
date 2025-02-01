@@ -1,4 +1,4 @@
-namespace Belin.Cli.Commands;
+namespace Belin.Cli.CommandLine;
 
 using Belin.Diagnostics;
 using Belin.Net.Http;

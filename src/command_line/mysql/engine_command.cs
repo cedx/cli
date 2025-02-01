@@ -1,14 +1,14 @@
-namespace Belin.Cli.Commands.MySql;
+namespace Belin.Cli.CommandLine.MySql;
 
 /// <summary>
-/// Backups a set of MariaDB/MySQL tables.
+/// Alters the storage engine of MariaDB/MySQL tables.
 /// </summary>
-public class BackupCommand: Command {
+public class EngineCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public BackupCommand(DsnOption dsnOption): base("db-backup", "Backup a set of MariaDB/MySQL tables.") {
+	public EngineCommand(DsnOption dsnOption): base("db-engine", "Alter the storage engine of MariaDB/MySQL tables.") {
 		var schemaOption = new SchemaOption();
 		var tableOption = new TableOption();
 

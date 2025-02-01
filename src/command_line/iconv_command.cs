@@ -1,4 +1,4 @@
-namespace Belin.Cli.Commands;
+namespace Belin.Cli.CommandLine;
 
 /// <summary>
 /// Converts the encoding of input files.

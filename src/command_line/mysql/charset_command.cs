@@ -1,14 +1,14 @@
-namespace Belin.Cli.Commands.MySql;
+namespace Belin.Cli.CommandLine.MySql;
 
 /// <summary>
-/// Alters the storage engine of MariaDB/MySQL tables.
+/// Alters the character set of MariaDB/MySQL tables.
 /// </summary>
-public class EngineCommand: Command {
+public class CharsetCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public EngineCommand(DsnOption dsnOption): base("db-engine", "Alter the storage engine of MariaDB/MySQL tables.") {
+	public CharsetCommand(DsnOption dsnOption): base("db-charset", "Alter the character set of MariaDB/MySQL tables.") {
 		var schemaOption = new SchemaOption();
 		var tableOption = new TableOption();
 

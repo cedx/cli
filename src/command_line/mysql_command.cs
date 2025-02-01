@@ -1,6 +1,6 @@
-namespace Belin.Cli.Commands;
+namespace Belin.Cli.CommandLine;
 
-using Belin.Cli.Commands.MySql;
+using Belin.Cli.CommandLine.MySql;
 
 /// <summary>
 /// TODO

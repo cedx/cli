@@ -1,6 +1,6 @@
-namespace Belin.Cli.Commands;
+namespace Belin.Cli.CommandLine;
 
-using Belin.Cli.Commands.Nssm;
+using Belin.Cli.CommandLine.Nssm;
 
 /// <summary>
 /// Registers a Node.js application as a Windows service.

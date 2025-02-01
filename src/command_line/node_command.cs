@@ -1,4 +1,4 @@
-namespace Belin.Cli.Commands;
+namespace Belin.Cli.CommandLine;
 
 /// <summary>
 /// Downloads and installs the latest Node.js release.
@@ -13,15 +13,16 @@ public class NodeCommand: Command {
 		var outputOption = new OutputOption(new DirectoryInfo(@"C:\Program Files\Node.js"));
 		Add(configOptions);
 		Add(outputOption);
-		this.SetHandler(Execute, configOptions, outputOption);
+		this.SetHandler(Execute, outputOption, configOptions);
 	}
 
 	/// <summary>
 	/// Executes this command.
 	/// </summary>
 	/// <param name="output">The path to the output directory.</param>
+	/// <param name="config">The path to the NSSM configuration file.</param>
 	/// <returns>The exit code.</returns>
-	private async Task<int> Execute(FileInfo config, DirectoryInfo output) {
+	private async Task<int> Execute(DirectoryInfo output, FileInfo? config) {
 		if (!Environment.IsPrivilegedProcess) {
 			Console.WriteLine("You must run this command in an elevated prompt.");
 			return 1;
