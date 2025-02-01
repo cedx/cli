@@ -18,13 +18,16 @@ public class JdkCommand: Command {
 		var outputOption = new OutputOption(new DirectoryInfo(@"C:\Program Files\OpenJDK"));
 		Add(javaOption);
 		Add(outputOption);
-		this.SetHandler(Execute, javaOption.FromAmong(["21", "17", "11", "8"]), outputOption);
+		this.SetHandler(Execute, outputOption, javaOption.FromAmong(["21", "17", "11", "8"]));
 	}
 
 	/// <summary>
 	/// Executes this command.
 	/// </summary>
-	private async Task<int> Execute(int java, DirectoryInfo output) {
+	/// <param name="output">The path to the output directory.</param>
+	/// <param name="java">The major version of the Java development kit.</param>
+	/// <returns>The exit code.</returns>
+	private async Task<int> Execute(DirectoryInfo output, int java) {
 		if (!Environment.IsPrivilegedProcess) {
 			Console.WriteLine("You must run this command in an elevated prompt.");
 			return 1;
@@ -33,8 +36,9 @@ public class JdkCommand: Command {
 		using var httpClient = HttpClientFactory.CreateClient();
 		var path = await DownloadArchive(httpClient, java);
 		ExtractArchive(path, output);
+		// TODO Strip the subfolder!!!
 
-		using var process = new Process() { StartInfo = { FileName = Path.Join(output.FullName, "bin/java.exe") } };
+		using var process = new Process() { StartInfo = { FileName = Path.Join(output.FullName, @"bin\java.exe") } };
 		Console.WriteLine(process.GetVersion());
 		return 0;
 	}
@@ -56,11 +60,12 @@ public class JdkCommand: Command {
 	}
 
 	/// <summary>
-	/// Extracts the TAR/ZIP archive located at the specified path.
+	/// Extracts the ZIP archive located at the specified path.
 	/// </summary>
-	/// <param name="path">The path to the downloaded TAR/ZIP archive.</param>
+	/// <param name="path">The path to the downloaded ZIP archive.</param>
 	/// <param name="output">The path to the output directory.</param>
 	private static void ExtractArchive(string path, DirectoryInfo output) {
+		// TODO Extract this method in an extension class!
 		Console.WriteLine($"Extracting file \"{Path.GetFileName(path)}\" into directory \"{output.FullName}\"...");
 		using var zipArchive = ZipFile.OpenRead(path);
 		zipArchive.ExtractToDirectory(output.FullName, overwriteFiles: true);

@@ -27,6 +27,7 @@ public class PhpCommand: Command {
 	/// Executes this command.
 	/// </summary>
 	/// <param name="output">The path to the output directory.</param>
+	/// <returns>The exit code.</returns>
 	private async Task<int> Execute(DirectoryInfo output) {
 		if (!Environment.IsPrivilegedProcess) {
 			Console.WriteLine("You must run this command in an elevated prompt.");
@@ -70,6 +71,7 @@ public class PhpCommand: Command {
 		using var serviceController = new ServiceController("W3SVC");
 		StopWebServer(serviceController);
 
+		// TODO Extract this method in an extension class!
 		Console.WriteLine($"Extracting file \"{Path.GetFileName(path)}\" into directory \"{output.FullName}\"...");
 		using var zipArchive = ZipFile.OpenRead(path);
 		zipArchive.ExtractToDirectory(output.FullName, overwriteFiles: true);
