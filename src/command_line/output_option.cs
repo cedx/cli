@@ -1,4 +1,4 @@
-namespace Belin.Cli.Commands;
+namespace Belin.Cli.CommandLine;
 
 /// <summary>
 /// Provides the path to an output directory.

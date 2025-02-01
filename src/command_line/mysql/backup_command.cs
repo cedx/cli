@@ -1,14 +1,14 @@
-namespace Belin.Cli.Commands.MySql;
+namespace Belin.Cli.CommandLine.MySql;
 
 /// <summary>
-/// Alters the character set of MariaDB/MySQL tables.
+/// Backups a set of MariaDB/MySQL tables.
 /// </summary>
-public class CharsetCommand: Command {
+public class BackupCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public CharsetCommand(DsnOption dsnOption): base("db-charset", "Alter the character set of MariaDB/MySQL tables.") {
+	public BackupCommand(DsnOption dsnOption): base("db-backup", "Backup a set of MariaDB/MySQL tables.") {
 		var schemaOption = new SchemaOption();
 		var tableOption = new TableOption();
 

@@ -1,4 +1,4 @@
-namespace Belin.Cli.Commands.Nssm;
+namespace Belin.Cli.CommandLine.Nssm;
 
 /// <summary>
 ///
