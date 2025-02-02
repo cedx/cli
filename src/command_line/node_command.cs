@@ -23,10 +23,7 @@ public class NodeCommand: Command {
 	/// <param name="config">The path to the NSSM configuration file.</param>
 	/// <returns>The exit code.</returns>
 	private async Task<int> Execute(DirectoryInfo output, FileInfo? config) {
-		if (!Environment.IsPrivilegedProcess) {
-			Console.WriteLine("You must run this command in an elevated prompt.");
-			return 1;
-		}
+		if (!this.CheckPrivilege(output)) return 1;
 
 		return await Task.FromResult(0);
 	}

@@ -10,6 +10,18 @@ using System.Reflection;
 public static class Extensions {
 
 	/// <summary>
+	/// Checks whether this command should be executed in an elevated prompt.
+	/// </summary>
+	/// <param name="_">The current command.</param>
+	/// <param name="output">The path to the output directory.</param>
+	/// <returns><see langword="true"/> if this command should be executed in an elevated prompt, otherwise <see langword="false"/>.</returns>
+	public static bool CheckPrivilege(this Command _, DirectoryInfo output) {
+		var isPrivileged = Environment.IsPrivilegedProcess;
+		if (!isPrivileged) Console.WriteLine("You must run this command in an elevated prompt.");
+		return isPrivileged;
+	}
+
+	/// <summary>
 	/// Creates a new HTTP client.
 	/// </summary>
 	/// <param name="_">The current command.</param>
@@ -35,7 +47,7 @@ public static class Extensions {
 	}
 
 	/// <summary>
-	/// Runs the specified executable with the `--version` argument.
+	/// Runs the specified executable with the <c>--version</c> argument.
 	/// </summary>
 	/// <param name="_">The current command.</param>
 	/// <param name="output">The path to the output directory.</param>

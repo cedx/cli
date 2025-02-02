@@ -25,10 +25,7 @@ public class PhpCommand: Command {
 	/// <param name="output">The path to the output directory.</param>
 	/// <returns>The exit code.</returns>
 	private async Task<int> Execute(DirectoryInfo output) {
-		if (!Environment.IsPrivilegedProcess) {
-			Console.WriteLine("You must run this command in an elevated prompt.");
-			return 1;
-		}
+		if (!this.CheckPrivilege(output)) return 1;
 
 		using var httpClient = this.CreateHttpClient();
 		using var serviceController = new ServiceController("W3SVC");
