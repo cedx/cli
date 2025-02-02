@@ -9,7 +9,7 @@ public class InstallCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public InstallCommand(): base("install", "Register the Windows service.") {
-		var workingDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
+		var workingDirectory = new DirectoryInfo(Environment.CurrentDirectory);
 		Add(new Argument<DirectoryInfo>("directory", () => workingDirectory, "The path to the root directory of the Node.js application."));
 		this.SetHandler(Execute);
 	}
@@ -20,6 +20,22 @@ public class InstallCommand: Command {
 	/// <returns>The exit code.</returns>
 	private async Task<int> Execute() {
 		if (!this.CheckPrivilege()) return 1;
+
+
+
 		return await Task.FromResult(0);
+	}
+
+	/// <summary>
+	/// TODO
+	/// </summary>
+	/// <param name="command"></param>
+	/// <returns></returns>
+	private static FileInfo GetPathFromEnvironment(string command) {
+		return Environment.GetEnvironmentVariable("Path")!
+			.Split(";")
+			.Where(path => !string.IsNullOrWhiteSpace(path))
+			.Select(path => new FileInfo(Path.Join(path.Trim(), command)))
+			.First(file => file.Exists);
 	}
 }
