@@ -1,4 +1,4 @@
-namespace Belin.Cli.CommandLine;
+namespace Belin.Cli.CommandLine.Setup;
 
 /// <summary>
 /// Downloads and installs the latest Node.js release.

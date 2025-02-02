@@ -1,4 +1,4 @@
-namespace Belin.Cli.CommandLine;
+namespace Belin.Cli.CommandLine.Setup;
 
 using Microsoft.Win32;
 using System.Net.Http.Json;
