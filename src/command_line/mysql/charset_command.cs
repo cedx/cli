@@ -8,13 +8,11 @@ public class CharsetCommand: Command {
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public CharsetCommand(DsnOption dsnOption): base("db-charset", "Alter the character set of MariaDB/MySQL tables.") {
+	public CharsetCommand(DsnOption dsnOption): base("charset", "Alter the character set of MariaDB/MySQL tables.") {
 		var schemaOption = new SchemaOption();
-		var tableOption = new TableOption();
-
 		Add(schemaOption);
+		var tableOption = new TableOption();
 		Add(tableOption);
-
 		this.SetHandler(Execute, dsnOption, schemaOption, tableOption);
 	}
 

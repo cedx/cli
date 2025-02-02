@@ -8,7 +8,7 @@ public class OptimizeCommand: Command {
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public OptimizeCommand(DsnOption dsnOption): base("db-optimize", "Optimize a set of MariaDB/MySQL tables.") {
+	public OptimizeCommand(DsnOption dsnOption): base("optimize", "Optimize a set of MariaDB/MySQL tables.") {
 		this.SetHandler(Execute, dsnOption);
 	}
 
