@@ -29,7 +29,7 @@ public class RemoveCommand: Command {
 	/// <param name="directory">The path to the root directory of the Node.js application.</param>
 	/// <returns>The exit code.</returns>
 	/// <exception cref="Exception">An error occurred when starting the NSSM program.</exception>
-	private Task<int> Execute(DirectoryInfo directory) {
+	public Task<int> Execute(DirectoryInfo directory) {
 		if (!this.CheckPrivilege()) return Task.FromResult(1);
 
 		var config = ApplicationConfiguration.ReadFromDirectory(directory);

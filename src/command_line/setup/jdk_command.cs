@@ -22,7 +22,7 @@ public class JdkCommand: Command {
 	/// <param name="output">The path to the output directory.</param>
 	/// <param name="java">The major version of the Java development kit.</param>
 	/// <returns>The exit code.</returns>
-	private async Task<int> Execute(DirectoryInfo output, int java) {
+	public async Task<int> Execute(DirectoryInfo output, int java) {
 		if (!this.CheckPrivilege(output)) return 1;
 
 		using var httpClient = this.CreateHttpClient();

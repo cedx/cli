@@ -18,7 +18,7 @@ public class InstallCommand: Command {
 	/// Executes this command.
 	/// </summary>
 	/// <returns>The exit code.</returns>
-	private async Task<int> Execute() {
+	public async Task<int> Execute() {
 		if (!this.CheckPrivilege()) return 1;
 
 
