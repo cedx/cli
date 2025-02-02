@@ -23,10 +23,7 @@ public class JdkCommand: Command {
 	/// <param name="java">The major version of the Java development kit.</param>
 	/// <returns>The exit code.</returns>
 	private async Task<int> Execute(DirectoryInfo output, int java) {
-		if (!Environment.IsPrivilegedProcess) {
-			Console.WriteLine("You must run this command in an elevated prompt.");
-			return 1;
-		}
+		if (!this.CheckPrivilege(output)) return 1;
 
 		using var httpClient = this.CreateHttpClient();
 		this.ExtractZipFile(await DownloadArchive(httpClient, java), output); // TODO Strip the subfolder!!!
