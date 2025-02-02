@@ -8,7 +8,7 @@ public class RestoreCommand: Command {
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public RestoreCommand(DsnOption dsnOption): base("db-restore", "Restore a set of MariaDB/MySQL tables.") {
+	public RestoreCommand(DsnOption dsnOption): base("restore", "Restore a set of MariaDB/MySQL tables.") {
 		this.SetHandler(Execute, dsnOption);
 	}
 

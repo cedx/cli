@@ -5,7 +5,7 @@ using System.IO.Compression;
 using System.Reflection;
 
 /// <summary>
-/// Provides extension method for the <see cref="Command"/> class.
+/// Provides extension methods for commands.
 /// </summary>
 public static class Extensions {
 
@@ -15,7 +15,7 @@ public static class Extensions {
 	/// <param name="_">The current command.</param>
 	/// <param name="output">The path to the output directory.</param>
 	/// <returns><see langword="true"/> if this command should be executed in an elevated prompt, otherwise <see langword="false"/>.</returns>
-	public static bool CheckPrivilege(this Command _, DirectoryInfo output) {
+	public static bool CheckPrivilege(this Command _, DirectoryInfo? output = null) {
 		var isPrivileged = Environment.IsPrivilegedProcess;
 		if (!isPrivileged) Console.WriteLine("You must run this command in an elevated prompt.");
 		return isPrivileged;
