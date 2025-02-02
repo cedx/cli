@@ -30,8 +30,12 @@ public class PhpCommand: Command {
 		using var httpClient = this.CreateHttpClient();
 		using var serviceController = new ServiceController("W3SVC");
 		var version = await FetchLatestVersion(httpClient);
-		var path = await DownloadArchive(httpClient, version);
+		if (version == null) {
+			Console.WriteLine("Unable to fetch the list of PHP releases.");
+			return 2;
+		}
 
+		var path = await DownloadArchive(httpClient, version);
 		StopWebServer(serviceController);
 		this.ExtractZipFile(path, output);
 		StartWebServer(serviceController);
@@ -62,13 +66,12 @@ public class PhpCommand: Command {
 	/// Fetches the latest version number of the PHP releases.
 	/// </summary>
 	/// <param name="httpClient">The HTTP client.</param>
-	/// <returns>The version number of the latest PHP release.</returns>
-	/// <exception cref="Exception">The latest PHP version number could not be fetched.</exception>
-	private static async Task<Version> FetchLatestVersion(HttpClient httpClient) {
+	/// <returns>The version number of the latest PHP release, or <see langword="null"/> if not found.</returns>
+	private static async Task<Version?> FetchLatestVersion(HttpClient httpClient) {
 		Console.WriteLine("Fetching the list of PHP releases...");
-		var phpReleases = await httpClient.GetFromJsonAsync<Dictionary<string, PhpRelease>>("https://www.php.net/releases/?json")
-			?? throw new Exception("Unable to fetch the list of PHP releases.");
-		return new Version(phpReleases.First().Value.Version);
+		var phpReleases = await httpClient.GetFromJsonAsync<Dictionary<string, PhpRelease>>("https://www.php.net/releases/?json");
+		var latestRelease = phpReleases?.FirstOrDefault().Value;
+		return latestRelease != null ? new Version(latestRelease.Version) : null;
 	}
 
 	/// <summary>

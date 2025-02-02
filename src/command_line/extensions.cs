@@ -64,6 +64,7 @@ public static class Extensions {
 			RedirectStandardOutput = true
 		};
 
+		// TODO remove exceptions and use nullables instead.
 		using var process = Process.Start(startInfo) ?? throw new Exception($"The \"{executable}\" process could not be started.");
 		var standardOutput = process.StandardOutput.ReadToEnd().Trim();
 		process.WaitForExit();

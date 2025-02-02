@@ -28,20 +28,28 @@ public class RemoveCommand: Command {
 	/// </summary>
 	/// <param name="directory">The path to the root directory of the Node.js application.</param>
 	/// <returns>The exit code.</returns>
-	/// <exception cref="Exception">An error occurred when starting the NSSM program.</exception>
-	public Task<int> Execute(DirectoryInfo directory) {
-		if (!this.CheckPrivilege()) return Task.FromResult(1);
+	public async Task<int> Execute(DirectoryInfo directory) {
+		if (!this.CheckPrivilege()) return 1;
 
 		var config = ApplicationConfiguration.ReadFromDirectory(directory);
+		if (config == null) {
+			Console.WriteLine("Unable to locate the application configuration file.");
+			return 2;
+		}
+
 		using var serviceController = new ServiceController(config.Id);
 		if (serviceController.Status == ServiceControllerStatus.Running) {
 			serviceController.Stop();
 			serviceController.WaitForStatus(ServiceControllerStatus.Stopped);
 		}
 
-		using var process = Process.Start("nssm.exe", ["remove", config.Id, "confirm"])
-			?? throw new Exception(@"The ""nssm.exe"" program could not be started.");
-		process.WaitForExit();
-		return Task.FromResult(process.ExitCode);
+		using var process = Process.Start("nssm.exe", ["remove", config.Id, "confirm"]);
+		if (process != null) await process.WaitForExitAsync();
+		else {
+			Console.WriteLine(@"The ""nssm.exe"" program could not be started.");
+			return 3;
+		}
+
+		return process.ExitCode;
 	}
 }
