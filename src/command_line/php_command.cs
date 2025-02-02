@@ -1,10 +1,6 @@
 namespace Belin.Cli.CommandLine;
 
-using Belin.Diagnostics;
-using Belin.Net.Http;
 using Microsoft.Win32;
-using System.Diagnostics;
-using System.IO.Compression;
 using System.ServiceProcess;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -34,14 +30,17 @@ public class PhpCommand: Command {
 			return 1;
 		}
 
-		using var httpClient = HttpClientFactory.CreateClient();
+		using var httpClient = this.CreateHttpClient();
+		using var serviceController = new ServiceController("W3SVC");
 		var version = await FetchLatestVersion(httpClient);
 		var path = await DownloadArchive(httpClient, version);
-		ExtractArchive(path, output);
+
+		StopWebServer(serviceController);
+		this.ExtractZipFile(path, output);
+		StartWebServer(serviceController);
 		RegisterEventLog(version, output);
 
-		using var process = new Process() { StartInfo = { FileName = Path.Join(output.FullName, "php.exe") } };
-		Console.WriteLine(process.GetVersion());
+		Console.WriteLine(this.GetExecutableVersion(output, "php.exe"));
 		return 0;
 	}
 
@@ -51,7 +50,7 @@ public class PhpCommand: Command {
 	/// <param name="httpClient">The HTTP client.</param>
 	/// <param name="version">The version number of the PHP release to download.</param>
 	/// <returns>The path to the downloaded ZIP archive.</returns>
-	private static async Task<string> DownloadArchive(HttpClient httpClient, Version version) {
+	private static async Task<FileInfo> DownloadArchive(HttpClient httpClient, Version version) {
 		var vs = version >= new Version("8.4.0") ? "vs17" : "vs16";
 		var path = Path.Join(Path.GetTempPath(), $"php-{version}-nts-Win32-{vs}-x64.zip");
 		var file = Path.GetFileName(path);
@@ -59,24 +58,7 @@ public class PhpCommand: Command {
 		Console.WriteLine($"Downloading file \"{file}\"...");
 		var bytes = await httpClient.GetByteArrayAsync($"https://windows.php.net/downloads/releases/{file}");
 		File.WriteAllBytes(path, bytes);
-		return path;
-	}
-
-	/// <summary>
-	/// Extracts the ZIP archive located at the specified path.
-	/// </summary>
-	/// <param name="path">The path to the downloaded ZIP archive.</param>
-	/// <param name="output">The path to the output directory.</param>
-	private static void ExtractArchive(string path, DirectoryInfo output) {
-		using var serviceController = new ServiceController("W3SVC");
-		StopWebServer(serviceController);
-
-		// TODO Extract this method in an extension class!
-		Console.WriteLine($"Extracting file \"{Path.GetFileName(path)}\" into directory \"{output.FullName}\"...");
-		using var zipArchive = ZipFile.OpenRead(path);
-		zipArchive.ExtractToDirectory(output.FullName, overwriteFiles: true);
-
-		StartWebServer(serviceController);
+		return new FileInfo(path);
 	}
 
 	/// <summary>
