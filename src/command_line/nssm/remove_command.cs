@@ -12,8 +12,13 @@ public class RemoveCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public RemoveCommand(): base("remove", "Unregister the Windows service.") {
-		var workingDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
-		var directoryArgument = new Argument<DirectoryInfo>("directory", () => workingDirectory, "The path to the root directory of the Node.js application.");
+		var workingDirectory = new DirectoryInfo(Environment.CurrentDirectory);
+		var directoryArgument = new Argument<DirectoryInfo>(
+			name: "directory",
+			description: "The path to the root directory of the Node.js application.",
+			getDefaultValue: () => workingDirectory
+		);
+
 		Add(directoryArgument);
 		this.SetHandler(Execute, directoryArgument);
 	}
@@ -27,14 +32,15 @@ public class RemoveCommand: Command {
 	private Task<int> Execute(DirectoryInfo directory) {
 		if (!this.CheckPrivilege()) return Task.FromResult(1);
 
-		var config = this.ReadConfiguration(directory);
+		var config = ApplicationConfiguration.ReadFromDirectory(directory);
 		using var serviceController = new ServiceController(config.Id);
 		if (serviceController.Status == ServiceControllerStatus.Running) {
 			serviceController.Stop();
 			serviceController.WaitForStatus(ServiceControllerStatus.Stopped);
 		}
 
-		using var process = Process.Start("nssm.exe", ["remove", config.Id, "confirm"]) ?? throw new Exception(@"The ""nssm.exe"" program could not be started.");
+		using var process = Process.Start("nssm.exe", ["remove", config.Id, "confirm"])
+			?? throw new Exception(@"The ""nssm.exe"" program could not be started.");
 		process.WaitForExit();
 		return Task.FromResult(process.ExitCode);
 	}
