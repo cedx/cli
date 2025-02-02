@@ -10,8 +10,9 @@ public class JdkCommand: Command {
 	/// </summary>
 	public JdkCommand(): base("jdk", "Set up the latest OpenJDK release.") {
 		var javaOption = new Option<int>(["-j", "--java"], () => 21, "The major version of the Java development kit.") { ArgumentHelpName = "version" };
-		Add(javaOption);
 		var outputOption = new OutputOption(new DirectoryInfo(@"C:\Program Files\OpenJDK"));
+
+		Add(javaOption);
 		Add(outputOption);
 		this.SetHandler(Execute, outputOption, javaOption.FromAmong(["21", "17", "11", "8"]));
 	}

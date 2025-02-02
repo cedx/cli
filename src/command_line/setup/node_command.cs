@@ -10,8 +10,9 @@ public class NodeCommand: Command {
 	/// </summary>
 	public NodeCommand(): base("node", "Set up the latest Node.js release.") {
 		var configOption = new Option<FileInfo>(["-c", "--config"], "The path to the NSSM configuration file.");
-		Add(configOption);
 		var outputOption = new OutputOption(new DirectoryInfo(@"C:\Program Files\Node.js"));
+
+		Add(configOption);
 		Add(outputOption);
 		this.SetHandler(Execute, outputOption, configOption);
 	}

@@ -10,8 +10,9 @@ public class BackupCommand: Command {
 	/// </summary>
 	public BackupCommand(DsnOption dsnOption): base("backup", "Backup a set of MariaDB/MySQL tables.") {
 		var schemaOption = new SchemaOption();
-		Add(schemaOption);
 		var tableOption = new TableOption();
+
+		Add(schemaOption);
 		Add(tableOption);
 		this.SetHandler(Execute, dsnOption, schemaOption, tableOption);
 	}
