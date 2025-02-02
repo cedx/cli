@@ -13,7 +13,7 @@ public class PhpCommand: Command {
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public PhpCommand(): base("php", "Download and install the latest PHP release.") {
+	public PhpCommand(): base("php", "Set up the latest PHP release.") {
 		var outputOption = new OutputOption(new DirectoryInfo(@"C:\Program Files\PHP"));
 		Add(outputOption);
 		this.SetHandler(Execute, outputOption);

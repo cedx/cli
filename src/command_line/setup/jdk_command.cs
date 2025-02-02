@@ -8,7 +8,7 @@ public class JdkCommand: Command {
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public JdkCommand(): base("jdk", "Download and install the latest OpenJDK release.") {
+	public JdkCommand(): base("jdk", "Set up the latest OpenJDK release.") {
 		var javaOption = new Option<int>(["-j", "--java"], () => 21, "The major version of the Java development kit.") { ArgumentHelpName = "version" };
 		Add(javaOption);
 		var outputOption = new OutputOption(new DirectoryInfo(@"C:\Program Files\OpenJDK"));
