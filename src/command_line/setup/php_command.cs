@@ -3,7 +3,6 @@ namespace Belin.Cli.CommandLine.Setup;
 using Microsoft.Win32;
 using System.Net.Http.Json;
 using System.ServiceProcess;
-using System.Threading.Tasks;
 
 /// <summary>
 /// Downloads and installs the latest PHP release.
