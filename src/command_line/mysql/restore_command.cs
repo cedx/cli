@@ -16,7 +16,8 @@ public class RestoreCommand: Command {
 	/// Executes this command.
 	/// </summary>
 	/// <param name="dsn">The connection string.</param>
-	private void Execute(Uri dsn) {
-
+	/// <returns>The exit code.</returns>
+	public async Task<int> Execute(Uri dsn) {
+		return await Task.FromResult(0);
 	}
 }
