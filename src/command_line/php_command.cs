@@ -1,8 +1,8 @@
 namespace Belin.Cli.CommandLine;
 
 using Microsoft.Win32;
+using System.Net.Http.Json;
 using System.ServiceProcess;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 /// <summary>
@@ -63,10 +63,12 @@ public class PhpCommand: Command {
 	/// </summary>
 	/// <param name="httpClient">The HTTP client.</param>
 	/// <returns>The version number of the latest PHP release.</returns>
+	/// <exception cref="Exception">The latest PHP version number could not be fetched.</exception>
 	private static async Task<Version> FetchLatestVersion(HttpClient httpClient) {
 		Console.WriteLine("Fetching the list of PHP releases...");
-		using var jsonDocument = JsonDocument.Parse(await httpClient.GetStringAsync("https://www.php.net/releases/?json"));
-		return new Version(jsonDocument.RootElement.EnumerateObject().FirstOrDefault().Value.GetProperty("version").ToString());
+		var phpReleases = await httpClient.GetFromJsonAsync<Dictionary<string, PhpRelease>>("https://www.php.net/releases/?json")
+			?? throw new Exception("Unable to fetch the list of PHP releases.");
+		return new Version(phpReleases.First().Value.Version);
 	}
 
 	/// <summary>
@@ -104,4 +106,15 @@ public class PhpCommand: Command {
 			serviceController.WaitForStatus(ServiceControllerStatus.Stopped);
 		}
 	}
+}
+
+/// <summary>
+/// Represents a PHP release.
+/// </summary>
+internal class PhpRelease {
+
+	/// <summary>
+	/// The version number.
+	/// </summary>
+	public string Version { get; set; } = string.Empty;
 }
