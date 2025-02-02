@@ -28,7 +28,6 @@ public class PhpCommand: Command {
 		if (!this.CheckPrivilege()) return 1;
 
 		using var httpClient = this.CreateHttpClient();
-		using var serviceController = new ServiceController("W3SVC");
 		var version = await FetchLatestVersion(httpClient);
 		if (version == null) {
 			Console.WriteLine("Unable to fetch the list of PHP releases.");
@@ -36,6 +35,7 @@ public class PhpCommand: Command {
 		}
 
 		var path = await DownloadArchive(httpClient, version);
+		using var serviceController = new ServiceController("W3SVC");
 		StopWebServer(serviceController);
 		this.ExtractZipFile(path, output);
 		StartWebServer(serviceController);
