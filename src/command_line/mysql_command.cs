@@ -3,14 +3,14 @@ namespace Belin.Cli.CommandLine;
 using Belin.Cli.CommandLine.MySql;
 
 /// <summary>
-/// TODO
+/// Manages MariaDB/MySQL databases.
 /// </summary>
 public class MySqlCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public MySqlCommand(): base("mysql", "TODO") {
+	public MySqlCommand(): base("mysql", "Manage MariaDB/MySQL databases.") {
 		var dsnOption = new DsnOption();
 		AddGlobalOption(dsnOption);
 		Add(new BackupCommand(dsnOption));
