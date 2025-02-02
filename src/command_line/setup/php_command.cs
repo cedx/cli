@@ -24,7 +24,7 @@ public class PhpCommand: Command {
 	/// </summary>
 	/// <param name="output">The path to the output directory.</param>
 	/// <returns>The exit code.</returns>
-	private async Task<int> Execute(DirectoryInfo output) {
+	public async Task<int> Execute(DirectoryInfo output) {
 		if (!this.CheckPrivilege(output)) return 1;
 
 		using var httpClient = this.CreateHttpClient();
