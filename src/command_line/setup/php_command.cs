@@ -69,8 +69,8 @@ public class PhpCommand: Command {
 	/// <returns>The version number of the latest PHP release, or <see langword="null"/> if not found.</returns>
 	private static async Task<Version?> FetchLatestVersion(HttpClient httpClient) {
 		Console.WriteLine("Fetching the list of PHP releases...");
-		var phpReleases = await httpClient.GetFromJsonAsync<Dictionary<string, PhpRelease>>("https://www.php.net/releases/?json");
-		var latestRelease = phpReleases?.FirstOrDefault().Value;
+		var releases = await httpClient.GetFromJsonAsync<Dictionary<string, PhpRelease>>("https://www.php.net/releases/?json");
+		var latestRelease = releases?.FirstOrDefault().Value;
 		return latestRelease != null ? new Version(latestRelease.Version) : null;
 	}
 

@@ -1,9 +1,18 @@
 namespace Belin.Cli.CommandLine.Setup;
 
+using System.Net.Http.Json;
+using System.ServiceProcess;
+using System.Text.Json;
+
 /// <summary>
 /// Downloads and installs the latest Node.js release.
 /// </summary>
 public class NodeCommand: Command {
+
+	/// <summary>
+	/// The identifiers of the NSSM services to restart.
+	/// </summary>
+	private readonly List<string> services = [];
 
 	/// <summary>
 	/// Creates a new command.
@@ -24,8 +33,103 @@ public class NodeCommand: Command {
 	/// <param name="config">The path to the NSSM configuration file.</param>
 	/// <returns>The exit code.</returns>
 	public async Task<int> Execute(DirectoryInfo output, FileInfo? config) {
-		if (!this.CheckPrivilege(output)) return 1;
+		if (config != null) {
+			services.Clear();
+			if (!config.Exists) {
+				Console.WriteLine("Unable to locate the specified configuration file.");
+				return 1;
+			}
 
-		return await Task.FromResult(0);
+			var map = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(File.ReadAllText(config.FullName));
+			if (map?.TryGetValue(Environment.MachineName, out var ids) ?? false) services.AddRange(ids);
+			else {
+				Console.WriteLine("Unable to parse the specified configuration file.");
+				return 2;
+			}
+		}
+
+		if (!this.CheckPrivilege(services.Count > 0 ? null : output)) return 3;
+
+		using var httpClient = this.CreateHttpClient();
+		var version = await FetchLatestVersion(httpClient);
+		if (version == null) {
+			Console.WriteLine("Unable to fetch the list of Node.js releases.");
+			return 4;
+		}
+
+		var path = await DownloadArchive(httpClient, version);
+		StartServices();
+		this.ExtractZipFile(path, output, strip: 1);
+		StopServices();
+
+		Console.WriteLine(this.GetExecutableVersion(output, "node.exe"));
+		return 0;
 	}
+
+	/// <summary>
+	/// Downloads the PHP release corresponding to the specified version.
+	/// </summary>
+	/// <param name="httpClient">The HTTP client.</param>
+	/// <param name="version">The version number of the PHP release to download.</param>
+	/// <returns>The path to the downloaded ZIP archive.</returns>
+	private static async Task<FileInfo> DownloadArchive(HttpClient httpClient, Version version) {
+		var file = $"node-v{version}-win-x64.zip";
+		Console.WriteLine($"Downloading file \"{file}\"...");
+
+		var bytes = await httpClient.GetByteArrayAsync($"https://nodejs.org/dist/v{version}/{file}");
+		var path = Path.Join(Path.GetTempPath(), file);
+		File.WriteAllBytes(path, bytes);
+		return new FileInfo(path);
+	}
+
+	/// <summary>
+	/// Fetches the latest version number of the Node.js releases.
+	/// </summary>
+	/// <param name="httpClient">The HTTP client.</param>
+	/// <returns>The version number of the latest Node.js release, or <see langword="null"/> if not found.</returns>
+	private static async Task<Version?> FetchLatestVersion(HttpClient httpClient) {
+		Console.WriteLine("Fetching the list of Node.js releases...");
+		var releases = await httpClient.GetFromJsonAsync<List<NodeRelease>>("https://nodejs.org/dist/index.json");
+		var latestRelease = releases?.FirstOrDefault();
+		return latestRelease != null ? new Version(latestRelease.Version[1..]) : null;
+	}
+
+	/// <summary>
+	/// Starts all hosted NSSM services
+	/// </summary>
+	private void StartServices() {
+		if (services.Count > 0) Console.WriteLine("Starting the NSSM services...");
+		foreach (var service in services) {
+			using var serviceController = new ServiceController(service);
+			if (serviceController.Status == ServiceControllerStatus.Stopped) {
+				serviceController.Start();
+				serviceController.WaitForStatus(ServiceControllerStatus.Running);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Stops all hosted NSSM services.
+	/// </summary>
+	private void StopServices() {
+		if (services.Count > 0) Console.WriteLine("Stopping the NSSM services...");
+		foreach (var service in services) {
+			using var serviceController = new ServiceController(service);
+			if (serviceController.Status == ServiceControllerStatus.Running) {
+				serviceController.Stop();
+				serviceController.WaitForStatus(ServiceControllerStatus.Stopped);
+			}
+		}
+	}
+}
+
+/// <summary>
+/// Represents a Node.js release.
+/// </summary>
+internal class NodeRelease {
+
+	/// <summary>
+	/// The version number.
+	/// </summary>
+	public string Version { get; set; } = string.Empty;
 }
