@@ -33,17 +33,12 @@ public class NodeCommand: Command {
 	/// <param name="config">The path to the NSSM configuration file.</param>
 	/// <returns>The exit code.</returns>
 	public async Task<int> Execute(DirectoryInfo output, FileInfo? config) {
+		services.Clear();
 		if (config != null) {
-			services.Clear();
-			if (!config.Exists) {
-				Console.WriteLine("Unable to locate the specified configuration file.");
-				return 1;
-			}
-
-			var map = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(File.ReadAllText(config.FullName));
-			if (map?.TryGetValue(Environment.MachineName, out var ids) ?? false) services.AddRange(ids);
+			var serviceIds = ReadNssmConfiguration(config);
+			if (serviceIds != null) services.AddRange(serviceIds);
 			else {
-				Console.WriteLine("Unable to parse the specified configuration file.");
+				Console.WriteLine("Unable to locate or parse the specified configuration file.");
 				return 2;
 			}
 		}
@@ -58,9 +53,9 @@ public class NodeCommand: Command {
 		}
 
 		var path = await DownloadArchive(httpClient, version);
-		StartServices();
-		this.ExtractZipFile(path, output, strip: 1);
 		StopServices();
+		this.ExtractZipFile(path, output, strip: 1);
+		StartServices();
 
 		Console.WriteLine(this.GetExecutableVersion(output, "node.exe"));
 		return 0;
@@ -92,6 +87,17 @@ public class NodeCommand: Command {
 		var releases = await httpClient.GetFromJsonAsync<List<NodeRelease>>("https://nodejs.org/dist/index.json");
 		var latestRelease = releases?.FirstOrDefault();
 		return latestRelease != null ? new Version(latestRelease.Version[1..]) : null;
+	}
+
+	/// <summary>
+	/// Reads the NSSM configuration file located at the specified path.
+	/// </summary>
+	/// <param name="file">The path to the NSSM configuration file.</param>
+	/// <returns>The list of parsed service identifiers or <see langword="null"/> if an error occurred.</returns>
+	private static List<string>? ReadNssmConfiguration(FileInfo file) {
+		if (!file.Exists) return null;
+		var map = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(File.ReadAllText(file.FullName));
+		return (map?.TryGetValue(Environment.MachineName, out var serviceIds) ?? false) ? serviceIds : null;
 	}
 
 	/// <summary>
