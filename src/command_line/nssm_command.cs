@@ -13,13 +13,5 @@ public class NssmCommand: Command {
 	public NssmCommand(): base("nssm", "Register a Node.js application as a Windows service.") {
 		Add(new InstallCommand());
 		Add(new RemoveCommand());
-		this.SetHandler(Execute);
-	}
-
-	/// <summary>
-	/// Executes this command.
-	/// </summary>
-	private void Execute() {
-
 	}
 }
