@@ -100,10 +100,9 @@ public class InstallCommand: Command {
 	/// <param name="executable">The executable name.</param>
 	/// <returns>The full path of the specified executable or <see langword="null"/> if not found.</returns>
 	private static FileInfo? GetPathFromEnvironment(string executable) {
-		return (Environment.GetEnvironmentVariable("Path") ?? string.Empty)
-			.Split(';')
-			.Where(path => !string.IsNullOrWhiteSpace(path))
-			.Select(path => new FileInfo(Path.Join(path.Trim(), executable)))
-			.FirstOrDefault(file => file.Exists);
+		var files = from path in (Environment.GetEnvironmentVariable("Path") ?? string.Empty).Split(';')
+			where !string.IsNullOrWhiteSpace(path)
+			select new FileInfo(Path.Join(path.Trim(), executable));
+		return files.FirstOrDefault(file => file.Exists);
 	}
 }
