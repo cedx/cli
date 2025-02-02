@@ -1,5 +1,6 @@
-using static System.IO.File;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
+using static System.IO.File;
 
 var release = HasArgument("r") || HasArgument("release");
 var target = Argument<string>("t", null) ?? Argument("target", "default");
@@ -54,6 +55,6 @@ RunTarget(target);
 /// <param name="pattern">The regular expression to find.</param>
 /// <param name="replacement">The replacement text.</param>
 /// <param name="options">The regular expression options to use.</param>
-void ReplaceInFile(FilePath file, string pattern, string replacement, RegexOptions options = RegexOptions.None) {
+void ReplaceInFile(FilePath file, [StringSyntax(StringSyntaxAttribute.Regex)] string pattern, string replacement, RegexOptions options = RegexOptions.None) {
 	WriteAllText(file.FullPath, new Regex(pattern, options).Replace(ReadAllText(file.FullPath), replacement));
 }
