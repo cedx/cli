@@ -9,11 +9,11 @@ public class NodeCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public NodeCommand(): base("node", "Download and install the latest Node.js release.") {
-		var configOptions = new Option<FileInfo>(["-c", "--config"], "The path to the NSSM configuration file.");
+		var configOption = new Option<FileInfo>(["-c", "--config"], "The path to the NSSM configuration file.");
+		Add(configOption);
 		var outputOption = new OutputOption(new DirectoryInfo(@"C:\Program Files\Node.js"));
-		Add(configOptions);
 		Add(outputOption);
-		this.SetHandler(Execute, outputOption, configOptions);
+		this.SetHandler(Execute, outputOption, configOption);
 	}
 
 	/// <summary>

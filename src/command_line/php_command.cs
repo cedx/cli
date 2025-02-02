@@ -49,11 +49,11 @@ public class PhpCommand: Command {
 	/// <returns>The path to the downloaded ZIP archive.</returns>
 	private static async Task<FileInfo> DownloadArchive(HttpClient httpClient, Version version) {
 		var vs = version >= new Version("8.4.0") ? "vs17" : "vs16";
-		var path = Path.Join(Path.GetTempPath(), $"php-{version}-nts-Win32-{vs}-x64.zip");
-		var file = Path.GetFileName(path);
-
+		var file = $"php-{version}-nts-Win32-{vs}-x64.zip";
 		Console.WriteLine($"Downloading file \"{file}\"...");
+
 		var bytes = await httpClient.GetByteArrayAsync($"https://windows.php.net/downloads/releases/{file}");
+		var path = Path.Join(Path.GetTempPath(), file);
 		File.WriteAllBytes(path, bytes);
 		return new FileInfo(path);
 	}

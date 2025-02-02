@@ -10,8 +10,8 @@ public class JdkCommand: Command {
 	/// </summary>
 	public JdkCommand(): base("jdk", "Download and install the latest OpenJDK release.") {
 		var javaOption = new Option<int>(["-j", "--java"], () => 21, "The major version of the Java development kit.") { ArgumentHelpName = "version" };
-		var outputOption = new OutputOption(new DirectoryInfo(@"C:\Program Files\OpenJDK"));
 		Add(javaOption);
+		var outputOption = new OutputOption(new DirectoryInfo(@"C:\Program Files\OpenJDK"));
 		Add(outputOption);
 		this.SetHandler(Execute, outputOption, javaOption.FromAmong(["21", "17", "11", "8"]));
 	}
@@ -26,7 +26,7 @@ public class JdkCommand: Command {
 		if (!this.CheckPrivilege(output)) return 1;
 
 		using var httpClient = this.CreateHttpClient();
-		this.ExtractZipFile(await DownloadArchive(httpClient, java), output); // TODO Strip the subfolder!!!
+		this.ExtractZipFile(await DownloadArchive(httpClient, java), output, strip: 1);
 		Console.WriteLine(this.GetExecutableVersion(output, @"bin\java.exe"));
 		return 0;
 	}
@@ -38,11 +38,11 @@ public class JdkCommand: Command {
 	/// <param name="java">The major version of the Java development kit.</param>
 	/// <returns>The path to the downloaded ZIP archive.</returns>
 	private static async Task<FileInfo> DownloadArchive(HttpClient httpClient, int java) {
-		var path = Path.Join(Path.GetTempPath(), $"microsoft-jdk-{java}-windows-x64.zip");
-		var file = Path.GetFileName(path);
-
+		var file = $"microsoft-jdk-{java}-windows-x64.zip";
 		Console.WriteLine($"Downloading file \"{file}\"...");
+
 		var bytes = await httpClient.GetByteArrayAsync($"https://aka.ms/download-jdk/{file}");
+		var path = Path.Join(Path.GetTempPath(), file);
 		File.WriteAllBytes(path, bytes);
 		return new FileInfo(path);
 	}

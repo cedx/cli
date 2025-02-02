@@ -40,10 +40,12 @@ public static class Extensions {
 	/// <param name="_">The current command.</param>
 	/// <param name="input">The path to the input ZIP file.</param>
 	/// <param name="output">The path to the output directory.</param>
-	public static void ExtractZipFile(this Command _, FileInfo input, DirectoryInfo output) {
+	/// <param name="strip">The number of leading directory components to remove from file names on extraction.</param>
+	public static void ExtractZipFile(this Command _, FileInfo input, DirectoryInfo output, int strip = 0) {
 		Console.WriteLine($"Extracting file \"{input.Name}\" into directory \"{output.FullName}\"...");
 		using var zipArchive = ZipFile.OpenRead(input.FullName);
 		zipArchive.ExtractToDirectory(output.FullName, overwriteFiles: true);
+		// TODO Implements the `strip` of components!
 	}
 
 	/// <summary>
