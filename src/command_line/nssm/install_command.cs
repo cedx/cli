@@ -1,6 +1,7 @@
 namespace Belin.Cli.CommandLine.Nssm;
 
 using System.Diagnostics;
+using System.ServiceProcess;
 
 /// <summary>
 /// Registers the Windows service.
@@ -11,23 +12,25 @@ public class InstallCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public InstallCommand(): base("install", "Register the Windows service.") {
-		var workingDirectory = new DirectoryInfo(Environment.CurrentDirectory);
 		var directoryArgument = new Argument<DirectoryInfo>(
 			name: "directory",
 			description: "The path to the root directory of the Node.js application.",
-			getDefaultValue: () => workingDirectory
+			getDefaultValue: () => new DirectoryInfo(Environment.CurrentDirectory)
 		);
 
+		var startOption = new Option<bool>(["-s", "--start"], "Whether to start the service after its registration.");
 		Add(directoryArgument);
-		this.SetHandler(Execute, directoryArgument);
+		Add(startOption);
+		this.SetHandler(Execute, directoryArgument, startOption);
 	}
 
 	/// <summary>
 	/// Executes this command.
 	/// </summary>
 	/// <param name="directory">The path to the root directory of the Node.js application.</param>
+	/// <param name="start">Value indicating whether to start the service after its registration.</param>
 	/// <returns>The exit code.</returns>
-	public async Task<int> Execute(DirectoryInfo directory) {
+	public async Task<int> Execute(DirectoryInfo directory, bool start = false) {
 		if (!this.CheckPrivilege()) return 1;
 
 		var package = PackageJsonFile.ReadFromDirectory(directory);
@@ -80,19 +83,27 @@ public class InstallCommand: Command {
 			}
 		}
 
+		if (start) {
+			using var serviceController = new ServiceController(config.Id);
+			if (serviceController.Status == ServiceControllerStatus.Stopped) {
+				serviceController.Start();
+				serviceController.WaitForStatus(ServiceControllerStatus.Running);
+			}
+		}
+
 		return 0;
 	}
 
 	/// <summary>
-	/// TODO
+	/// Gets the full path of the specified executable, by looking at the <c>Path</c> environment variable.
 	/// </summary>
-	/// <param name="command"></param>
-	/// <returns>TODO or <see langword="null"/> if not found.</returns>
-	private static FileInfo? GetPathFromEnvironment(string command) {
-		return Environment.GetEnvironmentVariable("Path")!
+	/// <param name="executable">The executable name.</param>
+	/// <returns>The full path of the specified executable or <see langword="null"/> if not found.</returns>
+	private static FileInfo? GetPathFromEnvironment(string executable) {
+		return (Environment.GetEnvironmentVariable("Path") ?? string.Empty)
 			.Split(";")
 			.Where(path => !string.IsNullOrWhiteSpace(path))
-			.Select(path => new FileInfo(Path.Join(path.Trim(), command)))
+			.Select(path => new FileInfo(Path.Join(path.Trim(), executable)))
 			.FirstOrDefault(file => file.Exists);
 	}
 }

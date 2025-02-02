@@ -10,8 +10,9 @@ public class EngineCommand: Command {
 	/// </summary>
 	public EngineCommand(DsnOption dsnOption): base("engine", "Alter the storage engine of MariaDB/MySQL tables.") {
 		var schemaOption = new SchemaOption();
-		Add(schemaOption);
 		var tableOption = new TableOption();
+
+		Add(schemaOption);
 		Add(tableOption);
 		this.SetHandler(Execute, dsnOption, schemaOption, tableOption);
 	}
