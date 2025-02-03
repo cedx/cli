@@ -19,7 +19,7 @@ public class NodeCommand: Command {
 	/// </summary>
 	public NodeCommand(): base("node", "Set up the latest Node.js release.") {
 		var configOption = new Option<FileInfo>(["-c", "--config"], "The path to the NSSM configuration file.");
-		var outputOption = new OutputOption(new DirectoryInfo(@"C:\Program Files\Node.js"));
+		var outputOption = new OutputOption(new DirectoryInfo(OperatingSystem.IsWindows() ? @"C:\Program Files\Node.js" : "/usr/local"));
 
 		Add(configOption);
 		Add(outputOption);
@@ -57,7 +57,7 @@ public class NodeCommand: Command {
 		this.ExtractZipFile(path, output, strip: 1);
 		StartServices();
 
-		Console.WriteLine(this.GetExecutableVersion(output, "node.exe"));
+		Console.WriteLine(this.GetExecutableVersion(output, "node"));
 		return 0;
 	}
 
