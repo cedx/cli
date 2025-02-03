@@ -1,11 +1,22 @@
 namespace Belin.Cli.CommandLine;
 
 using System.Text;
+using System.Text.Json;
 
 /// <summary>
 /// Converts the encoding of input files.
 /// </summary>
 public class IconvCommand: Command {
+
+	/// <summary>
+	/// The list of binary file extensions.
+	/// </summary>
+	private readonly List<string> binaryExtensions;
+
+	/// <summary>
+	/// The list of text file extensions.
+	/// </summary>
+	private readonly List<string> textExtensions;
 
 	/// <summary>
 	/// Creates a new command.
@@ -25,6 +36,10 @@ public class IconvCommand: Command {
 		Add(toOption);
 		Add(recursiveOption);
 		this.SetHandler(Execute, fileOrDirectoryArgument, fromOption, toOption, recursiveOption);
+
+		var directory = Path.GetFullPath(Path.Join(Environment.ProcessPath, "../res/file_extensions"));
+		binaryExtensions = JsonSerializer.Deserialize<List<string>>(File.ReadAllText(Path.Join(directory, "binary.json"))) ?? [];
+		textExtensions = JsonSerializer.Deserialize<List<string>>(File.ReadAllText(Path.Join(directory, "text.json"))) ?? [];
 	}
 
 	/// <summary>
@@ -42,10 +57,6 @@ public class IconvCommand: Command {
 
 		var fromEncoding = Encoding.GetEncoding(from);
 		var toEncoding = Encoding.GetEncoding(to);
-		if (fromEncoding is null || toEncoding is null) {
-			Console.WriteLine("TODO unable to ??......");
-			return 3;
-		}
 
 		switch (fileOrDirectory) {
 			case DirectoryInfo directory:
@@ -53,8 +64,7 @@ public class IconvCommand: Command {
 				Console.WriteLine("TODO directory");
 				break;
 			case FileInfo file:
-				Console.WriteLine(fileOrDirectory.GetType());
-				Console.WriteLine("TODO file");
+				ConvertFileEncoding(file, fromEncoding, toEncoding);
 				break;
 			default:
 				Console.WriteLine(fileOrDirectory.GetType());
@@ -71,15 +81,17 @@ public class IconvCommand: Command {
 	/// <param name="file">The path to the file to be converted.</param>
 	/// <param name="from">The input encoding.</param>
 	/// <param name="to">The output encoding.</param>
-	private static void ConvertEncoding(FileInfo file, Encoding from, Encoding to) {
-		var bytes = File.ReadAllBytes(file.FullName);
-		if (bytes.Length == 0) return;
+	private void ConvertFileEncoding(FileInfo file, Encoding from, Encoding to) {
+		var extension = file.Extension.ToLowerInvariant();
+		var isBinary = extension.Length > 0 && binaryExtensions.Contains(extension[1..]);
+		if (isBinary) return;
 
-		var isBinary = Array.IndexOf(bytes, '\0', 0, Math.Min(bytes.Length, 8_000)) > 0;
-		if (!isBinary) {
-			Console.WriteLine($"Converting: {file}");
-			File.WriteAllBytes(file.FullName, Encoding.Convert(from, to, bytes));
-		}
+		var bytes = File.ReadAllBytes(file.FullName);
+		var isText = extension.Length > 0 && textExtensions.Contains(extension[1..]);
+		if (!isText && Array.IndexOf(bytes, '\0', 0, Math.Min(bytes.Length, 8_000)) > 0) return;
+
+		Console.WriteLine($"Converting: {file}");
+		File.WriteAllBytes(file.FullName, Encoding.Convert(from, to, bytes));
 	}
 }
 
