@@ -34,31 +34,31 @@ public class InstallCommand: Command {
 		if (!this.CheckPrivilege()) return 1;
 
 		var package = PackageJsonFile.ReadFromDirectory(directory);
-		if (package == null) {
+		if (package is null) {
 			Console.WriteLine(@"Unable to locate the ""package.json"" file.");
 			return 2;
 		}
 
 		var binary = package.Bin?.FirstOrDefault().Value;
-		if (binary == null) {
+		if (binary is null) {
 			Console.WriteLine("Unable to determine the application entry point.");
 			return 3;
 		}
 
 		var config = ApplicationConfiguration.ReadFromDirectory(directory);
-		if (config == null) {
+		if (config is null) {
 			Console.WriteLine("Unable to locate the application configuration file.");
 			return 4;
 		}
 
 		var node = GetPathFromEnvironment("node.exe");
-		if (node == null) {
+		if (node is null) {
 			Console.WriteLine(@"Unable to locate the ""node.exe"" program.");
 			return 5;
 		}
 
 		using var installProcess = Process.Start("nssm.exe", ["install", config.Id, node.FullName, Path.Join(directory.FullName, binary)]);
-		if (installProcess != null) await installProcess.WaitForExitAsync();
+		if (installProcess is not null) await installProcess.WaitForExitAsync();
 		else {
 			Console.WriteLine(@"The ""nssm.exe"" program could not be started.");
 			return 6;
@@ -76,7 +76,7 @@ public class InstallCommand: Command {
 
 		foreach (var (key, value) in properties) {
 			using var setProcess = Process.Start("nssm.exe", ["set", config.Id, key, value]);
-			if (setProcess != null) await setProcess.WaitForExitAsync();
+			if (setProcess is not null) await setProcess.WaitForExitAsync();
 			else {
 				Console.WriteLine(@"The ""nssm.exe"" program could not be started.");
 				return 7;

@@ -17,7 +17,7 @@ public static class Extensions {
 	/// <returns><see langword="true"/> if this command should be executed in an elevated prompt, otherwise <see langword="false"/>.</returns>
 	public static bool CheckPrivilege(this Command _, DirectoryInfo? output = null) {
 		var isPrivileged = Environment.IsPrivilegedProcess;
-		if (output != null) {
+		if (output is not null) {
 			var home = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
 			if (output.Root.Name != home.Root.Name || output.FullName.StartsWith(home.FullName)) isPrivileged = true;
 		}

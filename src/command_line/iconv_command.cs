@@ -40,8 +40,12 @@ public class IconvCommand: Command {
 			return 2;
 		}
 
-		var fromEncoding = Encoding.GetEncoding(from)!;
-		var toEncoding = Encoding.GetEncoding(to)!;
+		var fromEncoding = Encoding.GetEncoding(from);
+		var toEncoding = Encoding.GetEncoding(to);
+		if (fromEncoding is null || toEncoding is null) {
+			Console.WriteLine("TODO unable to ??......");
+			return 3;
+		}
 
 		switch (fileOrDirectory) {
 			case DirectoryInfo directory:

@@ -34,9 +34,9 @@ public class NodeCommand: Command {
 	/// <returns>The exit code.</returns>
 	public async Task<int> Execute(DirectoryInfo output, FileInfo? config) {
 		services.Clear();
-		if (config != null) {
+		if (config is not null) {
 			var serviceIds = ReadNssmConfiguration(config);
-			if (serviceIds != null) services.AddRange(serviceIds);
+			if (serviceIds is not null) services.AddRange(serviceIds);
 			else {
 				Console.WriteLine("Unable to locate or parse the specified configuration file.");
 				return 2;
@@ -47,7 +47,7 @@ public class NodeCommand: Command {
 
 		using var httpClient = this.CreateHttpClient();
 		var version = await FetchLatestVersion(httpClient);
-		if (version == null) {
+		if (version is null) {
 			Console.WriteLine("Unable to fetch the list of Node.js releases.");
 			return 4;
 		}
@@ -86,7 +86,7 @@ public class NodeCommand: Command {
 		Console.WriteLine("Fetching the list of Node.js releases...");
 		var releases = await httpClient.GetFromJsonAsync<List<NodeRelease>>("https://nodejs.org/dist/index.json");
 		var latestRelease = releases?.FirstOrDefault();
-		return latestRelease != null ? new Version(latestRelease.Version[1..]) : null;
+		return latestRelease is not null ? new Version(latestRelease.Version[1..]) : null;
 	}
 
 	/// <summary>
