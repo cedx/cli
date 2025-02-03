@@ -53,16 +53,16 @@ public class InstallCommand: Command {
 			return 4;
 		}
 
-		var node = GetPathFromEnvironment("node.exe");
+		var node = GetPathFromEnvironment("node");
 		if (node is null) {
-			Console.WriteLine(@"Unable to locate the ""node.exe"" program.");
+			Console.WriteLine(@"Unable to locate the ""node"" program.");
 			return 5;
 		}
 
-		using var installProcess = Process.Start("nssm.exe", ["install", config.Id, node.FullName, Path.Join(directory.FullName, binary)]);
+		using var installProcess = Process.Start("nssm", ["install", config.Id, node.FullName, Path.Join(directory.FullName, binary)]);
 		if (installProcess is not null) await installProcess.WaitForExitAsync();
 		else {
-			Console.WriteLine(@"The ""nssm.exe"" program could not be started.");
+			Console.WriteLine(@"The ""nssm"" program could not be started.");
 			return 6;
 		}
 
@@ -77,10 +77,10 @@ public class InstallCommand: Command {
 		};
 
 		foreach (var (key, value) in properties) {
-			using var setProcess = Process.Start("nssm.exe", ["set", config.Id, key, value]);
+			using var setProcess = Process.Start("nssm", ["set", config.Id, key, value]);
 			if (setProcess is not null) await setProcess.WaitForExitAsync();
 			else {
-				Console.WriteLine(@"The ""nssm.exe"" program could not be started.");
+				Console.WriteLine(@"The ""nssm"" program could not be started.");
 				return 7;
 			}
 		}
@@ -102,9 +102,9 @@ public class InstallCommand: Command {
 	/// <param name="executable">The executable name.</param>
 	/// <returns>The full path of the specified executable or <see langword="null"/> if not found.</returns>
 	private static FileInfo? GetPathFromEnvironment(string executable) {
-		var files = from path in (Environment.GetEnvironmentVariable("Path") ?? string.Empty).Split(';')
+		var files = from path in (Environment.GetEnvironmentVariable("PATH") ?? string.Empty).Split(Path.PathSeparator)
 			where !string.IsNullOrWhiteSpace(path)
-			select new FileInfo(Path.Join(path.Trim(), executable));
+			select new FileInfo(Path.Join(path.Trim(), executable + (OperatingSystem.IsWindows() ? ".exe" : string.Empty)));
 		return files.FirstOrDefault(file => file.Exists);
 	}
 }
