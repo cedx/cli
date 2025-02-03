@@ -23,7 +23,7 @@ public class ApplicationConfiguration {
 	/// <param name="input">The path to the root directory of the Node.js application.</param>
 	/// <returns>The configuration of the specified Node.js application, or <see langword="null"/> if not found.</returns>
 	public static ApplicationConfiguration? ReadFromDirectory(DirectoryInfo input) {
-		foreach (var folder in new[] { @"lib\server", "lib", @"src\server", "src" }) {
+		foreach (var folder in new[] { "lib/server", "lib", "src/server", "src" }) {
 			var path = Path.Join(input.FullName, folder, "config.g.json");
 			if (File.Exists(path)) return JsonSerializer.Deserialize<ApplicationConfiguration>(File.ReadAllText(path));
 		}

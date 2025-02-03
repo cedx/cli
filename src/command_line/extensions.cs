@@ -53,7 +53,7 @@ public static class Extensions {
 		if (strip == 0) zipArchive.ExtractToDirectory(output.FullName, overwriteFiles: true);
 		else foreach (var entry in zipArchive.Entries) {
 			var path = string.Join('/', entry.FullName.Split('/').Skip(strip));
-			if (path.Length == 0) path += '/';
+			if (path.Length == 0) path = "/";
 
 			var fullPath = Path.Join(output.FullName, path);
 			if (fullPath[^1] == '/') Directory.CreateDirectory(fullPath);

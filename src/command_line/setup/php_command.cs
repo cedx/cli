@@ -13,7 +13,7 @@ public class PhpCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public PhpCommand(): base("php", "Set up the latest PHP release.") {
-		var outputOption = new OutputOption(new DirectoryInfo(@"C:\Program Files\PHP"));
+		var outputOption = new OutputOption(new DirectoryInfo(OperatingSystem.IsWindows() ? @"C:\Program Files\PHP" : "/usr/local"));
 		Add(outputOption);
 		this.SetHandler(Execute, outputOption);
 	}
@@ -40,7 +40,7 @@ public class PhpCommand: Command {
 		StartWebServer(serviceController);
 		RegisterEventLog(version, output);
 
-		Console.WriteLine(this.GetExecutableVersion(output, "php.exe"));
+		Console.WriteLine(this.GetExecutableVersion(output, "php"));
 		return 0;
 	}
 

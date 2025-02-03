@@ -10,7 +10,7 @@ public class JdkCommand: Command {
 	/// </summary>
 	public JdkCommand(): base("jdk", "Set up the latest OpenJDK release.") {
 		var javaOption = new Option<int>(["-j", "--java"], () => 21, "The major version of the Java development kit.") { ArgumentHelpName = "version" };
-		var outputOption = new OutputOption(new DirectoryInfo(@"C:\Program Files\OpenJDK"));
+		var outputOption = new OutputOption(new DirectoryInfo(OperatingSystem.IsWindows() ? @"C:\Program Files\OpenJDK" : "/opt/openjdk"));
 
 		Add(javaOption);
 		Add(outputOption);
@@ -28,7 +28,7 @@ public class JdkCommand: Command {
 
 		using var httpClient = this.CreateHttpClient();
 		this.ExtractZipFile(await DownloadArchive(httpClient, java), output, strip: 1);
-		Console.WriteLine(this.GetExecutableVersion(output, @"bin\java.exe"));
+		Console.WriteLine(this.GetExecutableVersion(output, "bin/java"));
 		return 0;
 	}
 
