@@ -44,10 +44,10 @@ public class RemoveCommand: Command {
 			serviceController.WaitForStatus(ServiceControllerStatus.Stopped);
 		}
 
-		using var process = Process.Start("nssm.exe", ["remove", config.Id, "confirm"]);
+		using var process = Process.Start("nssm", ["remove", config.Id, "confirm"]);
 		if (process is not null) await process.WaitForExitAsync();
 		else {
-			Console.WriteLine(@"The ""nssm.exe"" program could not be started.");
+			Console.WriteLine(@"The ""nssm"" program could not be started.");
 			return 3;
 		}
 
