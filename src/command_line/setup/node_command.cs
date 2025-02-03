@@ -68,7 +68,13 @@ public class NodeCommand: Command {
 	/// <param name="version">The version number of the PHP release to download.</param>
 	/// <returns>The path to the downloaded ZIP archive.</returns>
 	private static async Task<FileInfo> DownloadArchive(HttpClient httpClient, Version version) {
-		var file = $"node-v{version}-win-x64.zip";
+		var (operatingSystem, fileExtension) = true switch {
+			true when OperatingSystem.IsMacOS() => ("darwin", "tar.gz"),
+			true when OperatingSystem.IsWindows() => ("win", "zip"),
+			_ => ("linux", "tar.xz")
+		};
+
+		var file = $"node-v{version}-{operatingSystem}-x64.{fileExtension}";
 		Console.WriteLine($"Downloading file \"{file}\"...");
 
 		var bytes = await httpClient.GetByteArrayAsync($"https://nodejs.org/dist/v{version}/{file}");

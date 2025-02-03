@@ -39,7 +39,13 @@ public class JdkCommand: Command {
 	/// <param name="java">The major version of the Java development kit.</param>
 	/// <returns>The path to the downloaded ZIP archive.</returns>
 	private static async Task<FileInfo> DownloadArchive(HttpClient httpClient, int java) {
-		var file = $"microsoft-jdk-{java}-windows-x64.zip";
+		var (operatingSystem, fileExtension) = true switch {
+			true when OperatingSystem.IsMacOS() => ("macOS", "tar.gz"),
+			true when OperatingSystem.IsWindows() => ("windows", "zip"),
+			_ => ("linux", "tar.gz")
+		};
+
+		var file = $"microsoft-jdk-{java}-{operatingSystem}-x64.{fileExtension}";
 		Console.WriteLine($"Downloading file \"{file}\"...");
 
 		var bytes = await httpClient.GetByteArrayAsync($"https://aka.ms/download-jdk/{file}");
