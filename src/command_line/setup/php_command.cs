@@ -28,7 +28,7 @@ public class PhpCommand: Command {
 
 		using var httpClient = this.CreateHttpClient();
 		var version = await FetchLatestVersion(httpClient);
-		if (version == null) {
+		if (version is null) {
 			Console.WriteLine("Unable to fetch the list of PHP releases.");
 			return 2;
 		}
@@ -70,7 +70,7 @@ public class PhpCommand: Command {
 		Console.WriteLine("Fetching the list of PHP releases...");
 		var releases = await httpClient.GetFromJsonAsync<Dictionary<string, PhpRelease>>("https://www.php.net/releases/?json");
 		var latestRelease = releases?.FirstOrDefault().Value;
-		return latestRelease != null ? new Version(latestRelease.Version) : null;
+		return latestRelease is not null ? new Version(latestRelease.Version) : null;
 	}
 
 	/// <summary>

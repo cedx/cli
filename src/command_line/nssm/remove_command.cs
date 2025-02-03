@@ -31,7 +31,7 @@ public class RemoveCommand: Command {
 		if (!this.CheckPrivilege()) return 1;
 
 		var config = ApplicationConfiguration.ReadFromDirectory(directory);
-		if (config == null) {
+		if (config is null) {
 			Console.WriteLine("Unable to locate the application configuration file.");
 			return 2;
 		}
@@ -43,7 +43,7 @@ public class RemoveCommand: Command {
 		}
 
 		using var process = Process.Start("nssm.exe", ["remove", config.Id, "confirm"]);
-		if (process != null) await process.WaitForExitAsync();
+		if (process is not null) await process.WaitForExitAsync();
 		else {
 			Console.WriteLine(@"The ""nssm.exe"" program could not be started.");
 			return 3;
