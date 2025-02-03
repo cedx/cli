@@ -8,12 +8,20 @@ var version = Context.Configuration.GetValue("package_version");
 
 Task("build")
 	.Description("Builds the project.")
+	.IsDependentOn("fetch")
 	.Does(() => DotNetBuild("cli.sln", new() { Configuration = release ? "Release" : "Debug" }));
 
 Task("clean")
 	.Description("Deletes all generated files.")
 	.DoesForEach(["bin", "src/obj"], folder => EnsureDirectoryDoesNotExist(folder))
 	.Does(() => CleanDirectory("var", fileSystemInfo => fileSystemInfo.Path.Segments[^1] != ".gitkeep"));
+
+Task("fetch")
+	.Description("Fetches the remote resources.")
+	.DoesForEach(["binary", "text"], type => {
+		var path = $"sindresorhus/{type}-extensions/refs/heads/main/{type}-extensions.json";
+		DownloadFile($"https://raw.githubusercontent.com/{path}", $"res/file_extensions/{type}.json");
+	});
 
 Task("format")
 	.Description("Formats the source code.")
@@ -38,6 +46,7 @@ Task("version")
 
 Task("watch")
 	.Description("Watches for file changes.")
+	.IsDependentOn("fetch")
 	.Does(() => StartProcess("dotnet", new ProcessSettings { Arguments = "watch build", WorkingDirectory = "src" }));
 
 Task("default")
