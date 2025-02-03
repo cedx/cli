@@ -11,12 +11,12 @@ public class IconvCommand: Command {
 	/// <summary>
 	/// The list of binary file extensions.
 	/// </summary>
-	private readonly List<string> binaryExtensions;
+	private readonly List<string> binaryExtensions = [];
 
 	/// <summary>
 	/// The list of text file extensions.
 	/// </summary>
-	private readonly List<string> textExtensions;
+	private readonly List<string> textExtensions = [];
 
 	/// <summary>
 	/// Creates a new command.
@@ -27,8 +27,8 @@ public class IconvCommand: Command {
 			description: "The path to the file or directory to process."
 		);
 
-		var fromOption = new EncodingOption(["-f", "--from"], Encoding.UTF8.WebName, "The input encoding.");
-		var toOption = new EncodingOption(["-t", "--to"], Encoding.Latin1.WebName, "The output encoding.");
+		var fromOption = new EncodingOption(["-f", "--from"], Encoding.Latin1.WebName, "The input encoding.");
+		var toOption = new EncodingOption(["-t", "--to"], Encoding.UTF8.WebName, "The output encoding.");
 		var recursiveOption = new Option<bool>(["-r", "--recursive"], "Whether to process the directory recursively.");
 
 		Add(fileOrDirectoryArgument);
@@ -36,10 +36,6 @@ public class IconvCommand: Command {
 		Add(toOption);
 		Add(recursiveOption);
 		this.SetHandler(Execute, fileOrDirectoryArgument, fromOption, toOption, recursiveOption);
-
-		var directory = Path.GetFullPath(Path.Join(Environment.ProcessPath, "../res/file_extensions"));
-		binaryExtensions = JsonSerializer.Deserialize<List<string>>(File.ReadAllText(Path.Join(directory, "binary.json"))) ?? [];
-		textExtensions = JsonSerializer.Deserialize<List<string>>(File.ReadAllText(Path.Join(directory, "text.json"))) ?? [];
 	}
 
 	/// <summary>
@@ -55,28 +51,26 @@ public class IconvCommand: Command {
 			return 2;
 		}
 
-		var fromEncoding = Encoding.GetEncoding(from);
-		var toEncoding = Encoding.GetEncoding(to);
-
-		switch (fileOrDirectory) {
-			case DirectoryInfo directory:
-				Console.WriteLine(fileOrDirectory.GetType());
-				Console.WriteLine("TODO directory");
-				break;
-			case FileInfo file:
-				ConvertFileEncoding(file, fromEncoding, toEncoding);
-				break;
-			default:
-				Console.WriteLine(fileOrDirectory.GetType());
-				Console.WriteLine("TODO default");
-				break;
+		if (binaryExtensions.Count == 0 && textExtensions.Count == 0) {
+			var resources = Path.GetFullPath(Path.Join(Path.GetDirectoryName(Environment.ProcessPath), "../res/file_extensions"));
+			binaryExtensions.AddRange(JsonSerializer.Deserialize<List<string>>(File.ReadAllText(Path.Join(resources, "binary.json"))) ?? []);
+			textExtensions.AddRange(JsonSerializer.Deserialize<List<string>>(File.ReadAllText(Path.Join(resources, "text.json"))) ?? []);
 		}
 
+		var files = fileOrDirectory switch {
+			DirectoryInfo directory => directory.EnumerateFiles("*.*", SearchOption.AllDirectories),
+			FileInfo file => [file],
+			_ => []
+		};
+
+		var fromEncoding = Encoding.GetEncoding(from);
+		var toEncoding = Encoding.GetEncoding(to);
+		foreach (var file in files) ConvertFileEncoding(file, fromEncoding, toEncoding);
 		return await Task.FromResult(0);
 	}
 
 	/// <summary>
-	/// TODO
+	/// Converts the encoding of the specified file.
 	/// </summary>
 	/// <param name="file">The path to the file to be converted.</param>
 	/// <param name="from">The input encoding.</param>
