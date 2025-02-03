@@ -23,7 +23,9 @@ public class PhpCommand: Command {
 	/// </summary>
 	/// <param name="output">The path to the output directory.</param>
 	/// <returns>The exit code.</returns>
+	/// <exception cref="PlatformNotSupportedException">This command only supports the Windows platform.</exception>
 	public async Task<int> Execute(DirectoryInfo output) {
+		if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("This command only supports the Windows platform.");
 		if (!this.CheckPrivilege()) return 1;
 
 		using var httpClient = this.CreateHttpClient();

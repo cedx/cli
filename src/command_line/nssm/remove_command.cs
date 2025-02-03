@@ -27,7 +27,9 @@ public class RemoveCommand: Command {
 	/// </summary>
 	/// <param name="directory">The path to the root directory of the Node.js application.</param>
 	/// <returns>The exit code.</returns>
+	/// <exception cref="PlatformNotSupportedException">This command only supports the Windows platform.</exception>
 	public async Task<int> Execute(DirectoryInfo directory) {
+		if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("This command only supports the Windows platform.");
 		if (!this.CheckPrivilege()) return 1;
 
 		var config = ApplicationConfiguration.ReadFromDirectory(directory);
