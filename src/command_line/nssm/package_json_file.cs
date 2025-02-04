@@ -34,6 +34,6 @@ public class PackageJsonFile {
 	/// <returns>The <c>package.json</c> of the specified Node.js project, or <see langword="null"/> if not found.</returns>
 	public static PackageJsonFile? ReadFromDirectory(DirectoryInfo input) {
 		var path = Path.Join(input.FullName, "package.json");
-		return File.Exists(path) ? JsonSerializer.Deserialize<PackageJsonFile>(File.ReadAllText(path)) : null;
+		return File.Exists(path) ? JsonSerializer.Deserialize<PackageJsonFile>(File.ReadAllText(path), JsonSerializerOptions.Web) : null;
 	}
 }

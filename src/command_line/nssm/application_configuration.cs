@@ -25,7 +25,7 @@ public class ApplicationConfiguration {
 	public static ApplicationConfiguration? ReadFromDirectory(DirectoryInfo input) {
 		foreach (var folder in new[] { "lib/server", "lib", "src/server", "src" }) {
 			var path = Path.Join(input.FullName, folder, "config.g.json");
-			if (File.Exists(path)) return JsonSerializer.Deserialize<ApplicationConfiguration>(File.ReadAllText(path));
+			if (File.Exists(path)) return JsonSerializer.Deserialize<ApplicationConfiguration>(File.ReadAllText(path), JsonSerializerOptions.Web);
 		}
 
 		return null;
