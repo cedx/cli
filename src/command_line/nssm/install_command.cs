@@ -59,7 +59,7 @@ public class InstallCommand: Command {
 			return 5;
 		}
 
-		using var installProcess = Process.Start("nssm", ["install", config.Id, node.FullName, Path.Join(directory.FullName, binary)]);
+		using var installProcess = Process.Start("nssm", ["install", config.Id, node.FullName, Path.GetFullPath(Path.Join(directory.FullName, binary))]);
 		if (installProcess is not null) await installProcess.WaitForExitAsync();
 		else {
 			Console.WriteLine(@"The ""nssm"" program could not be started.");

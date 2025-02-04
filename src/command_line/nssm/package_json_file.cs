@@ -1,6 +1,7 @@
 namespace Belin.Cli.CommandLine.Nssm;
 
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 /// <summary>
 /// Represents the contents of a <c>package.json</c> file.
@@ -10,22 +11,26 @@ public class PackageJsonFile {
 	/// <summary>
 	/// The map of package commands.
 	/// </summary>
-	public Dictionary<string, string>? Bin { get; set; } = null;
+	[JsonPropertyName("bin")]
+	public IDictionary<string, string>? Bin { get; set; } = null;
 
 	/// <summary>
 	/// The package description.
 	/// </summary>
+	[JsonPropertyName("description")]
 	public string? Description { get; set; } = null;
 
 	/// <summary>
 	/// The package name.
 	/// </summary>
-	public string Name { get; set; } = string.Empty;
+	[JsonPropertyName("name")]
+	public required string Name { get; set; }
 
 	/// <summary>
 	/// The version number.
 	/// </summary>
-	public string Version { get; set; } = string.Empty;
+	[JsonPropertyName("version")]
+	public required string Version { get; set; }
 
 	/// <summary>
 	/// Reads the <c>package.json</c> file located in the specified directory.
@@ -34,6 +39,6 @@ public class PackageJsonFile {
 	/// <returns>The <c>package.json</c> of the specified Node.js project, or <see langword="null"/> if not found.</returns>
 	public static PackageJsonFile? ReadFromDirectory(DirectoryInfo input) {
 		var path = Path.Join(input.FullName, "package.json");
-		return File.Exists(path) ? JsonSerializer.Deserialize<PackageJsonFile>(File.ReadAllText(path), JsonSerializerOptions.Web) : null;
+		return File.Exists(path) ? JsonSerializer.Deserialize<PackageJsonFile>(File.ReadAllText(path)) : null;
 	}
 }
