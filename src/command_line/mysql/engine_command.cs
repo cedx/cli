@@ -23,6 +23,11 @@ public class EngineCommand: Command {
 	/// <param name="dsn">The connection string.</param>
 	/// <returns>The exit code.</returns>
 	public async Task<int> Execute(Uri dsn, string? schema, string[] tables) {
+		if (tables.Length > 0 && schema is null) {
+			Console.WriteLine($"The table \"{tables[0]}\" requires that a schema be specified.");
+			return 1;
+		}
+
 		return await Task.FromResult(0);
 	}
 }

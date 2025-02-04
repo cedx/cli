@@ -9,7 +9,12 @@ public class OptimizeCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public OptimizeCommand(DsnOption dsnOption): base("optimize", "Optimize a set of MariaDB/MySQL tables.") {
-		this.SetHandler(Execute, dsnOption);
+		var schemaOption = new SchemaOption();
+		var tableOption = new TableOption();
+
+		Add(schemaOption);
+		Add(tableOption);
+		this.SetHandler(Execute, dsnOption, schemaOption, tableOption);
 	}
 
 	/// <summary>
@@ -17,7 +22,13 @@ public class OptimizeCommand: Command {
 	/// </summary>
 	/// <param name="dsn">The connection string.</param>
 	/// <returns>The exit code.</returns>
-	public async Task<int> Execute(Uri dsn) {
+	public async Task<int> Execute(Uri dsn, string? schema, string[] tables) {
+		if (tables.Length > 0 && schema is null) {
+			Console.WriteLine($"The table \"{tables[0]}\" requires that a schema be specified.");
+			return 1;
+		}
+
+		//Console.WriteLine(dsn.Scheme);
 		return await Task.FromResult(0);
 	}
 }

@@ -17,7 +17,7 @@ DisableProgramGroupPage = yes
 LicenseFile = LICENSE.md
 OutputBaseFilename = belin.cli-{#version}
 OutputDir = var
-PrivilegesRequired = lowest
+PrivilegesRequired = admin
 SetupIconFile = res\favicon.ico
 SolidCompression = yes
 UninstallDisplayIcon = {app}\bin\{#executable}
@@ -32,9 +32,9 @@ Source: "run.ps1"; DestDir: "{app}"; DestName: "belin.cli.ps1"; Flags: ignorever
 [Icons]
 Name: "{autoprograms}\{#name}"; IconFilename: "{app}\bin\{#executable}"; Filename: "pwsh.exe"; \
 	Parameters: "-ExecutionPolicy Bypass -NoExit -NoLogo belin.cli.ps1"; WorkingDir: "{app}"
-Name: "{autoprograms}\{#name} (Administrateur)"; IconFilename: "{app}\bin\{#executable}"; Filename: "pwsh.exe"; \
+Name: "{autoprograms}\{#name} (Administrator)"; IconFilename: "{app}\bin\{#executable}"; Filename: "pwsh.exe"; \
 	Parameters: "-ExecutionPolicy Bypass -NoExit -NoLogo belin.cli.ps1"; WorkingDir: "{app}"; \
-	AfterInstall: SetElevationBit('{autoprograms}\{#name} (Administrateur).lnk')
+	AfterInstall: SetElevationBit('{autoprograms}\{#name} (Administrator).lnk')
 
 [Code]
 procedure SetElevationBit(filename: String);
