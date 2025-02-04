@@ -30,8 +30,28 @@ Source: "res\file_extensions\*"; DestDir: "{app}\res\file_extensions"; Flags: ig
 Source: "run.ps1"; DestDir: "{app}"; DestName: "belin.cli.ps1"; Flags: ignoreversion
 
 [Icons]
-Name: "{autoprograms}\{#name}"; IconFilename: "{app}\bin\{#executable}"; Filename: "pwsh.exe"; Parameters: "-ExecutionPolicy Bypass -NoExit -NoLogo belin.cli.ps1"; WorkingDir: "{app}"
-Name: "{autodesktop}\{#name}"; IconFilename: "{app}\bin\{#executable}"; Filename: "pwsh.exe"; Parameters: "-ExecutionPolicy Bypass -NoExit -NoLogo belin.cli.ps1"; WorkingDir: "{app}"; Tasks: desktopicon
+Name: "{autoprograms}\{#name}"; IconFilename: "{app}\bin\{#executable}"; Filename: "pwsh.exe"; \
+	Parameters: "-ExecutionPolicy Bypass -NoExit -NoLogo belin.cli.ps1"; WorkingDir: "{app}"
+Name: "{autoprograms}\{#name} (Administrateur)"; IconFilename: "{app}\bin\{#executable}"; Filename: "pwsh.exe"; \
+	Parameters: "-ExecutionPolicy Bypass -NoExit -NoLogo belin.cli.ps1"; WorkingDir: "{app}"; \
+	AfterInstall: SetElevationBit('{autoprograms}\{#name} (Administrateur).lnk')
 
-[Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+[Code]
+procedure SetElevationBit(filename: String);
+var
+	buffer: String;
+	stream: TStream;
+begin
+	filename := ExpandConstant(filename);
+	stream := TFileStream.Create(filename, fmOpenReadWrite);
+	try
+		stream.Seek(21, soFromBeginning);
+		SetLength(buffer, 1);
+		stream.ReadBuffer(buffer, 1);
+		buffer[1] := Chr(Ord(buffer[1]) or $20);
+		stream.Seek(-1, soFromCurrent);
+		stream.WriteBuffer(buffer, 1);
+	finally
+		stream.Free;
+	end;
+end;
