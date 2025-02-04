@@ -70,6 +70,7 @@ public static class Extensions {
 	/// <returns>The standard output of the underlying process.</returns>
 	/// <exception cref="Exception">An error occurred when starting the underlying process.</exception>
 	public static string GetExecutableVersion(this Command _, DirectoryInfo output, string executable) {
+		// TODO inutile de capturer la sortie standard!!! par défault, elle est affichée à l'écran !!!
 		var startInfo = new ProcessStartInfo {
 			Arguments = "--version",
 			CreateNoWindow = true,
