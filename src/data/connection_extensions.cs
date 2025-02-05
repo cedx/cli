@@ -22,7 +22,13 @@ public static class ConnectionExtensions {
 		""";
 
 		using var command = new MySqlCommand(query, connection);
+		command.Parameters.AddWithValue("@name", table.Name);
+		command.Parameters.AddWithValue("@schema", table.Schema);
 
+		using var reader = command.ExecuteReader();
+		var columns = new List<Column>();
+		while (reader.Read()) columns.Add(Column.OfRecord(reader));
+		return columns;
 	}
 
 	/// <summary>
@@ -39,6 +45,10 @@ public static class ConnectionExtensions {
 		""";
 
 		using var command = new MySqlCommand(query, connection);
+		using var reader = command.ExecuteReader();
+		var schemas = new List<Schema>();
+		while (reader.Read()) schemas.Add(Schema.OfRecord(reader));
+		return schemas;
 	}
 
 	/// <summary>
@@ -56,5 +66,12 @@ public static class ConnectionExtensions {
 		""";
 
 		using var command = new MySqlCommand(query, connection);
+		command.Parameters.AddWithValue("@schema", schema.Name);
+		command.Parameters.AddWithValue("@type", TableType.BaseTable);
+
+		using var reader = command.ExecuteReader();
+		var tables = new List<Table>();
+		while (reader.Read()) tables.Add(Table.OfRecord(reader));
+		return tables;
 	}
 }

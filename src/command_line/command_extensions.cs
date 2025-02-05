@@ -11,6 +11,11 @@ using System.Reflection;
 public static class CommandExtensions {
 
 	/// <summary>
+	/// The list of local host names.
+	/// </summary>
+	private static readonly string[] localHosts = ["::1", "127.0.0.1", "localhost"];
+
+	/// <summary>
 	/// Checks whether this command should be executed in an elevated prompt.
 	/// </summary>
 	/// <param name="_">The current command.</param>
@@ -31,13 +36,21 @@ public static class CommandExtensions {
 	/// Creates a new database connection.
 	/// </summary>
 	/// <param name="_">The current command.</param>
-	/// <param name="connectionString">The connection string used to connect to the database.</param>
+	/// <param name="uri">The connection string used to connect to the database.</param>
 	/// <returns>The newly created database connection.</returns>
-	public static MySqlConnection CreateDbConnection(this Command _, Uri connectionString) {
-		var host = connectionString.Host;
-		var port = connectionString.IsDefaultPort ? 3306 : connectionString.Port;
-		var userInfo = connectionString.UserInfo.Split(':').Select(Uri.UnescapeDataString).ToArray();
-		var connection = new MySqlConnection($"Server={host};Port={port};UserID={userInfo[0]};Password={userInfo[1]};Database=information_schema;Pooling=false");
+	public static MySqlConnection CreateDbConnection(this Command _, Uri uri) {
+		var userInfo = uri.UserInfo.Split(':').Select(Uri.UnescapeDataString).ToArray();
+		var builder = new MySqlConnectionStringBuilder {
+			Server = uri.Host,
+			Port = uri.IsDefaultPort ? 3306 : (uint) uri.Port,
+			Database = "information_schema",
+			UserID = userInfo[0],
+			Password = userInfo[1],
+			Pooling = false,
+			UseCompression = localHosts.Contains(uri.Host)
+		};
+
+		var connection = new MySqlConnection(builder.ConnectionString);
 		connection.Open();
 		return connection;
 	}

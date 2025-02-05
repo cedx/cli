@@ -1,5 +1,7 @@
 namespace Belin.Cli.Data;
 
+using System.Data;
+
 /// <summary>
 /// Provides the metadata of a database table.
 /// </summary>
@@ -48,6 +50,21 @@ public class Table {
 	public string GetQualifiedName(Func<string, string>? escape = null) {
 		escape ??= identifier => identifier;
 		return $"{escape(Schema)}.{escape(Name)}";
+	}
+
+	/// <summary>
+	/// Creates a new column from the specified database record.
+	/// </summary>
+	/// <param name="record">A database record providing values to initialize the instance.</param>
+	/// <returns>The newly created column.</returns>
+	public static Table OfRecord(IDataRecord record) {
+		return new Table {
+			Collation = (string) record["TABLE_COLLATION"] ?? string.Empty,
+			Engine = (string) record["ENGINE"] ?? string.Empty,
+			Name = (string) record["TABLE_NAME"] ?? string.Empty,
+			Schema = (string) record["TABLE_SCHEMA"] ?? string.Empty,
+			Type = (string) record["TABLE_TYPE"] ?? string.Empty
+		};
 	}
 }
 
