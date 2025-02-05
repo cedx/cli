@@ -1,5 +1,6 @@
 namespace Belin.Cli.CommandLine;
 
+using MySqlConnector;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Reflection;
@@ -7,7 +8,7 @@ using System.Reflection;
 /// <summary>
 /// Provides extension methods for commands.
 /// </summary>
-public static class Extensions {
+public static class CommandExtensions {
 
 	/// <summary>
 	/// Checks whether this command should be executed in an elevated prompt.
@@ -24,6 +25,21 @@ public static class Extensions {
 
 		if (!isPrivileged) Console.WriteLine("You must run this command in an elevated prompt.");
 		return isPrivileged;
+	}
+
+	/// <summary>
+	/// Creates a new database connection.
+	/// </summary>
+	/// <param name="_">The current command.</param>
+	/// <param name="connectionString">The connection string used to connect to the database.</param>
+	/// <returns>The newly created database connection.</returns>
+	public static MySqlConnection CreateDbConnection(this Command _, Uri connectionString) {
+		var host = connectionString.Host;
+		var port = connectionString.IsDefaultPort ? 3306 : connectionString.Port;
+		var userInfo = connectionString.UserInfo.Split(':').Select(Uri.UnescapeDataString).ToArray();
+		var connection = new MySqlConnection($"Server={host};Port={port};UserID={userInfo[0]};Password={userInfo[1]};Database=information_schema;Pooling=false");
+		connection.Open();
+		return connection;
 	}
 
 	/// <summary>
