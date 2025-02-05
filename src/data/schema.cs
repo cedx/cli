@@ -9,4 +9,19 @@ public class Schema {
 	/// The name of the database table associated with this class.
 	/// </summary>
 	public const string TableName = "SCHEMATA";
+
+	/// <summary>
+	/// The default character set.
+	/// </summary>
+	public string Charset { get; set; } = string.Empty;
+
+	/// <summary>
+	/// The default collation.
+	/// </summary>
+	public string Collation { get; set; } = string.Empty;
+
+	/// <summary>
+	/// The schema name.
+	/// </summary>
+	public required string Name { get; set; };
 }
