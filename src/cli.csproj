@@ -15,7 +15,7 @@
 		<OutDir>../bin</OutDir>
 		<OutputType>Exe</OutputType>
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-		<TargetFramework>net9.0-windows</TargetFramework>
+		<TargetFramework>net8.0-windows</TargetFramework>
 
 		<!-- TODO
 		<PackageOutputPath>var/nuget</PackageOutputPath>
