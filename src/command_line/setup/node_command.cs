@@ -3,6 +3,7 @@ namespace Belin.Cli.CommandLine.Setup;
 using System.Net.Http.Json;
 using System.ServiceProcess;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 /// <summary>
 /// Downloads and installs the latest Node.js release.
@@ -100,9 +101,9 @@ public class NodeCommand: Command {
 	/// </summary>
 	/// <param name="file">The path to the NSSM configuration file.</param>
 	/// <returns>The list of parsed service identifiers or <see langword="null"/> if an error occurred.</returns>
-	private static List<string>? ReadNssmConfiguration(FileInfo file) {
+	private static string[]? ReadNssmConfiguration(FileInfo file) {
 		if (!file.Exists) return null;
-		var map = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(File.ReadAllText(file.FullName));
+		var map = JsonSerializer.Deserialize<Dictionary<string, string[]>>(File.ReadAllText(file.FullName));
 		return (map?.TryGetValue(Environment.MachineName, out var serviceIds) ?? false) ? serviceIds : null;
 	}
 
@@ -143,5 +144,6 @@ internal class NodeRelease {
 	/// <summary>
 	/// The version number.
 	/// </summary>
-	public string Version { get; set; } = string.Empty;
+	[JsonPropertyName("version")]
+	public required string Version { get; set; }
 }

@@ -53,8 +53,8 @@ public class IconvCommand: Command {
 
 		if (binaryExtensions.Count == 0 && textExtensions.Count == 0) {
 			var resources = Path.GetFullPath(Path.Join(Path.GetDirectoryName(Environment.ProcessPath), "../res/file_extensions"));
-			binaryExtensions.AddRange(JsonSerializer.Deserialize<List<string>>(File.ReadAllText(Path.Join(resources, "binary.json"))) ?? []);
-			textExtensions.AddRange(JsonSerializer.Deserialize<List<string>>(File.ReadAllText(Path.Join(resources, "text.json"))) ?? []);
+			binaryExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "binary.json"))) ?? []);
+			textExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "text.json"))) ?? []);
 		}
 
 		var files = fileOrDirectory switch {

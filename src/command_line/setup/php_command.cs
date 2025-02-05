@@ -3,6 +3,7 @@ namespace Belin.Cli.CommandLine.Setup;
 using Microsoft.Win32;
 using System.Net.Http.Json;
 using System.ServiceProcess;
+using System.Text.Json.Serialization;
 
 /// <summary>
 /// Downloads and installs the latest PHP release.
@@ -120,5 +121,6 @@ internal class PhpRelease {
 	/// <summary>
 	/// The version number.
 	/// </summary>
-	public string Version { get; set; } = string.Empty;
+	[JsonPropertyName("version")]
+	public required string Version { get; set; }
 }
