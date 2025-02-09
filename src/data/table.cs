@@ -45,11 +45,11 @@ public class Table {
 	/// <summary>
 	/// Gets the fully qualified name.
 	/// </summary>
-	/// <param name="escape">A function used to escape the SQL identifiers.</param>
+	/// <param name="escape">Value indicating whether to escape the SQL identifiers.</param>
 	/// <returns>The fully qualified name.</returns>
-	public string GetQualifiedName(Func<string, string>? escape = null) {
-		escape ??= identifier => identifier;
-		return $"{escape(Schema)}.{escape(Name)}";
+	public string GetQualifiedName(bool escape = false) {
+		Func<string, string> escapeFunc = escape ? identifier => $"`{identifier}`" : identifier => identifier;
+		return $"{escapeFunc(Schema)}.{escapeFunc(Name)}";
 	}
 
 	/// <summary>

@@ -4,6 +4,7 @@ using MySqlConnector;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Reflection;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Provides extension methods for commands.
@@ -38,7 +39,7 @@ public static class CommandExtensions {
 	/// <param name="_">The current command.</param>
 	/// <param name="uri">The connection string used to connect to the database.</param>
 	/// <returns>The newly created database connection.</returns>
-	public static MySqlConnection CreateDbConnection(this Command _, Uri uri) {
+	public static async Task<MySqlConnection> CreateDbConnection(this Command _, Uri uri) {
 		var userInfo = uri.UserInfo.Split(':').Select(Uri.UnescapeDataString).ToArray();
 		var builder = new MySqlConnectionStringBuilder {
 			Server = uri.Host,
@@ -51,7 +52,7 @@ public static class CommandExtensions {
 		};
 
 		var connection = new MySqlConnection(builder.ConnectionString);
-		connection.Open();
+		await connection.OpenAsync();
 		return connection;
 	}
 
