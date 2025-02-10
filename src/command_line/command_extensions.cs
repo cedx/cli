@@ -48,7 +48,7 @@ public static class CommandExtensions {
 			UserID = userInfo[0],
 			Password = userInfo[1],
 			Pooling = false,
-			UseCompression = localHosts.Contains(uri.Host)
+			UseCompression = !localHosts.Contains(uri.Host)
 		};
 
 		var connection = new MySqlConnection(builder.ConnectionString);
