@@ -24,6 +24,8 @@ public class OptimizeCommand: Command {
 	/// Executes this command.
 	/// </summary>
 	/// <param name="dsn">The connection string.</param>
+	/// <param name="schemaName">The schema name.</param>
+	/// <param name="tableNames">The table names.</param>
 	/// <returns>The exit code.</returns>
 	public async Task<int> Execute(Uri dsn, string? schemaName, string[] tableNames) {
 		var noSchema = string.IsNullOrWhiteSpace(schemaName);
@@ -47,6 +49,7 @@ public class OptimizeCommand: Command {
 	/// </summary>
 	/// <param name="connection">The database connection.</param>
 	/// <param name="table">The table to optimize.</param>
+	/// <returns>Completes when the table has been optimized.</returns>
 	private static async Task OptimizeTable(MySqlConnection connection, Table table) {
 		var qualifiedName = table.GetQualifiedName(escape: true);
 		Console.WriteLine($"Optimizing: {qualifiedName}");

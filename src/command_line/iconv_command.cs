@@ -45,6 +45,7 @@ public class IconvCommand: Command {
 	/// <param name="from">The input encoding.</param>
 	/// <param name="to">The output encoding.</param>
 	/// <param name="recursive">Value indicating whether to process the directory recursively.</param>
+	/// <returns>The exit code.</returns>
 	public async Task<int> Execute(FileSystemInfo fileOrDirectory, string from, string to, bool recursive = false) {
 		if (!fileOrDirectory.Exists) {
 			Console.WriteLine("Unable to locate the specified file or directory.");
