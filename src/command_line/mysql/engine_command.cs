@@ -45,7 +45,7 @@ public class EngineCommand: Command {
 
 		using var disableForeignKeys = new MySqlCommand("SET foreign_key_checks = 0", connection);
 		await disableForeignKeys.ExecuteNonQueryAsync();
-		foreach (var table in tables.Where(item => string.Equals(item.Collation, engine, StringComparison.InvariantCultureIgnoreCase)))
+		foreach (var table in tables.Where(item => !string.Equals(item.Collation, engine, StringComparison.InvariantCultureIgnoreCase)))
 			await AlterTable(connection, table, engine);
 
 		using var enableForeignKeys = new MySqlCommand("SET foreign_key_checks = 1", connection);

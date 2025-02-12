@@ -45,7 +45,7 @@ public class CharsetCommand: Command {
 
 		using var disableForeignKeys = new MySqlCommand("SET foreign_key_checks = 0", connection);
 		await disableForeignKeys.ExecuteNonQueryAsync();
-		foreach (var table in tables.Where(item => string.Equals(item.Collation, collation, StringComparison.InvariantCultureIgnoreCase)))
+		foreach (var table in tables.Where(item => !string.Equals(item.Collation, collation, StringComparison.InvariantCultureIgnoreCase)))
 			await AlterTable(connection, table, collation);
 
 		using var enableForeignKeys = new MySqlCommand("SET foreign_key_checks = 1", connection);
