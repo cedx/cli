@@ -43,7 +43,7 @@ public class PhpCommand: Command {
 		StartWebServer(serviceController);
 		RegisterEventLog(version, output);
 
-		Console.WriteLine(this.GetExecutableVersion(output, "php"));
+		Console.WriteLine(await this.GetExecutableVersion(output, "php"));
 		return 0;
 	}
 

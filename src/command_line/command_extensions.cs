@@ -99,8 +99,7 @@ public static class CommandExtensions {
 	/// <param name="executable">The executable path, relative to the output directory.</param>
 	/// <returns>The standard output of the underlying process.</returns>
 	/// <exception cref="Exception">An error occurred when starting the underlying process.</exception>
-	public static string GetExecutableVersion(this Command _, DirectoryInfo output, string executable) {
-		// TODO inutile de capturer la sortie standard!!! par défault, elle est affichée à l'écran !!!
+	public static async Task<string> GetExecutableVersion(this Command _, DirectoryInfo output, string executable) {
 		var startInfo = new ProcessStartInfo {
 			Arguments = "--version",
 			CreateNoWindow = true,
@@ -111,7 +110,7 @@ public static class CommandExtensions {
 		// TODO remove exceptions and use nullables instead.
 		using var process = Process.Start(startInfo) ?? throw new Exception($"The \"{executable}\" process could not be started.");
 		var standardOutput = process.StandardOutput.ReadToEnd().Trim();
-		process.WaitForExit();
+		await process.WaitForExitAsync();
 		if (process.ExitCode != 0) throw new Exception($"The \"{executable}\" process failed with exit code {process.ExitCode}.");
 		return standardOutput;
 	}

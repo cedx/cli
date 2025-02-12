@@ -58,7 +58,7 @@ public class NodeCommand: Command {
 		this.ExtractZipFile(path, output, strip: 1);
 		StartServices();
 
-		Console.WriteLine(this.GetExecutableVersion(output, "node"));
+		Console.WriteLine(await this.GetExecutableVersion(output, "node"));
 		return 0;
 	}
 
