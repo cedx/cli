@@ -34,7 +34,7 @@ public class OptimizeCommand: Command {
 			return 1;
 		}
 
-		using var connection = await this.CreateDbConnection(dsn);
+		using var connection = await this.CreateMySqlConnection(dsn);
 		var schemas = noSchema ? connection.GetSchemas() : [new Schema { Name = schemaName! }];
 		var tables = schemas.SelectMany(schema => tableNames.Length > 0
 			? tableNames.Select(table => new Table { Name = table, Schema = schema.Name })

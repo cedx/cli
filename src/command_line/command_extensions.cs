@@ -34,12 +34,25 @@ public static class CommandExtensions {
 	}
 
 	/// <summary>
+	/// Creates a new HTTP client.
+	/// </summary>
+	/// <param name="_">The current command.</param>
+	/// <returns>The newly created HTTP client.</returns>
+	public static HttpClient CreateHttpClient(this Command _) {
+		var fileVersion = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>();
+		var userAgent = $".NET/{Environment.Version} | Belin.io/{new Version(fileVersion!.Version).ToString(3)}";
+		var httpClient = new HttpClient();
+		httpClient.DefaultRequestHeaders.Add("user-agent", userAgent);
+		return httpClient;
+	}
+
+	/// <summary>
 	/// Creates a new database connection.
 	/// </summary>
 	/// <param name="_">The current command.</param>
 	/// <param name="uri">The connection string used to connect to the database.</param>
 	/// <returns>The newly created database connection.</returns>
-	public static async Task<MySqlConnection> CreateDbConnection(this Command _, Uri uri) {
+	public static async Task<MySqlConnection> CreateMySqlConnection(this Command _, Uri uri) {
 		var userInfo = uri.UserInfo.Split(':').Select(Uri.UnescapeDataString).ToArray();
 		var builder = new MySqlConnectionStringBuilder {
 			Server = uri.Host,
@@ -54,19 +67,6 @@ public static class CommandExtensions {
 		var connection = new MySqlConnection(builder.ConnectionString);
 		await connection.OpenAsync();
 		return connection;
-	}
-
-	/// <summary>
-	/// Creates a new HTTP client.
-	/// </summary>
-	/// <param name="_">The current command.</param>
-	/// <returns>The newly created HTTP client.</returns>
-	public static HttpClient CreateHttpClient(this Command _) {
-		var fileVersion = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>();
-		var userAgent = $".NET/{Environment.Version} | Belin.io/{new Version(fileVersion!.Version).ToString(3)}";
-		var httpClient = new HttpClient();
-		httpClient.DefaultRequestHeaders.Add("user-agent", userAgent);
-		return httpClient;
 	}
 
 	/// <summary>
