@@ -4,18 +4,44 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cli", "src\cli.csproj", "{2EC1A0A4-A572-4401-88BE-D0F67E017C35}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		AUTHORS.txt = AUTHORS.txt
+		CHANGELOG.md = CHANGELOG.md
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{26E1FE4A-5477-4082-9862-7A58D77A2895}"
+	ProjectSection(SolutionItems) = preProject
+		build.cake = build.cake
+		cake.config = cake.config
+		run.ps1 = run.ps1
+		setup.iss = setup.iss
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{62A9C867-3A81-417B-B801-3BCF055BB66F}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2EC1A0A4-A572-4401-88BE-D0F67E017C35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2EC1A0A4-A572-4401-88BE-D0F67E017C35}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EC1A0A4-A572-4401-88BE-D0F67E017C35}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EC1A0A4-A572-4401-88BE-D0F67E017C35}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ADB9AABC-953D-43D9-929E-BB33D4295659}
 	EndGlobalSection
 EndGlobal
