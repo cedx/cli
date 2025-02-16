@@ -106,7 +106,7 @@ public class BackupCommand: Command {
 		args.AddRange(tableNames);
 
 		var startInfo = new ProcessStartInfo("mysqldump", args) { CreateNoWindow = true, RedirectStandardError = true };
-		using var process = Process.Start("mysqldump", args) ?? throw new Exception(@"The ""mysqldump"" process could not be started.");
+		using var process = Process.Start(startInfo) ?? throw new Exception(@"The ""mysqldump"" process could not be started.");
 
 		var stderr = process.StandardError.ReadToEnd().Trim();
 		await process.WaitForExitAsync();

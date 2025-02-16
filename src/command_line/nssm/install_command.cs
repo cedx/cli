@@ -30,9 +30,7 @@ public class InstallCommand: Command {
 	/// <param name="directory">The path to the root directory of the Node.js application.</param>
 	/// <param name="start">Value indicating whether to start the service after its registration.</param>
 	/// <returns>The exit code.</returns>
-	/// <exception cref="PlatformNotSupportedException">This command only supports the Windows platform.</exception>
 	public async Task<int> Execute(DirectoryInfo directory, bool start = false) {
-		if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("This command only supports the Windows platform.");
 		if (!this.CheckPrivilege()) return 1;
 
 		var package = PackageJsonFile.ReadFromDirectory(directory);

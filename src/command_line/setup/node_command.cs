@@ -54,9 +54,9 @@ public class NodeCommand: Command {
 		}
 
 		var path = await DownloadArchive(httpClient, version);
-		if (OperatingSystem.IsWindows()) StopServices();
+		StopServices();
 		this.ExtractZipFile(path, output, strip: 1);
-		if (OperatingSystem.IsWindows()) StartServices();
+		StartServices();
 
 		Console.WriteLine(await this.GetExecutableVersion(output, "node"));
 		return 0;
