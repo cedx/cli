@@ -23,6 +23,10 @@
 		-->
 	</PropertyGroup>
 
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+		<Exec Command="dotnet cake --target=fetch" />
+	</Target>
+
 	<ItemGroup>
 		<Compile Remove="var\**" />
 		<EmbeddedResource Remove="var\**" />
