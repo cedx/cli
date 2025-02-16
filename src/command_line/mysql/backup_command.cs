@@ -52,7 +52,7 @@ public class BackupCommand: Command {
 				var entity = tableNames.Length == 1 ? $"{schema.Name}.{tableNames[0]}" : schema.Name;
 				Console.WriteLine($"Exporting: {entity}");
 				if (format == BackupFormat.JsonLines) ExportToJsonLines(connection, schema, tableNames, directory);
-				else await ExportToSqlDump(dsn, schema, tableNames, directory);
+				else ExportToSqlDump(dsn, schema, tableNames, directory);
 			}
 
 			return 0;
@@ -76,11 +76,11 @@ public class BackupCommand: Command {
 			using var command = new MySqlCommand($"SELECT * FROM {table.GetQualifiedName(escape: true)}", connection);
 			using var file = File.CreateText(Path.Join(directory.FullName, $"{table.QualifiedName}.{BackupFormat.JsonLines}"));
 			using var reader = command.ExecuteReader();
+
 			while (reader.Read()) {
 				var record = new Dictionary<string, object?>();
 				for (var i = 0; i < reader.FieldCount; i++) record[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
-				var json = JsonSerializer.Serialize(record);
-				if (json is not null) file.WriteLine(json);
+				file.WriteLine(JsonSerializer.Serialize(record));
 			}
 		}
 	}
@@ -94,7 +94,7 @@ public class BackupCommand: Command {
 	/// <param name="directory">The path to the output directory.</param>
 	/// <returns>Completes when the specified schema has been exported.</returns>
 	/// <exception cref="ProcessException">An error occurred when starting the underlying process.</exception>
-	private async Task ExportToSqlDump(Uri dsn, Schema schema, string[] tableNames, DirectoryInfo directory) {
+	private void ExportToSqlDump(Uri dsn, Schema schema, string[] tableNames, DirectoryInfo directory) {
 		var entity = tableNames.Length == 1 ? $"{schema.Name}.{tableNames[0]}" : schema.Name;
 		var file = $"{entity}.{BackupFormat.SqlDump}";
 		var query = this.ParseQueryString(dsn.Query);
@@ -118,7 +118,7 @@ public class BackupCommand: Command {
 		using var process = Process.Start(startInfo) ?? throw new ProcessException("mysqldump");
 
 		var stderr = process.StandardError.ReadToEnd().Trim();
-		await process.WaitForExitAsync();
+		process.WaitForExit();
 		if (process.ExitCode != 0) throw new ProcessException(stderr);
 	}
 }

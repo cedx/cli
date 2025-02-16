@@ -9,15 +9,17 @@ public class RestoreCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public RestoreCommand(DsnOption dsnOption): base("restore", "Restore a set of MariaDB/MySQL tables.") {
-		this.SetHandler(Execute, dsnOption);
+		var fileOrDirectoryArgument = new Argument<DirectoryInfo>("fileOrDirectory", "The path to a file or directory to process.");
+		this.SetHandler(Execute, dsnOption, fileOrDirectoryArgument);
 	}
 
 	/// <summary>
 	/// Executes this command.
 	/// </summary>
 	/// <param name="dsn">The connection string.</param>
+	/// <param name="fileOrDirectory">The path to a file or directory to process.</param>
 	/// <returns>The exit code.</returns>
-	public async Task<int> Execute(Uri dsn) {
+	public static async Task<int> Execute(Uri dsn, FileSystemInfo fileOrDirectory) {
 		return await Task.FromResult(0);
 	}
 }
