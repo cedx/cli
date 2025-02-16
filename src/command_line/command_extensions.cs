@@ -129,7 +129,7 @@ public static class CommandExtensions {
 		var collection = new NameValueCollection();
 		if (query.Length > 0) foreach (var param in query.Split('&')) {
 			var parts = param.Split('=');
-			if (parts.Length > 0) collection.Add(parts[0], parts.Length > 1 ? Uri.UnescapeDataString(parts[1]) : null);
+			if (parts.Length > 0) collection.Add(Uri.UnescapeDataString(parts[0]), parts.Length > 1 ? Uri.UnescapeDataString(parts[1]) : null);
 		}
 
 		return collection;
