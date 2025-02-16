@@ -48,13 +48,19 @@ public class BackupCommand: Command {
 			? tableNames.Select(table => new Table { Name = table, Schema = schema.Name })
 			: connection.GetTables(schema));
 
-		directory.Create();
-		foreach (var schema in schemas) {
-			if (format == BackupFormat.JsonLines) await ExportToJsonLines(connection, schema, tableNames, directory);
-			else await ExportToSqlDump(dsn, schema, tableNames, directory);
-		}
+		try {
+			directory.Create();
+			foreach (var schema in schemas) {
+				if (format == BackupFormat.JsonLines) await ExportToJsonLines(connection, schema, tableNames, directory);
+				else await ExportToSqlDump(dsn, schema, tableNames, directory);
+			}
 
-		return 0;
+			return 0;
+		}
+		catch (Exception e) {
+			Console.WriteLine(e.Message);
+			return 2;
+		}
 	}
 
 	/// <summary>
@@ -83,6 +89,7 @@ public class BackupCommand: Command {
 	/// <param name="tableNames">The tables to export.</param>
 	/// <param name="directory">The path to the output directory.</param>
 	/// <returns>Completes when the specified schema has been exported.</returns>
+	/// <exception cref="ProcessException">An error occurred when starting the underlying process.</exception>
 	private async Task ExportToSqlDump(Uri dsn, Schema schema, string[] tableNames, DirectoryInfo directory) {
 		var entity = tableNames.Length == 1 ? $"{schema.Name}.{tableNames[0]}" : schema.Name;
 		Console.WriteLine($"Exporting: {entity}");
@@ -106,11 +113,11 @@ public class BackupCommand: Command {
 		args.AddRange(tableNames);
 
 		var startInfo = new ProcessStartInfo("mysqldump", args) { CreateNoWindow = true, RedirectStandardError = true };
-		using var process = Process.Start(startInfo) ?? throw new Exception(@"The ""mysqldump"" process could not be started.");
+		using var process = Process.Start(startInfo) ?? throw new ProcessException("mysqldump");
 
 		var stderr = process.StandardError.ReadToEnd().Trim();
 		await process.WaitForExitAsync();
-		if (process.ExitCode != 0) throw new Exception(stderr);
+		if (process.ExitCode != 0) throw new ProcessException(stderr);
 	}
 }
 
