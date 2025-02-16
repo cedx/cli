@@ -1,6 +1,7 @@
 namespace Belin.Cli.CommandLine;
 
 using MySqlConnector;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Reflection;
@@ -113,5 +114,23 @@ public static class CommandExtensions {
 		await process.WaitForExitAsync();
 		if (process.ExitCode != 0) throw new Exception($"The \"{executable}\" process failed with exit code {process.ExitCode}.");
 		return standardOutput;
+	}
+
+	/// <summary>
+	/// Parses the specified query string into a name-value collection.
+	/// </summary>
+	/// <param name="_">The current command.</param>
+	/// <param name="query">The query string.</param>
+	/// <returns>The name-value collection corresponding to the specified query string.</returns>
+	public static NameValueCollection ParseQueryString(this Command _, string query) {
+		if (query.StartsWith('?')) query = query[1..];
+
+		var collection = new NameValueCollection();
+		if (query.Length > 0) foreach (var param in query.Split('&')) {
+			var parts = param.Split('=');
+			if (parts.Length > 0) collection.Add(parts[0], parts.Length > 1 ? Uri.UnescapeDataString(parts[1]) : null);
+		}
+
+		return collection;
 	}
 }
