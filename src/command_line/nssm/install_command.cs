@@ -65,13 +65,13 @@ public class InstallCommand: Command {
 		}
 
 		var properties = new Dictionary<string, string> {
-			["AppDirectory"] = directory.FullName,
-			["AppNoConsole"] = "1",
-			["AppStderr"] = Path.Join(directory.FullName, @"var\stderr.log"),
-			["AppStdout"] = Path.Join(directory.FullName, @"var\stdout.log"),
-			["Description"] = package.Description ?? string.Empty,
-			["DisplayName"] = config.Name,
-			["Start"] = "SERVICE_AUTO_START"
+			{ "AppDirectory", directory.FullName },
+			{ "AppNoConsole", "1" },
+			{ "AppStderr", Path.Join(directory.FullName, @"var\stderr.log") },
+			{ "AppStdout", Path.Join(directory.FullName, @"var\stdout.log") },
+			{ "Description", package.Description ?? string.Empty },
+			{ "DisplayName", config.Name },
+			{ "Start", "SERVICE_AUTO_START" }
 		};
 
 		foreach (var (key, value) in properties) {
