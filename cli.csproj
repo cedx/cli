@@ -7,11 +7,11 @@
 
 	<PropertyGroup>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<ApplicationIcon>../res/favicon.ico</ApplicationIcon>
+		<ApplicationIcon>res/favicon.ico</ApplicationIcon>
 		<AssemblyName>Belin.Cli</AssemblyName>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<OutDir>../bin</OutDir>
+		<OutDir>bin</OutDir>
 		<OutputType>Exe</OutputType>
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 		<TargetFramework>net9.0-windows</TargetFramework>
@@ -24,12 +24,18 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Remove="var\**" />
+		<EmbeddedResource Remove="var\**" />
+		<None Remove="var\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Using Include="System.CommandLine" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="MySqlConnector" Version="2.*" />
-	  <PackageReference Include="System.CommandLine" Version="2.*-*" />
-	  <PackageReference Include="System.ServiceProcess.ServiceController" Version="9.*" />
+		<PackageReference Include="MySqlConnector" Version="2.*" />
+		<PackageReference Include="System.CommandLine" Version="2.*-*" />
+		<PackageReference Include="System.ServiceProcess.ServiceController" Version="9.*" />
 	</ItemGroup>
 </Project>
