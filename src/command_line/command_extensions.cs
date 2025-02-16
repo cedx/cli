@@ -61,6 +61,7 @@ public static class CommandExtensions {
 			Database = "information_schema",
 			UserID = userInfo[0],
 			Password = userInfo[1],
+			ConvertZeroDateTime = true,
 			Pooling = false,
 			UseCompression = !localHosts.Contains(uri.Host)
 		};
