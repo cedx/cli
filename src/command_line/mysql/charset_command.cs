@@ -44,13 +44,13 @@ public class CharsetCommand: Command {
 			: connection.GetTables(schema));
 
 		using var disableForeignKeys = new MySqlCommand("SET foreign_key_checks = 0", connection);
-		await disableForeignKeys.ExecuteNonQueryAsync();
+		disableForeignKeys.ExecuteNonQuery();
 		foreach (var table in tables.Where(item => !string.Equals(item.Collation, collation, StringComparison.InvariantCultureIgnoreCase)))
-			await AlterTable(connection, table, collation);
+			AlterTable(connection, table, collation);
 
 		using var enableForeignKeys = new MySqlCommand("SET foreign_key_checks = 1", connection);
-		await enableForeignKeys.ExecuteNonQueryAsync();
-		return 0;
+		enableForeignKeys.ExecuteNonQuery();
+		return await Task.FromResult(0);
 	}
 
 	/// <summary>
@@ -60,11 +60,11 @@ public class CharsetCommand: Command {
 	/// <param name="table">The table to alter.</param>
 	/// <param name="collation">The name of the new character set.</param>
 	/// <returns>Completes when the table has been altered.</returns>
-	private static async Task AlterTable(MySqlConnection connection, Table table, string collation) {
+	private static void AlterTable(MySqlConnection connection, Table table, string collation) {
 		var qualifiedName = table.GetQualifiedName(escape: true);
 		Console.WriteLine($"Processing: {qualifiedName}");
 		var query = $"ALTER TABLE {qualifiedName} CONVERT TO CHARACTER SET {collation.Split('_')[0]} COLLATE {collation}";
 		using var command = new MySqlCommand(query, connection);
-		await command.ExecuteNonQueryAsync();
+		command.ExecuteNonQuery();
 	}
 }

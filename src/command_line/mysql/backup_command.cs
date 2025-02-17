@@ -55,7 +55,7 @@ public class BackupCommand: Command {
 				else ExportToSqlDump(dsn, schema, tableNames, directory);
 			}
 
-			return 0;
+			return await Task.FromResult(0);
 		}
 		catch (Exception e) {
 			Console.WriteLine(e.Message);

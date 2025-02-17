@@ -43,12 +43,12 @@ public class RemoveCommand: Command {
 		}
 
 		using var process = Process.Start("nssm", ["remove", config.Id, "confirm"]);
-		if (process is not null) await process.WaitForExitAsync();
+		if (process is not null) process.WaitForExit();
 		else {
 			Console.WriteLine(@"The ""nssm"" program could not be started.");
 			return 3;
 		}
 
-		return process.ExitCode;
+		return await Task.FromResult(process.ExitCode);
 	}
 }

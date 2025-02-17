@@ -58,7 +58,7 @@ public class InstallCommand: Command {
 		}
 
 		using var installProcess = Process.Start("nssm", ["install", config.Id, node.FullName, Path.GetFullPath(Path.Join(directory.FullName, binary))]);
-		if (installProcess is not null) await installProcess.WaitForExitAsync();
+		if (installProcess is not null) installProcess.WaitForExit();
 		else {
 			Console.WriteLine(@"The ""nssm"" program could not be started.");
 			return 6;
@@ -76,7 +76,7 @@ public class InstallCommand: Command {
 
 		foreach (var (key, value) in properties) {
 			using var setProcess = Process.Start("nssm", ["set", config.Id, key, value]);
-			if (setProcess is not null) await setProcess.WaitForExitAsync();
+			if (setProcess is not null) setProcess.WaitForExit();
 			else {
 				Console.WriteLine(@"The ""nssm"" program could not be started.");
 				return 7;
@@ -91,7 +91,7 @@ public class InstallCommand: Command {
 			}
 		}
 
-		return 0;
+		return await Task.FromResult(0);
 	}
 
 	/// <summary>

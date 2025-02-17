@@ -19,7 +19,7 @@ public class RestoreCommand: Command {
 	/// <param name="dsn">The connection string.</param>
 	/// <param name="fileOrDirectory">The path to a file or directory to process.</param>
 	/// <returns>The exit code.</returns>
-	public static async Task<int> Execute(Uri dsn, FileSystemInfo fileOrDirectory) {
-		return await Task.FromResult(0);
+	public static Task<int> Execute(Uri dsn, FileSystemInfo fileOrDirectory) {
+		return Task.FromResult(0);
 	}
 }

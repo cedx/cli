@@ -44,13 +44,13 @@ public class EngineCommand: Command {
 			: connection.GetTables(schema));
 
 		using var disableForeignKeys = new MySqlCommand("SET foreign_key_checks = 0", connection);
-		await disableForeignKeys.ExecuteNonQueryAsync();
+		disableForeignKeys.ExecuteNonQuery();
 		foreach (var table in tables.Where(item => !string.Equals(item.Collation, engine, StringComparison.InvariantCultureIgnoreCase)))
-			await AlterTable(connection, table, engine);
+			AlterTable(connection, table, engine);
 
 		using var enableForeignKeys = new MySqlCommand("SET foreign_key_checks = 1", connection);
-		await enableForeignKeys.ExecuteNonQueryAsync();
-		return 0;
+		enableForeignKeys.ExecuteNonQuery();
+		return await Task.FromResult(0);
 	}
 
 	/// <summary>
@@ -60,10 +60,10 @@ public class EngineCommand: Command {
 	/// <param name="table">The table to alter.</param>
 	/// <param name="engine">The name of the new storage engine.</param>
 	/// <returns>Completes when the table has been altered.</returns>
-	private static async Task AlterTable(MySqlConnection connection, Table table, string engine) {
+	private static void AlterTable(MySqlConnection connection, Table table, string engine) {
 		var qualifiedName = table.GetQualifiedName(escape: true);
 		Console.WriteLine($"Processing: {qualifiedName}");
 		using var command = new MySqlCommand($"ALTER TABLE {qualifiedName} ENGINE = {engine}", connection);
-		await command.ExecuteNonQueryAsync();
+		command.ExecuteNonQuery();
 	}
 }
