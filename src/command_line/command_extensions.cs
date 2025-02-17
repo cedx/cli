@@ -53,7 +53,7 @@ public static class CommandExtensions {
 	/// <param name="_">The current command.</param>
 	/// <param name="uri">The connection string used to connect to the database.</param>
 	/// <returns>The newly created database connection.</returns>
-	public static async Task<MySqlConnection> CreateMySqlConnection(this Command _, Uri uri) {
+	public static MySqlConnection CreateMySqlConnection(this Command _, Uri uri) {
 		var userInfo = uri.UserInfo.Split(':').Select(Uri.UnescapeDataString).ToArray();
 		var builder = new MySqlConnectionStringBuilder {
 			Server = uri.Host,
@@ -67,7 +67,7 @@ public static class CommandExtensions {
 		};
 
 		var connection = new MySqlConnection(builder.ConnectionString);
-		await connection.OpenAsync();
+		connection.Open();
 		return connection;
 	}
 
@@ -101,7 +101,7 @@ public static class CommandExtensions {
 	/// <param name="executable">The executable path, relative to the output directory.</param>
 	/// <returns>The standard output of the underlying process.</returns>
 	/// <exception cref="ProcessException">An error occurred when starting the underlying process.</exception>
-	public static async Task<string> GetExecutableVersion(this Command _, DirectoryInfo output, string executable) {
+	public static string GetExecutableVersion(this Command _, DirectoryInfo output, string executable) {
 		var startInfo = new ProcessStartInfo {
 			Arguments = "--version",
 			CreateNoWindow = true,
@@ -112,7 +112,7 @@ public static class CommandExtensions {
 		// TODO remove exceptions and use nullables instead.
 		using var process = Process.Start(startInfo) ?? throw new ProcessException(executable);
 		var standardOutput = process.StandardOutput.ReadToEnd().Trim();
-		await process.WaitForExitAsync();
+		process.WaitForExit();
 		if (process.ExitCode != 0) throw new ProcessException($"The \"{executable}\" process failed with exit code {process.ExitCode}.");
 		return standardOutput;
 	}

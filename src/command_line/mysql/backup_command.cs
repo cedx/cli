@@ -47,7 +47,7 @@ public class BackupCommand: Command {
 			if (format == BackupFormat.JsonLines) Console.WriteLine(@"Warning: the ""JSON Lines"" format does not export INVISIBLE columns.");
 			directory.Create();
 
-			using var connection = await this.CreateMySqlConnection(dsn);
+			using var connection = this.CreateMySqlConnection(dsn);
 			foreach (var schema in noSchema ? connection.GetSchemas() : [new Schema { Name = schemaName! }]) {
 				var entity = tableNames.Length == 1 ? $"{schema.Name}.{tableNames[0]}" : schema.Name;
 				Console.WriteLine($"Exporting: {entity}");

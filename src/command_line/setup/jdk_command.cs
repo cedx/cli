@@ -28,7 +28,7 @@ public class JdkCommand: Command {
 
 		using var httpClient = this.CreateHttpClient();
 		this.ExtractZipFile(await DownloadArchive(httpClient, java), output, strip: 1);
-		Console.WriteLine(await this.GetExecutableVersion(output, "bin/java"));
+		Console.WriteLine(this.GetExecutableVersion(output, "bin/java"));
 		return 0;
 	}
 
