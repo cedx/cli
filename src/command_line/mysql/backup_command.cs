@@ -3,7 +3,6 @@ namespace Belin.Cli.CommandLine.MySql;
 using Belin.Cli.Data;
 using MySqlConnector;
 using System.Diagnostics;
-using System.Text;
 using System.Text.Json;
 
 /// <summary>

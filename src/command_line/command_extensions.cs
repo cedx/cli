@@ -4,8 +4,8 @@ using MySqlConnector;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Net.Http.Headers;
 using System.Reflection;
-using System.Threading.Tasks;
 
 /// <summary>
 /// Provides extension methods for commands.
@@ -44,6 +44,7 @@ public static class CommandExtensions {
 		var userAgent = $".NET/{Environment.Version} | Belin.io/{new Version(fileVersion!.Version).ToString(3)}";
 		var httpClient = new HttpClient();
 		httpClient.DefaultRequestHeaders.Add("user-agent", userAgent);
+		httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(userAgent));
 		return httpClient;
 	}
 
