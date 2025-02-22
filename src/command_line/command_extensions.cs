@@ -5,7 +5,6 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Net.Http.Headers;
-using System.Reflection;
 
 /// <summary>
 /// Provides extension methods for commands.
@@ -40,11 +39,8 @@ public static class CommandExtensions {
 	/// <param name="_">The current command.</param>
 	/// <returns>The newly created HTTP client.</returns>
 	public static HttpClient CreateHttpClient(this Command _) {
-		var fileVersion = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>();
-		var userAgent = $".NET/{Environment.Version} | Belin.io/{new Version(fileVersion!.Version).ToString(3)}";
 		var httpClient = new HttpClient();
-		httpClient.DefaultRequestHeaders.Add("user-agent", userAgent);
-		httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(userAgent));
+		httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(".NET", Environment.Version.ToString(3)));
 		return httpClient;
 	}
 
