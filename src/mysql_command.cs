@@ -1,6 +1,6 @@
-namespace Belin.Cli.CommandLine;
+namespace Belin.Cli;
 
-using Belin.Cli.CommandLine.MySql;
+using Belin.Cli.MySql;
 
 /// <summary>
 /// Manages MariaDB/MySQL databases.

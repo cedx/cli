@@ -1,6 +1,5 @@
-namespace Belin.Cli.CommandLine.MySql;
+namespace Belin.Cli.MySql;
 
-using Belin.Cli.Data;
 using MySqlConnector;
 using System.Diagnostics;
 using System.Text.Json;

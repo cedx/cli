@@ -1,4 +1,4 @@
-namespace Belin.Cli.CommandLine.Setup;
+namespace Belin.Cli.Setup;
 
 /// <summary>
 /// Downloads and installs the latest OpenJDK release.

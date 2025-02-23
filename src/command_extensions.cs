@@ -1,4 +1,4 @@
-namespace Belin.Cli.CommandLine;
+namespace Belin.Cli;
 
 using MySqlConnector;
 using System.Collections.Specialized;

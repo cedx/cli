@@ -1,4 +1,4 @@
-namespace Belin.Cli.CommandLine.Setup;
+namespace Belin.Cli.Setup;
 
 using System.Net.Http.Json;
 using System.ServiceProcess;

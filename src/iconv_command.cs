@@ -1,4 +1,4 @@
-namespace Belin.Cli.CommandLine;
+namespace Belin.Cli;
 
 using System.Text;
 using System.Text.Json;

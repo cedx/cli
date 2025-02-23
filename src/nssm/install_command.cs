@@ -1,4 +1,4 @@
-namespace Belin.Cli.CommandLine.Nssm;
+namespace Belin.Cli.Nssm;
 
 using System.Diagnostics;
 using System.ServiceProcess;

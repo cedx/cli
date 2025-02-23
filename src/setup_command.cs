@@ -1,6 +1,6 @@
-namespace Belin.Cli.CommandLine;
+namespace Belin.Cli;
 
-using Belin.Cli.CommandLine.Setup;
+using Belin.Cli.Setup;
 
 /// <summary>
 /// Downloads and installs a runtime environment.

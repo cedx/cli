@@ -1,4 +1,4 @@
-namespace Belin.Cli.Data;
+namespace Belin.Cli.MySql;
 
 using System.Data;
 

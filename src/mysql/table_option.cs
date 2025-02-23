@@ -1,4 +1,4 @@
-namespace Belin.Cli.CommandLine.MySql;
+namespace Belin.Cli.MySql;
 
 /// <summary>
 /// Provides the name of a database table.

@@ -1,4 +1,4 @@
-namespace Belin.Cli.CommandLine.MySql;
+namespace Belin.Cli.MySql;
 
 /// <summary>
 /// Restores a set of MariaDB/MySQL tables.
