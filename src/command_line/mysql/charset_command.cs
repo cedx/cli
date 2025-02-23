@@ -12,14 +12,14 @@ public class CharsetCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public CharsetCommand(DsnOption dsnOption): base("charset", "Alter the character set of MariaDB/MySQL tables.") {
-		var collationParameter = new Argument<string>("collation", "The name of the new character set.");
+		var collationArgument = new Argument<string>("collation", "The name of the new character set.");
 		var schemaOption = new SchemaOption();
 		var tableOption = new TableOption();
 
-		Add(collationParameter);
+		Add(collationArgument);
 		Add(schemaOption);
 		Add(tableOption);
-		this.SetHandler(Execute, dsnOption, collationParameter, schemaOption, tableOption);
+		this.SetHandler(Execute, dsnOption, collationArgument, schemaOption, tableOption);
 	}
 
 	/// <summary>

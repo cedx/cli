@@ -22,11 +22,7 @@ public class IconvCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public IconvCommand(): base("iconv", "Convert the encoding of input files.") {
-		var fileOrDirectoryArgument = new Argument<FileSystemInfo>(
-			name: "fileOrDirectory",
-			description: "The path to the file or directory to process."
-		);
-
+		var fileOrDirectoryArgument = new Argument<FileSystemInfo>("fileOrDirectory", "The path to the file or directory to process.");
 		var fromOption = new EncodingOption(["-f", "--from"], Encoding.Latin1.WebName, "The input encoding.");
 		var toOption = new EncodingOption(["-t", "--to"], Encoding.UTF8.WebName, "The output encoding.");
 		var recursiveOption = new Option<bool>(["-r", "--recursive"], "Whether to process the directory recursively.");

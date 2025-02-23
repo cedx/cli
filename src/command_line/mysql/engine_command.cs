@@ -12,14 +12,14 @@ public class EngineCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public EngineCommand(DsnOption dsnOption): base("engine", "Alter the storage engine of MariaDB/MySQL tables.") {
-		var engineParameter = new Argument<string>("engine", "The name of the new storage engine.");
+		var engineArgument = new Argument<string>("engine", "The name of the new storage engine.");
 		var schemaOption = new SchemaOption();
 		var tableOption = new TableOption();
 
-		Add(engineParameter);
+		Add(engineArgument);
 		Add(schemaOption);
 		Add(tableOption);
-		this.SetHandler(Execute, dsnOption, engineParameter, schemaOption, tableOption);
+		this.SetHandler(Execute, dsnOption, engineArgument, schemaOption, tableOption);
 	}
 
 	/// <summary>
