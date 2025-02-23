@@ -90,14 +90,13 @@ public class BackupCommand: Command {
 	/// <param name="schema">The schema to export.</param>
 	/// <param name="tableNames">The tables to export.</param>
 	/// <param name="directory">The path to the output directory.</param>
-	/// <returns>Completes when the specified schema has been exported.</returns>
 	/// <exception cref="ProcessException">An error occurred when starting the underlying process.</exception>
 	private void ExportToSqlDump(Uri dsn, Schema schema, string[] tableNames, DirectoryInfo directory) {
 		var entity = tableNames.Length == 1 ? $"{schema.Name}.{tableNames[0]}" : schema.Name;
 		var file = $"{entity}.{BackupFormat.SqlDump}";
+
 		var query = this.ParseQueryString(dsn.Query);
 		var userInfo = dsn.UserInfo.Split(':').Select(Uri.UnescapeDataString).ToArray();
-
 		var args = new List<string> {
 			$"--default-character-set={query["charset"] ?? "utf8mb4"}",
 			$"--host={dsn.Host}",
@@ -108,7 +107,7 @@ public class BackupCommand: Command {
 		};
 
 		var hosts = new[] { "::1", "127.0.0.1", "localhost" };
-		if (hosts.Contains(dsn.Host)) args.Add("--compress");
+		if (!hosts.Contains(dsn.Host)) args.Add("--compress");
 		args.Add(schema.Name);
 		args.AddRange(tableNames);
 

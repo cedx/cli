@@ -58,7 +58,6 @@ public class CharsetCommand: Command {
 	/// <param name="connection">The database connection.</param>
 	/// <param name="table">The table to alter.</param>
 	/// <param name="collation">The name of the new character set.</param>
-	/// <returns>Completes when the table has been altered.</returns>
 	private static void AlterTable(MySqlConnection connection, Table table, string collation) {
 		var qualifiedName = table.GetQualifiedName(escape: true);
 		Console.WriteLine($"Processing: {qualifiedName}");

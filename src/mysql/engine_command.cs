@@ -58,7 +58,6 @@ public class EngineCommand: Command {
 	/// <param name="connection">The database connection.</param>
 	/// <param name="table">The table to alter.</param>
 	/// <param name="engine">The name of the new storage engine.</param>
-	/// <returns>Completes when the table has been altered.</returns>
 	private static void AlterTable(MySqlConnection connection, Table table, string engine) {
 		var qualifiedName = table.GetQualifiedName(escape: true);
 		Console.WriteLine($"Processing: {qualifiedName}");

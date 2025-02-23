@@ -48,7 +48,6 @@ public class OptimizeCommand: Command {
 	/// </summary>
 	/// <param name="connection">The database connection.</param>
 	/// <param name="table">The table to optimize.</param>
-	/// <returns>Completes when the table has been optimized.</returns>
 	private static void OptimizeTable(MySqlConnection connection, Table table) {
 		var qualifiedName = table.GetQualifiedName(escape: true);
 		Console.WriteLine($"Optimizing: {qualifiedName}");

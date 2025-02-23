@@ -1,5 +1,7 @@
 namespace Belin.Cli.MySql;
 
+using System.Diagnostics;
+using System.IO;
 using System.Text;
 
 /// <summary>
@@ -26,7 +28,7 @@ public class RestoreCommand: Command {
 	/// <param name="fileOrDirectory">The path to a file or directory to process.</param>
 	/// <param name="recursive">Value indicating whether to process the directory recursively.</param>
 	/// <returns>The exit code.</returns>
-	public static async Task<int> Execute(Uri dsn, FileSystemInfo fileOrDirectory, bool recursive = false) {
+	public async Task<int> Execute(Uri dsn, FileSystemInfo fileOrDirectory, bool recursive = false) {
 		if (!fileOrDirectory.Exists) {
 			Console.WriteLine("Unable to locate the specified file or directory.");
 			return 1;
@@ -38,15 +40,39 @@ public class RestoreCommand: Command {
 			_ => []
 		};
 
-		foreach (var file in files) ImportFile(file);
+		foreach (var file in files) ImportFile(dsn, file);
 		return await Task.FromResult(0);
 	}
 
 	/// <summary>
 	/// Imports a SQL dump into the database.
 	/// </summary>
+	/// <param name="dsn">The connection string.</param>
 	/// <param name="file">The path of the file to be restored.</param>
-	private static void ImportFile(FileInfo file) {
-		// TODO
+	/// <exception cref="ProcessException">An error occurred when starting the underlying process.</exception>
+	private void ImportFile(Uri dsn, FileInfo file) {
+		var entity = Path.GetFileNameWithoutExtension(file.FullName);
+		Console.WriteLine($"Importing: {entity}");
+
+		var query = this.ParseQueryString(dsn.Query);
+		var userInfo = dsn.UserInfo.Split(':').Select(Uri.UnescapeDataString).ToArray();
+		var args = new List<string> {
+			$"--default-character-set={query["charset"] ?? "utf8mb4"}",
+			$"--execute=USE {entity.Split('.').First()}; SOURCE {file.FullName.Replace('\\', '/')};",
+			$"--host={dsn.Host}",
+			$"--password={userInfo[1]}",
+			$"--port={(dsn.IsDefaultPort ? 3306 : dsn.Port)}",
+			$"--user={userInfo[0]}"
+		};
+
+		var hosts = new[] { "::1", "127.0.0.1", "localhost" };
+		if (!hosts.Contains(dsn.Host)) args.Add("--compress");
+
+		var startInfo = new ProcessStartInfo("mysql", args) { CreateNoWindow = true, RedirectStandardError = true };
+		using var process = Process.Start(startInfo) ?? throw new ProcessException("mysql");
+
+		var stderr = process.StandardError.ReadToEnd().Trim();
+		process.WaitForExit();
+		if (process.ExitCode != 0) throw new ProcessException(stderr);
 	}
 }
