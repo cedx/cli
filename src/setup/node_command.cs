@@ -40,17 +40,17 @@ public class NodeCommand: Command {
 			if (serviceIds is not null) services.AddRange(serviceIds);
 			else {
 				Console.WriteLine("Unable to locate or parse the specified configuration file.");
-				return 2;
+				return 1;
 			}
 		}
 
-		if (!this.CheckPrivilege(services.Count > 0 ? null : output)) return 3;
+		if (!this.CheckPrivilege(services.Count > 0 ? null : output)) return 2;
 
 		using var httpClient = this.CreateHttpClient();
 		var version = await FetchLatestVersion(httpClient);
 		if (version is null) {
 			Console.WriteLine("Unable to fetch the list of Node.js releases.");
-			return 4;
+			return 3;
 		}
 
 		var path = await DownloadArchive(httpClient, version);

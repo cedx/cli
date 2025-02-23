@@ -45,7 +45,7 @@ public class IconvCommand: Command {
 	public async Task<int> Execute(FileSystemInfo fileOrDirectory, string from, string to, bool recursive = false) {
 		if (!fileOrDirectory.Exists) {
 			Console.WriteLine("Unable to locate the specified file or directory.");
-			return 2;
+			return 1;
 		}
 
 		if (binaryExtensions.Count == 0 && textExtensions.Count == 0) {
@@ -55,7 +55,7 @@ public class IconvCommand: Command {
 		}
 
 		var files = fileOrDirectory switch {
-			DirectoryInfo directory => directory.EnumerateFiles("*.*", SearchOption.AllDirectories),
+			DirectoryInfo directory => directory.EnumerateFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly),
 			FileInfo file => [file],
 			_ => []
 		};
