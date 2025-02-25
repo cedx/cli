@@ -2,7 +2,6 @@ namespace Belin.Cli.MySql;
 
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 
 /// <summary>
 /// Restores a set of MariaDB/MySQL tables.
