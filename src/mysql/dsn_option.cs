@@ -15,7 +15,7 @@ public class DsnOption: Option<Uri> {
 	/// <summary>
 	/// Creates a new option.
 	/// </summary>
-	public DsnOption(): base(["-d", "--dsn"], /*Parse,*/ description: "The connection string.") {
+	public DsnOption(): base(["-d", "--dsn"], description: "The connection string.") {
 		ArgumentHelpName = "uri";
 		IsRequired = true;
 		AddValidator(Validate);
