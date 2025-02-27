@@ -22,43 +22,16 @@ public class DsnOption: Option<Uri> {
 	}
 
 	/// <summary>
-	///
+	/// Validates the result produced when parsing this option.
 	/// </summary>
-	/// <param name=""></param>
-	private static Uri Parse(ArgumentResult result) {
-		var dsn = result.Tokens[0].Value;
-		if (string.IsNullOrWhiteSpace(dsn)) {
-			result.ErrorMessage = "TODO !!!!!!!!!!!!";
-			return new Uri("error:string.IsNullOrWhiteSpace");
+	/// <param name="optionResult">The parsed result.</param>
+	private void Validate(OptionResult result) {
+		var uri = result.GetValueForOption(this);
+		if (uri is not null) {
+			var schemes = string.Join(" or ", allowedSchemes.Select(scheme => $"'{scheme}'"));
+			if (!uri.IsAbsoluteUri) result.ErrorMessage = $"The '--{Name}' option requires an absolute URI.";
+			else if (!allowedSchemes.Contains(uri.Scheme)) result.ErrorMessage = $"The '--{Name}' option only supports the {schemes} scheme.";
+			else if (!uri.UserInfo.Contains(':')) result.ErrorMessage = $"The '--{Name}' option requires full credentials to be specified.";
 		}
-
-		//if (!dsn.Contains("://")) dsn = $"mysql://{dsn}";
-
-		// if (!Uri.TryCreate(dsn, UriKind.Absolute, out var uri)) {
-		// 	result.ErrorMessage = "TODO invalid URI";
-		// 	return new Uri("invalid");
-		// }
-
-		// if (!allowedSchemes.Contains(uri.Scheme)) {
-		// 	result.ErrorMessage = "TODO invalid SCHEME";
-		// 	return new Uri("invalid");
-		// }
-
-		return new Uri($"todo:{dsn}");
-	}
-
-	/// <summary>
-	///
-	/// </summary>
-	/// <param name="optionResult"></param>
-	private static void Validate(OptionResult result) {
-		if (result.ErrorMessage is not null) {
-			Console.WriteLine(result.ErrorMessage);
-		}
-
-		var uri = result.GetValueForOption(result.Option)!;
-		Console.WriteLine(uri);
-		// if (!uri.IsAbsoluteUri) uri.Scheme = "mysql";
-		// result.Option.Parse()
 	}
 }
