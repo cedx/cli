@@ -28,9 +28,9 @@
 	</Target>
 
 	<ItemGroup>
-		<Compile Remove="var\**" />
-		<EmbeddedResource Remove="var\**" />
-		<None Remove="var\**" />
+		<Compile Remove="var/**" />
+		<EmbeddedResource Remove="var/**" />
+		<None Remove="var/**" />
 	</ItemGroup>
 
 	<ItemGroup>
