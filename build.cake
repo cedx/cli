@@ -9,7 +9,7 @@ var version = Context.Configuration.GetValue("package_version");
 Task("build")
 	.Description("Builds the project.")
 	.IsDependentOn("fetch")
-	.Does(() => DotNetBuild("cli.sln", new() { Configuration = release ? "Release" : "Debug" }));
+	.Does(() => DotNetBuild("cli.slnx", new() { Configuration = release ? "Release" : "Debug" }));
 
 Task("clean")
 	.Description("Deletes all generated files.")
@@ -25,7 +25,7 @@ Task("fetch")
 
 Task("format")
 	.Description("Formats the source code.")
-	.Does(() => DotNetFormat("cli.sln"));
+	.Does(() => DotNetFormat("cli.slnx"));
 
 Task("publish")
 	.Description("Publishes the package.")
