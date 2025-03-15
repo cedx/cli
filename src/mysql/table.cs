@@ -30,7 +30,7 @@ public class Table {
 	/// <summary>
 	/// The fully qualified name.
 	/// </summary>
-	public string QualifiedName { get => GetQualifiedName(); }
+	public string QualifiedName => GetQualifiedName();
 
 	/// <summary>
 	/// The schema containing this table.
