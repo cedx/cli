@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 /// <summary>
 /// Downloads and installs the latest PHP release.
 /// </summary>
-public class PhpCommand: Command {
+public sealed class PhpCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.

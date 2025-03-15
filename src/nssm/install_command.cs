@@ -6,7 +6,7 @@ using System.ServiceProcess;
 /// <summary>
 /// Registers the Windows service.
 /// </summary>
-public class InstallCommand: Command {
+public sealed class InstallCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.

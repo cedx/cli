@@ -5,7 +5,7 @@ using Belin.Cli.Setup;
 /// <summary>
 /// Downloads and installs a runtime environment.
 /// </summary>
-public class SetupCommand: Command {
+public sealed class SetupCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.

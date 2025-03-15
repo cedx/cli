@@ -6,7 +6,7 @@ using System.ServiceProcess;
 /// <summary>
 /// Unregisters the Windows service.
 /// </summary>
-public class RemoveCommand: Command {
+public sealed class RemoveCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.

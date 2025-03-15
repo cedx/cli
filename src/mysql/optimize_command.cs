@@ -5,7 +5,7 @@ using MySqlConnector;
 /// <summary>
 /// Optimizes a set of MariaDB/MySQL tables.
 /// </summary>
-public class OptimizeCommand: Command {
+public sealed class OptimizeCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.

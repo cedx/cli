@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 /// <summary>
 /// Downloads and installs the latest Node.js release.
 /// </summary>
-public class NodeCommand: Command {
+public sealed class NodeCommand: Command {
 
 	/// <summary>
 	/// The identifiers of the NSSM services to restart.

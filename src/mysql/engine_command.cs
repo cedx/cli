@@ -5,7 +5,7 @@ using MySqlConnector;
 /// <summary>
 /// Alters the storage engine of MariaDB/MySQL tables.
 /// </summary>
-public class EngineCommand: Command {
+public sealed class EngineCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.
