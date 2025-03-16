@@ -106,7 +106,6 @@ public static class CommandExtensions {
 			RedirectStandardOutput = true
 		};
 
-		// TODO remove exceptions and use nullables instead.
 		using var process = Process.Start(startInfo) ?? throw new ProcessException(executable);
 		var standardOutput = process.StandardOutput.ReadToEnd().Trim();
 		process.WaitForExit();
