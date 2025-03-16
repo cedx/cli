@@ -68,10 +68,10 @@ public sealed class RestoreCommand: Command {
 		if (!hosts.Contains(dsn.Host)) args.Add("--compress");
 
 		var startInfo = new ProcessStartInfo("mysql", args) { CreateNoWindow = true, RedirectStandardError = true };
-		using var process = Process.Start(startInfo) ?? throw new ProcessException("mysql");
+		using var process = Process.Start(startInfo) ?? throw new ProcessException(startInfo.FileName);
 
 		var stderr = process.StandardError.ReadToEnd().Trim();
 		process.WaitForExit();
-		if (process.ExitCode != 0) throw new ProcessException(stderr);
+		if (process.ExitCode != 0) throw new ProcessException(startInfo.FileName, stderr);
 	}
 }

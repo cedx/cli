@@ -112,11 +112,11 @@ public sealed class BackupCommand: Command {
 		args.AddRange(tableNames);
 
 		var startInfo = new ProcessStartInfo("mysqldump", args) { CreateNoWindow = true, RedirectStandardError = true };
-		using var process = Process.Start(startInfo) ?? throw new ProcessException("mysqldump");
+		using var process = Process.Start(startInfo) ?? throw new ProcessException(startInfo.FileName);
 
 		var stderr = process.StandardError.ReadToEnd().Trim();
 		process.WaitForExit();
-		if (process.ExitCode != 0) throw new ProcessException(stderr);
+		if (process.ExitCode != 0) throw new ProcessException(startInfo.FileName, stderr);
 	}
 }
 

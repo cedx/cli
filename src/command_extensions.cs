@@ -106,10 +106,10 @@ public static class CommandExtensions {
 			RedirectStandardOutput = true
 		};
 
-		using var process = Process.Start(startInfo) ?? throw new ProcessException(executable);
+		using var process = Process.Start(startInfo) ?? throw new ProcessException(startInfo.FileName);
 		var standardOutput = process.StandardOutput.ReadToEnd().Trim();
 		process.WaitForExit();
-		if (process.ExitCode != 0) throw new ProcessException($"The \"{executable}\" process failed with exit code {process.ExitCode}.");
+		if (process.ExitCode != 0) throw new ProcessException(startInfo.FileName, $"The process failed with exit code {process.ExitCode}.");
 		return standardOutput;
 	}
 
