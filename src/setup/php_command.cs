@@ -114,7 +114,7 @@ public sealed class PhpCommand: Command {
 /// <summary>
 /// Represents a PHP release.
 /// </summary>
-internal record PhpRelease {
+internal sealed record PhpRelease {
 
 	/// <summary>
 	/// The version number.

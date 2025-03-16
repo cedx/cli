@@ -139,7 +139,7 @@ public sealed class NodeCommand: Command {
 /// <summary>
 /// Represents a Node.js release.
 /// </summary>
-internal record NodeRelease {
+internal sealed record NodeRelease {
 
 	/// <summary>
 	/// The version number.
