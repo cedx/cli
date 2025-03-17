@@ -6,31 +6,31 @@ using System.Text.Json.Serialization;
 /// <summary>
 /// Represents the contents of a <c>package.json</c> file.
 /// </summary>
-public class PackageJsonFile {
+public record PackageJsonFile {
 
 	/// <summary>
 	/// The map of package commands.
 	/// </summary>
 	[JsonPropertyName("bin")]
-	public IDictionary<string, string>? Bin { get; set; } = null;
+	public IDictionary<string, string>? Bin { get; init; } = null;
 
 	/// <summary>
 	/// The package description.
 	/// </summary>
 	[JsonPropertyName("description")]
-	public string? Description { get; set; } = null;
+	public string? Description { get; init; } = null;
 
 	/// <summary>
 	/// The package name.
 	/// </summary>
 	[JsonPropertyName("name")]
-	public required string Name { get; set; }
+	public required string Name { get; init; }
 
 	/// <summary>
 	/// The version number.
 	/// </summary>
 	[JsonPropertyName("version")]
-	public required string Version { get; set; }
+	public required string Version { get; init; }
 
 	/// <summary>
 	/// Reads the <c>package.json</c> file located in the specified directory.

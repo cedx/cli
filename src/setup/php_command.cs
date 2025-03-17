@@ -120,5 +120,5 @@ internal sealed record PhpRelease {
 	/// The version number.
 	/// </summary>
 	[JsonPropertyName("version")]
-	public required string Version { get; set; }
+	public required string Version { get; init; }
 }

@@ -6,19 +6,19 @@ using System.Text.Json.Serialization;
 /// <summary>
 /// Provides the configuration of a Node.js application.
 /// </summary>
-public class ApplicationConfiguration {
+public record ApplicationConfiguration {
 
 	/// <summary>
 	/// The application identifier.
 	/// </summary>
 	[JsonPropertyName("id")]
-	public required string Id { get; set; }
+	public required string Id { get; init; }
 
 	/// <summary>
 	/// The application name.
 	/// </summary>
 	[JsonPropertyName("name")]
-	public required string Name { get; set; }
+	public required string Name { get; init; }
 
 	/// <summary>
 	/// Reads the configuration file of the Node.js application located in the specified directory.

@@ -12,5 +12,5 @@ public class ProcessException(string fileName, string message = "", Exception? i
 	/// <summary>
 	/// The name of the document or application file that has been started.
 	/// </summary>
-	public string FileName { get; } = fileName;
+	public string FileName => fileName;
 }

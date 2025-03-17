@@ -5,7 +5,7 @@ using System.Data;
 /// <summary>
 /// Provides the metadata of a database schema.
 /// </summary>
-public class Schema {
+public record Schema {
 
 	/// <summary>
 	/// The name of the database table associated with this class.
@@ -15,17 +15,17 @@ public class Schema {
 	/// <summary>
 	/// The default character set.
 	/// </summary>
-	public string Charset { get; set; } = string.Empty;
+	public string Charset { get; init; } = string.Empty;
 
 	/// <summary>
 	/// The default collation.
 	/// </summary>
-	public string Collation { get; set; } = string.Empty;
+	public string Collation { get; init; } = string.Empty;
 
 	/// <summary>
 	/// The schema name.
 	/// </summary>
-	public required string Name { get; set; }
+	public required string Name { get; init; }
 
 	/// <summary>
 	/// Creates a new column from the specified database record.

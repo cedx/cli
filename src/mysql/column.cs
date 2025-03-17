@@ -5,7 +5,7 @@ using System.Data;
 /// <summary>
 /// Provides the metadata of a table column.
 /// </summary>
-public class Column {
+public record Column {
 
 	/// <summary>
 	/// The name of the database table associated with this class.
@@ -15,22 +15,22 @@ public class Column {
 	/// <summary>
 	/// The schema name.
 	/// </summary>
-	public required string Name { get; set; }
+	public required string Name { get; init; }
 
 	/// <summary>
 	/// The column position.
 	/// </summary>
-	public int Position { get; set; } = 0;
+	public int Position { get; init; } = 0;
 
 	/// <summary>
 	/// The schema containing this column.
 	/// </summary>
-	public string Schema { get; set; } = string.Empty;
+	public string Schema { get; init; } = string.Empty;
 
 	/// <summary>
 	/// The table containing this column.
 	/// </summary>
-	public string Table { get; set; } = string.Empty;
+	public string Table { get; init; } = string.Empty;
 
 	/// <summary>
 	/// Creates a new column from the specified database record.

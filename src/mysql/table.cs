@@ -5,7 +5,7 @@ using System.Data;
 /// <summary>
 /// Provides the metadata of a database table.
 /// </summary>
-public class Table {
+public record Table {
 
 	/// <summary>
 	/// The name of the database table associated with this class.
@@ -15,17 +15,17 @@ public class Table {
 	/// <summary>
 	/// The default collation.
 	/// </summary>
-	public string Collation { get; set; } = string.Empty;
+	public string Collation { get; init; } = string.Empty;
 
 	/// <summary>
 	/// The storage engine.
 	/// </summary>
-	public string Engine { get; set; } = TableEngine.None;
+	public string Engine { get; init; } = TableEngine.None;
 
 	/// <summary>
 	/// The schema name.
 	/// </summary>
-	public required string Name { get; set; }
+	public required string Name { get; init; }
 
 	/// <summary>
 	/// The fully qualified name.
@@ -35,12 +35,12 @@ public class Table {
 	/// <summary>
 	/// The schema containing this table.
 	/// </summary>
-	public string Schema { get; set; } = string.Empty;
+	public string Schema { get; init; } = string.Empty;
 
 	/// <summary>
 	/// The table type.
 	/// </summary>
-	public string Type { get; set; } = TableType.BaseTable;
+	public string Type { get; init; } = TableType.BaseTable;
 
 	/// <summary>
 	/// Gets the fully qualified name.
