@@ -34,9 +34,9 @@ public record Schema {
 	/// <returns>The newly created column.</returns>
 	public static Schema OfRecord(IDataRecord record) {
 		return new Schema {
-			Charset = (string) record["DEFAULT_CHARACTER_SET_NAME"] ?? string.Empty,
-			Collation = (string) record["DEFAULT_COLLATION_NAME"] ?? string.Empty,
-			Name = (string) record["SCHEMA_NAME"] ?? string.Empty
+			Charset = (string?) record["DEFAULT_CHARACTER_SET_NAME"] ?? string.Empty,
+			Collation = (string?) record["DEFAULT_COLLATION_NAME"] ?? string.Empty,
+			Name = (string?) record["SCHEMA_NAME"] ?? string.Empty
 		};
 	}
 }

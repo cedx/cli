@@ -39,10 +39,10 @@ public record Column {
 	/// <returns>The newly created column.</returns>
 	public static Column OfRecord(IDataRecord record) {
 		return new Column {
-			Name = (string) record["COLUMN_NAME"] ?? string.Empty,
-			Position = (int) record["ORDINAL_POSITION"],
-			Schema = (string) record["TABLE_SCHEMA"] ?? string.Empty,
-			Table = (string) record["TABLE_NAME"] ?? string.Empty
+			Name = (string?) record["COLUMN_NAME"] ?? string.Empty,
+			Position = (int?) record["ORDINAL_POSITION"] ?? 0,
+			Schema = (string?) record["TABLE_SCHEMA"] ?? string.Empty,
+			Table = (string?) record["TABLE_NAME"] ?? string.Empty
 		};
 	}
 }

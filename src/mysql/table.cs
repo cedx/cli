@@ -59,11 +59,11 @@ public record Table {
 	/// <returns>The newly created column.</returns>
 	public static Table OfRecord(IDataRecord record) {
 		return new Table {
-			Collation = (string) record["TABLE_COLLATION"] ?? string.Empty,
-			Engine = (string) record["ENGINE"] ?? string.Empty,
-			Name = (string) record["TABLE_NAME"] ?? string.Empty,
-			Schema = (string) record["TABLE_SCHEMA"] ?? string.Empty,
-			Type = (string) record["TABLE_TYPE"] ?? string.Empty
+			Collation = (string?) record["TABLE_COLLATION"] ?? string.Empty,
+			Engine = (string?) record["ENGINE"] ?? string.Empty,
+			Name = (string?) record["TABLE_NAME"] ?? string.Empty,
+			Schema = (string?) record["TABLE_SCHEMA"] ?? string.Empty,
+			Type = (string?) record["TABLE_TYPE"] ?? string.Empty
 		};
 	}
 }
