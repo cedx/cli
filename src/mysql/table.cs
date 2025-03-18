@@ -23,7 +23,7 @@ public record Table {
 	public string Engine { get; init; } = TableEngine.None;
 
 	/// <summary>
-	/// The schema name.
+	/// The table name.
 	/// </summary>
 	public required string Name { get; init; }
 

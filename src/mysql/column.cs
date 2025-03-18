@@ -13,7 +13,7 @@ public record Column {
 	public const string TableName = "COLUMNS";
 
 	/// <summary>
-	/// The schema name.
+	/// The column name.
 	/// </summary>
 	public required string Name { get; init; }
 
