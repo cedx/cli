@@ -1,7 +1,7 @@
 #define executable "Belin.Cli.exe"
 #define publisher "Belin.io"
 #define name publisher + " CLI"
-#define version "2.0.0"
+#define version "2.1.0"
 
 [Setup]
 AppCopyright = © Cédric Belin
