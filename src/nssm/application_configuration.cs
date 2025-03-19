@@ -6,13 +6,13 @@ using System.Text.Json.Serialization;
 /// <summary>
 /// Provides the configuration of a Node.js application.
 /// </summary>
-public record ApplicationConfiguration {
+public class ApplicationConfiguration {
 
 	/// <summary>
 	/// The application description.
 	/// </summary>
 	[JsonPropertyName("description")]
-	public required string Description { get; init; } = string.Empty;
+	public required string Description { get; set; } = string.Empty;
 
 	/// <summary>
 	/// The application identifier.
