@@ -9,6 +9,12 @@ using System.Text.Json.Serialization;
 public record ApplicationConfiguration {
 
 	/// <summary>
+	/// The application description.
+	/// </summary>
+	[JsonPropertyName("description")]
+	public required string Description { get; init; } = string.Empty;
+
+	/// <summary>
 	/// The application identifier.
 	/// </summary>
 	[JsonPropertyName("id")]
@@ -27,7 +33,7 @@ public record ApplicationConfiguration {
 	/// <returns>The configuration of the specified Node.js application, or <see langword="null"/> if not found.</returns>
 	public static ApplicationConfiguration? ReadFromDirectory(DirectoryInfo input) {
 		foreach (var folder in new[] { "lib/server", "lib", "src/server", "src" }) {
-			var path = Path.Join(input.FullName, folder, "config.g.json");
+			var path = Path.Join(input.FullName, folder, "appsettings.json");
 			if (File.Exists(path)) return JsonSerializer.Deserialize<ApplicationConfiguration>(File.ReadAllText(path));
 		}
 
