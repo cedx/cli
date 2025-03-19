@@ -51,7 +51,9 @@ public sealed class OptimizeCommand: Command {
 	private static void OptimizeTable(MySqlConnection connection, Table table) {
 		var qualifiedName = table.GetQualifiedName(escape: true);
 		Console.WriteLine($"Optimizing: {qualifiedName}");
-		using var command = new MySqlCommand($"OPTIMIZE TABLE {qualifiedName}", connection);
+
+		using var command = connection.CreateCommand();
+		command.CommandText = $"OPTIMIZE TABLE {qualifiedName}";
 		command.ExecuteNonQuery();
 	}
 }

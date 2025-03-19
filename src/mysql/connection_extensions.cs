@@ -14,16 +14,15 @@ public static class ConnectionExtensions {
 	/// <param name="table">The database table.</param>
 	/// <returns>The columns contained in the specified table.</returns>
 	public static IList<Column> GetColumns(this MySqlConnection connection, Table table) {
-		var query = """
+		using var command = connection.CreateCommand();
+		command.Parameters.AddWithValue("@name", table.Name);
+		command.Parameters.AddWithValue("@schema", table.Schema);
+		command.CommandText = """
 			SELECT *
 			FROM information_schema.COLUMNS
 			WHERE TABLE_SCHEMA = @schema AND TABLE_NAME = @name
 			ORDER BY ORDINAL_POSITION
 		""";
-
-		using var command = new MySqlCommand(query, connection);
-		command.Parameters.AddWithValue("@name", table.Name);
-		command.Parameters.AddWithValue("@schema", table.Schema);
 
 		using var reader = command.ExecuteReader();
 		var columns = new List<Column>();
@@ -37,14 +36,14 @@ public static class ConnectionExtensions {
 	/// <param name="connection">The database connectinon.</param>
 	/// <returns>The schemas hosted by the database.</returns>
 	public static IList<Schema> GetSchemas(this MySqlConnection connection) {
-		var query = """
+		using var command = connection.CreateCommand();
+		command.CommandText = """
 			SELECT *
 			FROM information_schema.SCHEMATA
 			WHERE SCHEMA_NAME NOT IN ('information_schema', 'mysql', 'performance_schema', 'sys')
 			ORDER BY SCHEMA_NAME
 		""";
 
-		using var command = new MySqlCommand(query, connection);
 		using var reader = command.ExecuteReader();
 		var schemas = new List<Schema>();
 		while (reader.Read()) schemas.Add(Schema.OfRecord(reader));
@@ -58,16 +57,15 @@ public static class ConnectionExtensions {
 	/// <param name="schema">The database schema.</param>
 	/// <returns>The tables contained in the specified schema.</returns>
 	public static IList<Table> GetTables(this MySqlConnection connection, Schema schema) {
-		var query = """
+		using var command = connection.CreateCommand();
+		command.Parameters.AddWithValue("@schema", schema.Name);
+		command.Parameters.AddWithValue("@type", TableType.BaseTable);
+		command.CommandText = """
 			SELECT *
 			FROM information_schema.TABLES
 			WHERE TABLE_SCHEMA = @schema AND TABLE_TYPE = @type
 			ORDER BY TABLE_NAME
 		""";
-
-		using var command = new MySqlCommand(query, connection);
-		command.Parameters.AddWithValue("@schema", schema.Name);
-		command.Parameters.AddWithValue("@type", TableType.BaseTable);
 
 		using var reader = command.ExecuteReader();
 		var tables = new List<Table>();

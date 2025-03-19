@@ -71,10 +71,11 @@ public sealed class BackupCommand: Command {
 	private static void ExportToJsonLines(MySqlConnection connection, Schema schema, string[] tableNames, DirectoryInfo directory) {
 		var tables = tableNames.Length > 0 ? tableNames.Select(table => new Table { Name = table, Schema = schema.Name }) : connection.GetTables(schema);
 		foreach (var table in tables) {
-			using var command = new MySqlCommand($"SELECT * FROM {table.GetQualifiedName(escape: true)}", connection);
+			using var command = connection.CreateCommand();
+			command.CommandText = $"SELECT * FROM {table.GetQualifiedName(escape: true)}";
+
 			using var file = File.CreateText(Path.Join(directory.FullName, $"{table.QualifiedName}.{BackupFormat.JsonLines}"));
 			using var reader = command.ExecuteReader();
-
 			while (reader.Read()) {
 				var record = new Dictionary<string, object?>();
 				for (var i = 0; i < reader.FieldCount; i++) record[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
