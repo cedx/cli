@@ -33,69 +33,78 @@ public sealed class InstallCommand: Command {
 	public async Task<int> Execute(DirectoryInfo directory, bool start = false) {
 		if (!this.CheckPrivilege()) return 1;
 
-		var package = PackageJsonFile.ReadFromDirectory(directory);
-		if (package is null) {
-			Console.WriteLine(@"Unable to locate the ""package.json"" file.");
+		try {
+			var application = ApplicationConfiguration.ReadFromDirectory(directory)
+				?? throw new NotSupportedException("Unable to locate the application configuration file.");
+
+			var (program, entryPoint) = Directory.EnumerateFiles(directory.FullName, "*.slnx").Any()
+				? GetDotNetApplicationPaths(directory)
+				: GetNodeApplicationPaths(directory);
+
+			using var installProcess = Process.Start("nssm", ["install", application.Id, program, entryPoint])
+				?? throw new NotSupportedException(@"The ""nssm"" program could not be started.");
+			installProcess.WaitForExit();
+
+			var properties = new Dictionary<string, string> {
+				["AppDirectory"] = directory.FullName,
+				["AppNoConsole"] = "1",
+				["AppStderr"] = Path.Join(directory.FullName, @"var\stderr.log"),
+				["AppStdout"] = Path.Join(directory.FullName, @"var\stdout.log"),
+				["Description"] = application.Description,
+				["DisplayName"] = application.Name,
+				["Start"] = "SERVICE_AUTO_START"
+			};
+
+			foreach (var (key, value) in properties) {
+				using var setProcess = Process.Start("nssm", ["set", application.Id, key, value])
+					?? throw new NotSupportedException(@"The ""nssm"" program could not be started.");
+				setProcess.WaitForExit();
+			}
+
+			if (start) {
+				using var serviceController = new ServiceController(application.Id);
+				if (serviceController.Status == ServiceControllerStatus.Stopped) {
+					serviceController.Start();
+					serviceController.WaitForStatus(ServiceControllerStatus.Running);
+				}
+			}
+		}
+		catch (NotSupportedException e) {
+			Console.WriteLine(e.Message);
 			return 2;
-		}
-
-		var binary = package.Bin?.FirstOrDefault().Value;
-		if (binary is null) {
-			Console.WriteLine("Unable to determine the application entry point.");
-			return 3;
-		}
-
-		var config = ApplicationConfiguration.ReadFromDirectory(directory);
-		if (config is null) {
-			Console.WriteLine("Unable to locate the application configuration file.");
-			return 4;
-		}
-
-		var node = GetPathFromEnvironment("node");
-		if (node is null) {
-			Console.WriteLine(@"Unable to locate the ""node"" program.");
-			return 5;
-		}
-
-		using var installProcess = Process.Start("nssm", ["install", config.Id, node.FullName, Path.GetFullPath(Path.Join(directory.FullName, binary))]);
-		if (installProcess is not null) installProcess.WaitForExit();
-		else {
-			Console.WriteLine(@"The ""nssm"" program could not be started.");
-			return 6;
-		}
-
-		var properties = new Dictionary<string, string> {
-			["AppDirectory"] = directory.FullName,
-			["AppNoConsole"] = "1",
-			["AppStderr"] = Path.Join(directory.FullName, @"var\stderr.log"),
-			["AppStdout"] = Path.Join(directory.FullName, @"var\stdout.log"),
-			["Description"] = package.Description ?? string.Empty,
-			["DisplayName"] = config.Name,
-			["Start"] = "SERVICE_AUTO_START"
-		};
-
-		foreach (var (key, value) in properties) {
-			using var setProcess = Process.Start("nssm", ["set", config.Id, key, value]);
-			if (setProcess is not null) setProcess.WaitForExit();
-			else {
-				Console.WriteLine(@"The ""nssm"" program could not be started.");
-				return 7;
-			}
-		}
-
-		if (start) {
-			using var serviceController = new ServiceController(config.Id);
-			if (serviceController.Status == ServiceControllerStatus.Stopped) {
-				serviceController.Start();
-				serviceController.WaitForStatus(ServiceControllerStatus.Running);
-			}
 		}
 
 		return await Task.FromResult(0);
 	}
 
 	/// <summary>
-	/// Gets the full path of the specified executable, by looking at the <c>Path</c> environment variable.
+	/// Determines the paths of the program and the entry point of a .NET application.
+	/// </summary>
+	/// <param name="directory">The path to the application root directory.</param>
+	/// <returns>The paths of the program and the entry point of the .NET application.</returns>
+	/// <exception cref="NotSupportedException">TODO</exception>
+	private static (string, string) GetDotNetApplicationPaths(DirectoryInfo directory) {
+		var package = PackageJsonFile.ReadFromDirectory(directory) ?? throw new NotSupportedException(@"Unable to locate the ""package.json"" file.");
+		var binary = package.Bin?.FirstOrDefault().Value ?? throw new NotSupportedException("Unable to determine the application entry point.");
+		var dotnet = GetPathFromEnvironment("dotnet") ?? throw new NotSupportedException(@"Unable to locate the ""dotnet"" program.");
+		return (dotnet.FullName, Path.GetFullPath(Path.Join(directory.FullName, binary)));
+	}
+
+	/// <summary>
+	/// Determines the paths of the program and the entry point of a Node.js application.
+	/// </summary>
+	/// <param name="directory">The path to the application root directory.</param>
+	/// <returns>The paths of the program and the entry point of the Node.js application.</returns>
+	/// <exception cref="NotSupportedException">TODO</exception>
+	private static (string, string) GetNodeApplicationPaths(DirectoryInfo directory) {
+		var package = PackageJsonFile.ReadFromDirectory(directory) ?? throw new NotSupportedException(@"Unable to locate the ""package.json"" file.");
+		var binary = package.Bin?.FirstOrDefault().Value ?? throw new NotSupportedException("Unable to determine the application entry point.");
+		var node = GetPathFromEnvironment("node") ?? throw new NotSupportedException(@"Unable to locate the ""node"" program.");
+		return (node.FullName, Path.GetFullPath(Path.Join(directory.FullName, binary)));
+	}
+
+	/// <summary>
+	/// Gets the full path of the specified executable, by looking at the <c>PATH</c> environment variable.
 	/// </summary>
 	/// <param name="executable">The executable name.</param>
 	/// <returns>The full path of the specified executable or <see langword="null"/> if not found.</returns>
