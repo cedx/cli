@@ -17,9 +17,9 @@ public static class ConnectionExtensions {
 		using var command = connection.CreateCommand();
 		command.Parameters.AddWithValue("@name", table.Name);
 		command.Parameters.AddWithValue("@schema", table.Schema);
-		command.CommandText = """
+		command.CommandText = $"""
 			SELECT *
-			FROM information_schema.COLUMNS
+			FROM information_schema.{Column.TableName}
 			WHERE TABLE_SCHEMA = @schema AND TABLE_NAME = @name
 			ORDER BY ORDINAL_POSITION
 		""";
@@ -37,9 +37,9 @@ public static class ConnectionExtensions {
 	/// <returns>The schemas hosted by the database.</returns>
 	public static IList<Schema> GetSchemas(this MySqlConnection connection) {
 		using var command = connection.CreateCommand();
-		command.CommandText = """
+		command.CommandText = $"""
 			SELECT *
-			FROM information_schema.SCHEMATA
+			FROM information_schema.{Schema.TableName}
 			WHERE SCHEMA_NAME NOT IN ('information_schema', 'mysql', 'performance_schema', 'sys')
 			ORDER BY SCHEMA_NAME
 		""";
@@ -60,9 +60,9 @@ public static class ConnectionExtensions {
 		using var command = connection.CreateCommand();
 		command.Parameters.AddWithValue("@schema", schema.Name);
 		command.Parameters.AddWithValue("@type", TableType.BaseTable);
-		command.CommandText = """
+		command.CommandText = $"""
 			SELECT *
-			FROM information_schema.TABLES
+			FROM information_schema.{Table.TableName}
 			WHERE TABLE_SCHEMA = @schema AND TABLE_TYPE = @type
 			ORDER BY TABLE_NAME
 		""";
