@@ -51,13 +51,13 @@ public static class CommandExtensions {
 	/// <param name="uri">The connection string used to connect to the database.</param>
 	/// <returns>The newly created database connection.</returns>
 	public static MySqlConnection CreateMySqlConnection(this Command _, Uri uri) {
-		var userInfo = uri.UserInfo.Split(':').Select(Uri.UnescapeDataString).ToArray();
+		var userInfo = uri.UserInfo.Split(':').Select(Uri.UnescapeDataString);
 		var builder = new MySqlConnectionStringBuilder {
 			Server = uri.Host,
 			Port = uri.IsDefaultPort ? 3306 : (uint) uri.Port,
 			Database = "information_schema",
-			UserID = userInfo[0],
-			Password = userInfo[1],
+			UserID = userInfo.First(),
+			Password = userInfo.Last(),
 			ConvertZeroDateTime = true,
 			Pooling = false,
 			UseCompression = !localHosts.Contains(uri.Host)

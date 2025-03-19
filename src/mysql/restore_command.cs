@@ -54,14 +54,14 @@ public sealed class RestoreCommand: Command {
 		Console.WriteLine($"Importing: {entity}");
 
 		var query = this.ParseQueryString(dsn.Query);
-		var userInfo = dsn.UserInfo.Split(':').Select(Uri.UnescapeDataString).ToArray();
+		var userInfo = dsn.UserInfo.Split(':').Select(Uri.UnescapeDataString);
 		var args = new List<string> {
 			$"--default-character-set={query["charset"] ?? "utf8mb4"}",
 			$"--execute=USE {entity.Split('.').First()}; SOURCE {file.FullName.Replace('\\', '/')};",
 			$"--host={dsn.Host}",
-			$"--password={userInfo[1]}",
+			$"--password={userInfo.Last()}",
 			$"--port={(dsn.IsDefaultPort ? 3306 : dsn.Port)}",
-			$"--user={userInfo[0]}"
+			$"--user={userInfo.First()}"
 		};
 
 		var hosts = new[] { "::1", "127.0.0.1", "localhost" };

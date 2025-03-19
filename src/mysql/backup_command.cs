@@ -97,14 +97,14 @@ public sealed class BackupCommand: Command {
 		var file = $"{entity}.{BackupFormat.SqlDump}";
 
 		var query = this.ParseQueryString(dsn.Query);
-		var userInfo = dsn.UserInfo.Split(':').Select(Uri.UnescapeDataString).ToArray();
+		var userInfo = dsn.UserInfo.Split(':').Select(Uri.UnescapeDataString);
 		var args = new List<string> {
 			$"--default-character-set={query["charset"] ?? "utf8mb4"}",
 			$"--host={dsn.Host}",
-			$"--password={userInfo[1]}",
+			$"--password={userInfo.Last()}",
 			$"--port={(dsn.IsDefaultPort ? 3306 : dsn.Port)}",
 			$"--result-file={Path.Join(directory.FullName, file)}",
-			$"--user={userInfo[0]}"
+			$"--user={userInfo.First()}"
 		};
 
 		var hosts = new[] { "::1", "127.0.0.1", "localhost" };
