@@ -84,7 +84,7 @@ public sealed class InstallCommand: Command {
 	/// <returns>The paths of the program and the entry point of the .NET application.</returns>
 	/// <exception cref="NotSupportedException">TODO</exception>
 	private static (string, string) GetDotNetApplicationPaths(DirectoryInfo directory) {
-		var package = PackageJsonFile.ReadFromDirectory(directory) ?? throw new NotSupportedException(@"Unable to locate the ""package.json"" file.");
+		var package = PackageJsonFile.ReadFromDirectory(directory.FullName) ?? throw new NotSupportedException(@"Unable to locate the ""package.json"" file.");
 		var binary = package.Bin?.FirstOrDefault().Value ?? throw new NotSupportedException("Unable to determine the application entry point.");
 		var dotnet = GetPathFromEnvironment("dotnet") ?? throw new NotSupportedException(@"Unable to locate the ""dotnet"" program.");
 		return (dotnet.FullName, Path.GetFullPath(Path.Join(directory.FullName, binary)));
@@ -97,7 +97,7 @@ public sealed class InstallCommand: Command {
 	/// <returns>The paths of the program and the entry point of the Node.js application.</returns>
 	/// <exception cref="NotSupportedException">TODO</exception>
 	private static (string, string) GetNodeApplicationPaths(DirectoryInfo directory) {
-		var package = PackageJsonFile.ReadFromDirectory(directory) ?? throw new NotSupportedException(@"Unable to locate the ""package.json"" file.");
+		var package = PackageJsonFile.ReadFromDirectory(directory.FullName) ?? throw new NotSupportedException(@"Unable to locate the ""package.json"" file.");
 		var binary = package.Bin?.FirstOrDefault().Value ?? throw new NotSupportedException("Unable to determine the application entry point.");
 		var node = GetPathFromEnvironment("node") ?? throw new NotSupportedException(@"Unable to locate the ""node"" program.");
 		return (node.FullName, Path.GetFullPath(Path.Join(directory.FullName, binary)));
