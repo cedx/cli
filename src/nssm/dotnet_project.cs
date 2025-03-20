@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 /// </summary>
 [DesignerCategory("code")]
 [Serializable]
-[XmlRoot(Namespace = "", IsNullable = false)]
+[XmlRoot("Project", Namespace = "", IsNullable = false)]
 [XmlType(AnonymousType = true)]
 public partial class DotNetProject {
 

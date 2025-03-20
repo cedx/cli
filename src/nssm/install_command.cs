@@ -34,10 +34,10 @@ public sealed class InstallCommand: Command {
 		if (!this.CheckPrivilege()) return Task.FromResult(1);
 
 		try {
-			var application = ApplicationConfiguration.ReadFromDirectory(directory.FullName)
+			var application = Application.ReadFromDirectory(directory.FullName)
 				?? throw new EntryPointNotFoundException("Unable to locate the application configuration file.");
 
-			var (program, entryPoint) = Directory.EnumerateFiles(application.RootPath, "*.slnx").Any()
+			var (program, entryPoint) = Directory.EnumerateFiles(application.Path, "*.slnx").Any()
 				? GetDotNetApplicationPaths(application)
 				: GetNodeApplicationPaths(application);
 
@@ -46,10 +46,10 @@ public sealed class InstallCommand: Command {
 			if (installProcess.ExitCode != 0) throw new ProcessException("nssm", $"The \"install\" command failed with exit code {installProcess.ExitCode}.");
 
 			var properties = new Dictionary<string, string> {
-				["AppDirectory"] = application.RootPath,
+				["AppDirectory"] = application.Path,
 				["AppNoConsole"] = "1",
-				["AppStderr"] = Path.Join(application.RootPath, @"var\stderr.log"),
-				["AppStdout"] = Path.Join(application.RootPath, @"var\stdout.log"),
+				["AppStderr"] = Path.Join(application.Path, @"var\stderr.log"),
+				["AppStdout"] = Path.Join(application.Path, @"var\stdout.log"),
 				["Description"] = application.Description,
 				["DisplayName"] = application.Name,
 				["Start"] = "SERVICE_AUTO_START"
@@ -76,12 +76,12 @@ public sealed class InstallCommand: Command {
 	/// <param name="application">The application configuration.</param>
 	/// <returns>The paths of the program and the entry point of the .NET application.</returns>
 	/// <exception cref="EntryPointNotFoundException">The program and/or entry point could not be determined.</exception>
-	private static (string Program, string EntryPoint) GetDotNetApplicationPaths(ApplicationConfiguration application) {
-		var package = PackageJson.ReadFromDirectory(application.RootPath) ?? throw new EntryPointNotFoundException(@"Unable to locate the ""package.json"" file.");
+	private static (string Program, string EntryPoint) GetDotNetApplicationPaths(Application application) {
+		var package = PackageJson.ReadFromDirectory(application.Path) ?? throw new EntryPointNotFoundException(@"Unable to locate the ""package.json"" file.");
 
 		var entryPoint = package.Bin.FirstOrDefault().Value ?? throw new EntryPointNotFoundException("Unable to determine the application entry point.");
 		var program = GetPathFromEnvironment("dotnet") ?? throw new EntryPointNotFoundException(@"Unable to locate the ""dotnet"" program.");
-		return (Program: program.FullName, EntryPoint: Path.GetFullPath(Path.Join(application.RootPath, entryPoint)));
+		return (Program: program.FullName, EntryPoint: Path.GetFullPath(Path.Join(application.Path, entryPoint)));
 	}
 
 	/// <summary>
@@ -90,13 +90,13 @@ public sealed class InstallCommand: Command {
 	/// <param name="application">The application configuration.</param>
 	/// <returns>The paths of the program and the entry point of the Node.js application.</returns>
 	/// <exception cref="EntryPointNotFoundException">The program and/or entry point could not be determined.</exception>
-	private static (string Program, string EntryPoint) GetNodeApplicationPaths(ApplicationConfiguration application) {
-		var package = PackageJson.ReadFromDirectory(application.RootPath) ?? throw new EntryPointNotFoundException(@"Unable to locate the ""package.json"" file.");
+	private static (string Program, string EntryPoint) GetNodeApplicationPaths(Application application) {
+		var package = PackageJson.ReadFromDirectory(application.Path) ?? throw new EntryPointNotFoundException(@"Unable to locate the ""package.json"" file.");
 		if (!string.IsNullOrWhiteSpace(package.Description)) application.Description = package.Description;
 
 		var entryPoint = package.Bin.FirstOrDefault().Value ?? throw new EntryPointNotFoundException("Unable to determine the application entry point.");
 		var program = GetPathFromEnvironment("node") ?? throw new EntryPointNotFoundException(@"Unable to locate the ""node"" program.");
-		return (Program: program.FullName, EntryPoint: Path.GetFullPath(Path.Join(application.RootPath, entryPoint)));
+		return (Program: program.FullName, EntryPoint: Path.GetFullPath(Path.Join(application.Path, entryPoint)));
 	}
 
 	/// <summary>
@@ -116,7 +116,7 @@ public sealed class InstallCommand: Command {
 	/// Starts the specified application.
 	/// </summary>
 	/// <param name="application">The application configuration.</param>
-	private static void StartApplication(ApplicationConfiguration application) {
+	private static void StartApplication(Application application) {
 		using var serviceController = new ServiceController(application.Id);
 		if (serviceController.Status == ServiceControllerStatus.Stopped) {
 			serviceController.Start();

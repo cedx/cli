@@ -30,7 +30,7 @@ public sealed class RemoveCommand: Command {
 	public Task<int> Execute(DirectoryInfo directory) {
 		if (!this.CheckPrivilege()) return Task.FromResult(1);
 
-		var application = ApplicationConfiguration.ReadFromDirectory(directory.FullName);
+		var application = Application.ReadFromDirectory(directory.FullName);
 		if (application is null) {
 			Console.WriteLine("Unable to locate the application configuration file.");
 			return Task.FromResult(2);
