@@ -30,7 +30,7 @@ public sealed class RemoveCommand: Command {
 	public async Task<int> Execute(DirectoryInfo directory) {
 		if (!this.CheckPrivilege()) return 1;
 
-		var application = ApplicationConfiguration.ReadFromDirectory(directory);
+		var application = ApplicationConfiguration.ReadFromDirectory(directory.FullName);
 		if (application is null) {
 			Console.WriteLine("Unable to locate the application configuration file.");
 			return 2;
@@ -42,13 +42,15 @@ public sealed class RemoveCommand: Command {
 			serviceController.WaitForStatus(ServiceControllerStatus.Stopped);
 		}
 
-		using var process = Process.Start("nssm", ["remove", application.Id, "confirm"]);
-		if (process is not null) process.WaitForExit();
-		else {
-			Console.WriteLine(@"The ""nssm"" program could not be started.");
+		try {
+			using var process = Process.Start("nssm", ["remove", application.Id, "confirm"]) ?? throw new ProcessException("nssm");
+			process.WaitForExit();
+			if (process.ExitCode != 0) throw new ProcessException("nssm", $"The process failed with exit code {process.ExitCode}.");
+			return await Task.FromResult(0);
+		}
+		catch (Exception e) {
+			Console.WriteLine(e.Message);
 			return 3;
 		}
-
-		return await Task.FromResult(process.ExitCode);
 	}
 }

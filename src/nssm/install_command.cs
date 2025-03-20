@@ -34,73 +34,69 @@ public sealed class InstallCommand: Command {
 		if (!this.CheckPrivilege()) return 1;
 
 		try {
-			var application = ApplicationConfiguration.ReadFromDirectory(directory)
-				?? throw new NotSupportedException("Unable to locate the application configuration file.");
+			var application = ApplicationConfiguration.ReadFromDirectory(directory.FullName)
+				?? throw new EntryPointNotFoundException("Unable to locate the application configuration file.");
 
-			var (program, entryPoint) = Directory.EnumerateFiles(directory.FullName, "*.slnx").Any()
-				? GetDotNetApplicationPaths(directory)
-				: GetNodeApplicationPaths(directory);
+			var (program, entryPoint) = Directory.EnumerateFiles(application.RootPath, "*.slnx").Any()
+				? GetDotNetApplicationPaths(application)
+				: GetNodeApplicationPaths(application);
 
-			using var installProcess = Process.Start("nssm", ["install", application.Id, program, entryPoint])
-				?? throw new NotSupportedException(@"The ""nssm"" program could not be started.");
+			using var installProcess = Process.Start("nssm", ["install", application.Id, program, entryPoint]) ?? throw new ProcessException("nssm");
 			installProcess.WaitForExit();
+			if (installProcess.ExitCode != 0) throw new ProcessException("nssm", $"The \"install\" command failed with exit code {installProcess.ExitCode}.");
 
 			var properties = new Dictionary<string, string> {
-				["AppDirectory"] = directory.FullName,
+				["AppDirectory"] = application.RootPath,
 				["AppNoConsole"] = "1",
-				["AppStderr"] = Path.Join(directory.FullName, @"var\stderr.log"),
-				["AppStdout"] = Path.Join(directory.FullName, @"var\stdout.log"),
+				["AppStderr"] = Path.Join(application.RootPath, @"var\stderr.log"),
+				["AppStdout"] = Path.Join(application.RootPath, @"var\stdout.log"),
 				["Description"] = application.Description,
 				["DisplayName"] = application.Name,
 				["Start"] = "SERVICE_AUTO_START"
 			};
 
 			foreach (var (key, value) in properties) {
-				using var setProcess = Process.Start("nssm", ["set", application.Id, key, value])
-					?? throw new NotSupportedException(@"The ""nssm"" program could not be started.");
+				using var setProcess = Process.Start("nssm", ["set", application.Id, key, value]) ?? throw new ProcessException("nssm");
 				setProcess.WaitForExit();
+				if (setProcess.ExitCode != 0) throw new ProcessException("nssm", $"The \"set\" command failed with exit code {setProcess.ExitCode}.");
 			}
 
-			if (start) {
-				using var serviceController = new ServiceController(application.Id);
-				if (serviceController.Status == ServiceControllerStatus.Stopped) {
-					serviceController.Start();
-					serviceController.WaitForStatus(ServiceControllerStatus.Running);
-				}
-			}
+			if (start) StartApplication(application);
+			return await Task.FromResult(0);
 		}
-		catch (NotSupportedException e) {
+		catch (Exception e) {
 			Console.WriteLine(e.Message);
 			return 2;
 		}
-
-		return await Task.FromResult(0);
 	}
 
 	/// <summary>
 	/// Determines the paths of the program and the entry point of a .NET application.
 	/// </summary>
-	/// <param name="directory">The path to the application root directory.</param>
+	/// <param name="application">The application configuration.</param>
 	/// <returns>The paths of the program and the entry point of the .NET application.</returns>
-	/// <exception cref="NotSupportedException">TODO</exception>
-	private static (string, string) GetDotNetApplicationPaths(DirectoryInfo directory) {
-		var package = PackageJsonFile.ReadFromDirectory(directory.FullName) ?? throw new NotSupportedException(@"Unable to locate the ""package.json"" file.");
-		var binary = package.Bin?.FirstOrDefault().Value ?? throw new NotSupportedException("Unable to determine the application entry point.");
-		var dotnet = GetPathFromEnvironment("dotnet") ?? throw new NotSupportedException(@"Unable to locate the ""dotnet"" program.");
-		return (dotnet.FullName, Path.GetFullPath(Path.Join(directory.FullName, binary)));
+	/// <exception cref="EntryPointNotFoundException">The program and/or entry point could not be determined.</exception>
+	private static (string Program, string EntryPoint) GetDotNetApplicationPaths(ApplicationConfiguration application) {
+		var package = PackageJsonFile.ReadFromDirectory(application.RootPath) ?? throw new EntryPointNotFoundException(@"Unable to locate the ""package.json"" file.");
+
+		var binary = package.Bin?.FirstOrDefault().Value ?? throw new EntryPointNotFoundException("Unable to determine the application entry point.");
+		var dotnet = GetPathFromEnvironment("dotnet") ?? throw new EntryPointNotFoundException(@"Unable to locate the ""dotnet"" program.");
+		return (Program: dotnet.FullName, EntryPoint: Path.GetFullPath(Path.Join(application.RootPath, binary)));
 	}
 
 	/// <summary>
 	/// Determines the paths of the program and the entry point of a Node.js application.
 	/// </summary>
-	/// <param name="directory">The path to the application root directory.</param>
+	/// <param name="application">The application configuration.</param>
 	/// <returns>The paths of the program and the entry point of the Node.js application.</returns>
-	/// <exception cref="NotSupportedException">TODO</exception>
-	private static (string, string) GetNodeApplicationPaths(DirectoryInfo directory) {
-		var package = PackageJsonFile.ReadFromDirectory(directory.FullName) ?? throw new NotSupportedException(@"Unable to locate the ""package.json"" file.");
-		var binary = package.Bin?.FirstOrDefault().Value ?? throw new NotSupportedException("Unable to determine the application entry point.");
-		var node = GetPathFromEnvironment("node") ?? throw new NotSupportedException(@"Unable to locate the ""node"" program.");
-		return (node.FullName, Path.GetFullPath(Path.Join(directory.FullName, binary)));
+	/// <exception cref="EntryPointNotFoundException">The program and/or entry point could not be determined.</exception>
+	private static (string Program, string EntryPoint) GetNodeApplicationPaths(ApplicationConfiguration application) {
+		var package = PackageJsonFile.ReadFromDirectory(application.RootPath) ?? throw new EntryPointNotFoundException(@"Unable to locate the ""package.json"" file.");
+		if (!string.IsNullOrWhiteSpace(package.Description)) application.Description = package.Description;
+
+		var binary = package.Bin?.FirstOrDefault().Value ?? throw new EntryPointNotFoundException("Unable to determine the application entry point.");
+		var node = GetPathFromEnvironment("node") ?? throw new EntryPointNotFoundException(@"Unable to locate the ""node"" program.");
+		return (Program: node.FullName, EntryPoint: Path.GetFullPath(Path.Join(application.RootPath, binary)));
 	}
 
 	/// <summary>
@@ -114,5 +110,17 @@ public sealed class InstallCommand: Command {
 			where !string.IsNullOrWhiteSpace(path)
 			select new FileInfo(Path.Join(path.Trim(), executable + (OperatingSystem.IsWindows() ? ".exe" : string.Empty)));
 		return files.FirstOrDefault(file => file.Exists);
+	}
+
+	/// <summary>
+	/// Starts the specified application.
+	/// </summary>
+	/// <param name="application">The application configuration.</param>
+	private static void StartApplication(ApplicationConfiguration application) {
+		using var serviceController = new ServiceController(application.Id);
+		if (serviceController.Status == ServiceControllerStatus.Stopped) {
+			serviceController.Start();
+			serviceController.WaitForStatus(ServiceControllerStatus.Running);
+		}
 	}
 }
