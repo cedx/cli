@@ -77,11 +77,11 @@ public sealed class InstallCommand: Command {
 	/// <returns>The paths of the program and the entry point of the .NET application.</returns>
 	/// <exception cref="EntryPointNotFoundException">The program and/or entry point could not be determined.</exception>
 	private static (string Program, string EntryPoint) GetDotNetApplicationPaths(ApplicationConfiguration application) {
-		var package = PackageJsonFile.ReadFromDirectory(application.RootPath) ?? throw new EntryPointNotFoundException(@"Unable to locate the ""package.json"" file.");
+		var package = PackageJson.ReadFromDirectory(application.RootPath) ?? throw new EntryPointNotFoundException(@"Unable to locate the ""package.json"" file.");
 
-		var binary = package.Bin?.FirstOrDefault().Value ?? throw new EntryPointNotFoundException("Unable to determine the application entry point.");
-		var dotnet = GetPathFromEnvironment("dotnet") ?? throw new EntryPointNotFoundException(@"Unable to locate the ""dotnet"" program.");
-		return (Program: dotnet.FullName, EntryPoint: Path.GetFullPath(Path.Join(application.RootPath, binary)));
+		var entryPoint = package.Bin.FirstOrDefault().Value ?? throw new EntryPointNotFoundException("Unable to determine the application entry point.");
+		var program = GetPathFromEnvironment("dotnet") ?? throw new EntryPointNotFoundException(@"Unable to locate the ""dotnet"" program.");
+		return (Program: program.FullName, EntryPoint: Path.GetFullPath(Path.Join(application.RootPath, entryPoint)));
 	}
 
 	/// <summary>
@@ -91,12 +91,12 @@ public sealed class InstallCommand: Command {
 	/// <returns>The paths of the program and the entry point of the Node.js application.</returns>
 	/// <exception cref="EntryPointNotFoundException">The program and/or entry point could not be determined.</exception>
 	private static (string Program, string EntryPoint) GetNodeApplicationPaths(ApplicationConfiguration application) {
-		var package = PackageJsonFile.ReadFromDirectory(application.RootPath) ?? throw new EntryPointNotFoundException(@"Unable to locate the ""package.json"" file.");
+		var package = PackageJson.ReadFromDirectory(application.RootPath) ?? throw new EntryPointNotFoundException(@"Unable to locate the ""package.json"" file.");
 		if (!string.IsNullOrWhiteSpace(package.Description)) application.Description = package.Description;
 
-		var binary = package.Bin?.FirstOrDefault().Value ?? throw new EntryPointNotFoundException("Unable to determine the application entry point.");
-		var node = GetPathFromEnvironment("node") ?? throw new EntryPointNotFoundException(@"Unable to locate the ""node"" program.");
-		return (Program: node.FullName, EntryPoint: Path.GetFullPath(Path.Join(application.RootPath, binary)));
+		var entryPoint = package.Bin.FirstOrDefault().Value ?? throw new EntryPointNotFoundException("Unable to determine the application entry point.");
+		var program = GetPathFromEnvironment("node") ?? throw new EntryPointNotFoundException(@"Unable to locate the ""node"" program.");
+		return (Program: program.FullName, EntryPoint: Path.GetFullPath(Path.Join(application.RootPath, entryPoint)));
 	}
 
 	/// <summary>

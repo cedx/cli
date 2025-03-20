@@ -37,12 +37,10 @@ public record Column {
 	/// </summary>
 	/// <param name="record">A database record providing values to initialize the instance.</param>
 	/// <returns>The newly created column.</returns>
-	public static Column OfRecord(IDataRecord record) {
-		return new Column {
-			Name = (string?) record["COLUMN_NAME"] ?? string.Empty,
-			Position = (int?) record["ORDINAL_POSITION"] ?? 0,
-			Schema = (string?) record["TABLE_SCHEMA"] ?? string.Empty,
-			Table = (string?) record["TABLE_NAME"] ?? string.Empty
-		};
-	}
+	public static Column OfRecord(IDataRecord record) => new() {
+		Name = record["COLUMN_NAME"] is DBNull ? string.Empty : (string) record["COLUMN_NAME"],
+		Position = record["ORDINAL_POSITION"] is DBNull ? 0 : (int) record["ORDINAL_POSITION"],
+		Schema = record["TABLE_SCHEMA"] is DBNull ? string.Empty : (string) record["TABLE_SCHEMA"],
+		Table = record["TABLE_NAME"] is DBNull ? string.Empty : (string) record["TABLE_NAME"]
+	};
 }

@@ -57,15 +57,13 @@ public record Table {
 	/// </summary>
 	/// <param name="record">A database record providing values to initialize the instance.</param>
 	/// <returns>The newly created column.</returns>
-	public static Table OfRecord(IDataRecord record) {
-		return new Table {
-			Collation = (string?) record["TABLE_COLLATION"] ?? string.Empty,
-			Engine = (string?) record["ENGINE"] ?? string.Empty,
-			Name = (string?) record["TABLE_NAME"] ?? string.Empty,
-			Schema = (string?) record["TABLE_SCHEMA"] ?? string.Empty,
-			Type = (string?) record["TABLE_TYPE"] ?? string.Empty
-		};
-	}
+	public static Table OfRecord(IDataRecord record) => new() {
+		Collation = record["TABLE_COLLATION"] is DBNull ? string.Empty : (string) record["TABLE_COLLATION"],
+		Engine = record["ENGINE"] is DBNull ? TableEngine.None : (string) record["ENGINE"],
+		Name = record["TABLE_NAME"] is DBNull ? string.Empty : (string) record["TABLE_NAME"],
+		Schema = record["TABLE_SCHEMA"] is DBNull ? string.Empty : (string) record["TABLE_SCHEMA"],
+		Type = record["TABLE_TYPE"] is DBNull ? TableType.BaseTable : (string) record["TABLE_TYPE"]
+	};
 }
 
 /// <summary>

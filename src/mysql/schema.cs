@@ -32,11 +32,9 @@ public record Schema {
 	/// </summary>
 	/// <param name="record">A database record providing values to initialize the instance.</param>
 	/// <returns>The newly created column.</returns>
-	public static Schema OfRecord(IDataRecord record) {
-		return new Schema {
-			Charset = (string?) record["DEFAULT_CHARACTER_SET_NAME"] ?? string.Empty,
-			Collation = (string?) record["DEFAULT_COLLATION_NAME"] ?? string.Empty,
-			Name = (string?) record["SCHEMA_NAME"] ?? string.Empty
-		};
-	}
+	public static Schema OfRecord(IDataRecord record) => new() {
+		Charset = record["DEFAULT_CHARACTER_SET_NAME"] is DBNull ? string.Empty : (string) record["DEFAULT_CHARACTER_SET_NAME"],
+		Collation = record["DEFAULT_COLLATION_NAME"] is DBNull ? string.Empty : (string) record["DEFAULT_COLLATION_NAME"],
+		Name = record["SCHEMA_NAME"] is DBNull ? string.Empty : (string) record["SCHEMA_NAME"]
+	};
 }
