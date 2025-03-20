@@ -30,19 +30,19 @@ public sealed class RemoveCommand: Command {
 	public async Task<int> Execute(DirectoryInfo directory) {
 		if (!this.CheckPrivilege()) return 1;
 
-		var config = ApplicationConfiguration.ReadFromDirectory(directory);
-		if (config is null) {
+		var application = ApplicationConfiguration.ReadFromDirectory(directory);
+		if (application is null) {
 			Console.WriteLine("Unable to locate the application configuration file.");
 			return 2;
 		}
 
-		using var serviceController = new ServiceController(config.Id);
+		using var serviceController = new ServiceController(application.Id);
 		if (serviceController.Status == ServiceControllerStatus.Running) {
 			serviceController.Stop();
 			serviceController.WaitForStatus(ServiceControllerStatus.Stopped);
 		}
 
-		using var process = Process.Start("nssm", ["remove", config.Id, "confirm"]);
+		using var process = Process.Start("nssm", ["remove", application.Id, "confirm"]);
 		if (process is not null) process.WaitForExit();
 		else {
 			Console.WriteLine(@"The ""nssm"" program could not be started.");

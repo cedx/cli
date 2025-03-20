@@ -144,6 +144,5 @@ internal sealed record NodeRelease {
 	/// <summary>
 	/// The version number.
 	/// </summary>
-	[JsonPropertyName("version")]
 	public required string Version { get; init; }
 }
