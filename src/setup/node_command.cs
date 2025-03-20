@@ -139,10 +139,5 @@ public sealed class NodeCommand: Command {
 /// <summary>
 /// Represents a Node.js release.
 /// </summary>
-internal sealed record NodeRelease {
-
-	/// <summary>
-	/// The version number.
-	/// </summary>
-	public required string Version { get; init; }
-}
+/// <param name="Version">The version number.</param>
+internal sealed record NodeRelease(string Version);

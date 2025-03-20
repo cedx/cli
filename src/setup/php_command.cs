@@ -114,10 +114,5 @@ public sealed class PhpCommand: Command {
 /// <summary>
 /// Represents a PHP release.
 /// </summary>
-internal sealed record PhpRelease {
-
-	/// <summary>
-	/// The version number.
-	/// </summary>
-	public required string Version { get; init; }
-}
+/// <param name="Version">The version number.</param>
+internal sealed record PhpRelease(string Version);
