@@ -5,7 +5,7 @@ using System.Data;
 /// <summary>
 /// Provides the metadata of a table column.
 /// </summary>
-public record Column {
+public class Column {
 
 	/// <summary>
 	/// The name of the database table associated with this class.

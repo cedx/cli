@@ -5,7 +5,7 @@ using System.Data;
 /// <summary>
 /// Provides the metadata of a database table.
 /// </summary>
-public record Table {
+public class Table {
 
 	/// <summary>
 	/// The name of the database table associated with this class.
