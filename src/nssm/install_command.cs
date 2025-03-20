@@ -30,8 +30,8 @@ public sealed class InstallCommand: Command {
 	/// <param name="directory">The path to the root directory of the Node.js application.</param>
 	/// <param name="start">Value indicating whether to start the service after its registration.</param>
 	/// <returns>The exit code.</returns>
-	public async Task<int> Execute(DirectoryInfo directory, bool start = false) {
-		if (!this.CheckPrivilege()) return 1;
+	public Task<int> Execute(DirectoryInfo directory, bool start = false) {
+		if (!this.CheckPrivilege()) return Task.FromResult(1);
 
 		try {
 			var application = ApplicationConfiguration.ReadFromDirectory(directory.FullName)
@@ -62,11 +62,11 @@ public sealed class InstallCommand: Command {
 			}
 
 			if (start) StartApplication(application);
-			return await Task.FromResult(0);
+			return Task.FromResult(0);
 		}
 		catch (Exception e) {
 			Console.WriteLine(e.Message);
-			return 2;
+			return Task.FromResult(2);
 		}
 	}
 

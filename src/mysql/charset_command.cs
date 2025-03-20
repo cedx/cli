@@ -29,11 +29,11 @@ public sealed class CharsetCommand: Command {
 	/// <param name="schemaName">The schema name.</param>
 	/// <param name="tableNames">The table names.</param>
 	/// <returns>The exit code.</returns>
-	public async Task<int> Execute(Uri dsn, string collation, string? schemaName, string[] tableNames) {
+	public Task<int> Execute(Uri dsn, string collation, string? schemaName, string[] tableNames) {
 		var noSchema = string.IsNullOrWhiteSpace(schemaName);
 		if (tableNames.Length > 0 && noSchema) {
 			Console.WriteLine($"The table \"{tableNames[0]}\" requires that a schema be specified.");
-			return 1;
+			return Task.FromResult(1);
 		}
 
 		using var connection = this.CreateMySqlConnection(dsn);
@@ -51,7 +51,7 @@ public sealed class CharsetCommand: Command {
 		using var enableForeignKeys = connection.CreateCommand();
 		enableForeignKeys.CommandText = "SET foreign_key_checks = 1";
 		enableForeignKeys.ExecuteNonQuery();
-		return await Task.FromResult(0);
+		return Task.FromResult(0);
 	}
 
 	/// <summary>

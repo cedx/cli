@@ -42,10 +42,10 @@ public sealed class IconvCommand: Command {
 	/// <param name="to">The output encoding.</param>
 	/// <param name="recursive">Value indicating whether to process the directory recursively.</param>
 	/// <returns>The exit code.</returns>
-	public async Task<int> Execute(FileSystemInfo fileOrDirectory, string from, string to, bool recursive = false) {
+	public Task<int> Execute(FileSystemInfo fileOrDirectory, string from, string to, bool recursive = false) {
 		if (!fileOrDirectory.Exists) {
 			Console.WriteLine("Unable to locate the specified file or directory.");
-			return 1;
+			return Task.FromResult(1);
 		}
 
 		if (binaryExtensions.Count == 0 && textExtensions.Count == 0) {
@@ -63,7 +63,7 @@ public sealed class IconvCommand: Command {
 		var fromEncoding = Encoding.GetEncoding(from);
 		var toEncoding = Encoding.GetEncoding(to);
 		foreach (var file in files) ConvertFileEncoding(file, fromEncoding, toEncoding);
-		return await Task.FromResult(0);
+		return Task.FromResult(0);
 	}
 
 	/// <summary>

@@ -26,11 +26,11 @@ public sealed class OptimizeCommand: Command {
 	/// <param name="schemaName">The schema name.</param>
 	/// <param name="tableNames">The table names.</param>
 	/// <returns>The exit code.</returns>
-	public async Task<int> Execute(Uri dsn, string? schemaName, string[] tableNames) {
+	public Task<int> Execute(Uri dsn, string? schemaName, string[] tableNames) {
 		var noSchema = string.IsNullOrWhiteSpace(schemaName);
 		if (tableNames.Length > 0 && noSchema) {
 			Console.WriteLine($"The table \"{tableNames[0]}\" requires that a schema be specified.");
-			return 1;
+			return Task.FromResult(1);
 		}
 
 		using var connection = this.CreateMySqlConnection(dsn);
@@ -40,7 +40,7 @@ public sealed class OptimizeCommand: Command {
 			: connection.GetTables(schema));
 
 		foreach (var table in tables) OptimizeTable(connection, table);
-		return await Task.FromResult(0);
+		return Task.FromResult(0);
 	}
 
 	/// <summary>

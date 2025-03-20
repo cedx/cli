@@ -27,13 +27,13 @@ public sealed class RemoveCommand: Command {
 	/// </summary>
 	/// <param name="directory">The path to the root directory of the Node.js application.</param>
 	/// <returns>The exit code.</returns>
-	public async Task<int> Execute(DirectoryInfo directory) {
-		if (!this.CheckPrivilege()) return 1;
+	public Task<int> Execute(DirectoryInfo directory) {
+		if (!this.CheckPrivilege()) return Task.FromResult(1);
 
 		var application = ApplicationConfiguration.ReadFromDirectory(directory.FullName);
 		if (application is null) {
 			Console.WriteLine("Unable to locate the application configuration file.");
-			return 2;
+			return Task.FromResult(2);
 		}
 
 		using var serviceController = new ServiceController(application.Id);
@@ -46,11 +46,11 @@ public sealed class RemoveCommand: Command {
 			using var process = Process.Start("nssm", ["remove", application.Id, "confirm"]) ?? throw new ProcessException("nssm");
 			process.WaitForExit();
 			if (process.ExitCode != 0) throw new ProcessException("nssm", $"The process failed with exit code {process.ExitCode}.");
-			return await Task.FromResult(0);
+			return Task.FromResult(0);
 		}
 		catch (Exception e) {
 			Console.WriteLine(e.Message);
-			return 3;
+			return Task.FromResult(3);
 		}
 	}
 }

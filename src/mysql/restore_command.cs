@@ -27,10 +27,10 @@ public sealed class RestoreCommand: Command {
 	/// <param name="fileOrDirectory">The path to a file or directory to process.</param>
 	/// <param name="recursive">Value indicating whether to process the directory recursively.</param>
 	/// <returns>The exit code.</returns>
-	public async Task<int> Execute(Uri dsn, FileSystemInfo fileOrDirectory, bool recursive = false) {
+	public Task<int> Execute(Uri dsn, FileSystemInfo fileOrDirectory, bool recursive = false) {
 		if (!fileOrDirectory.Exists) {
 			Console.WriteLine("Unable to locate the specified file or directory.");
-			return 1;
+			return Task.FromResult(1);
 		}
 
 		var files = fileOrDirectory switch {
@@ -40,7 +40,7 @@ public sealed class RestoreCommand: Command {
 		};
 
 		foreach (var file in files) ImportFile(dsn, file);
-		return await Task.FromResult(0);
+		return Task.FromResult(0);
 	}
 
 	/// <summary>

@@ -34,11 +34,11 @@ public sealed class BackupCommand: Command {
 	/// <param name="schemaName">The schema name.</param>
 	/// <param name="tableNames">The table names.</param>
 	/// <returns>The exit code.</returns>
-	public async Task<int> Execute(Uri dsn, DirectoryInfo directory, string format, string? schemaName, string[] tableNames) {
+	public Task<int> Execute(Uri dsn, DirectoryInfo directory, string format, string? schemaName, string[] tableNames) {
 		var noSchema = string.IsNullOrWhiteSpace(schemaName);
 		if (tableNames.Length > 0 && noSchema) {
 			Console.WriteLine($"The table \"{tableNames[0]}\" requires that a schema be specified.");
-			return 1;
+			return Task.FromResult(1);
 		}
 
 		try {
@@ -53,11 +53,11 @@ public sealed class BackupCommand: Command {
 				else ExportToSqlDump(dsn, schema, tableNames, directory);
 			}
 
-			return await Task.FromResult(0);
+			return Task.FromResult(0);
 		}
 		catch (Exception e) {
 			Console.WriteLine(e.Message);
-			return 2;
+			return Task.FromResult(2);
 		}
 	}
 
