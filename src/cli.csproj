@@ -17,16 +17,6 @@
 		<TargetFramework>net9.0-windows</TargetFramework>
 	</PropertyGroup>
 
-	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-		<Exec Command="dotnet cake --target=fetch" />
-	</Target>
-
-	<ItemGroup>
-		<Compile Remove="var/**" />
-		<EmbeddedResource Remove="var/**" />
-		<None Remove="var/**" />
-	</ItemGroup>
-
 	<ItemGroup>
 		<Using Include="System.CommandLine" />
 	</ItemGroup>

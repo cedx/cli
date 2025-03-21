@@ -1,6 +1,7 @@
 namespace Belin.Cli.Nssm;
 
 using System.Diagnostics;
+using System.Reflection;
 using System.ServiceProcess;
 
 /// <summary>
@@ -38,8 +39,8 @@ public sealed class InstallCommand: Command {
 				?? throw new EntryPointNotFoundException("Unable to locate the application configuration file.");
 
 			var (program, entryPoint) = Directory.EnumerateFiles(application.Path, "*.slnx").Any()
-				? GetDotNetApplicationPaths(application)
-				: GetNodeApplicationPaths(application);
+				? GetDotNetEntryPoint(application)
+				: GetNodeEntryPoint(application);
 
 			using var installProcess = Process.Start("nssm", ["install", application.Id, program, entryPoint]) ?? throw new ProcessException("nssm");
 			installProcess.WaitForExit();
@@ -71,17 +72,28 @@ public sealed class InstallCommand: Command {
 	}
 
 	/// <summary>
-	/// Determines the paths of the program and the entry point of a .NET application.
+	/// Determines the paths of the program and the entry point of a C# application.
 	/// </summary>
 	/// <param name="application">The application configuration.</param>
-	/// <returns>The paths of the program and the entry point of the .NET application.</returns>
+	/// <returns>The paths of the program and the entry point of the C# application.</returns>
 	/// <exception cref="EntryPointNotFoundException">The program and/or entry point could not be determined.</exception>
-	private static (string Program, string EntryPoint) GetDotNetApplicationPaths(Application application) {
-		var package = NodePackage.ReadFromDirectory(application.Path) ?? throw new EntryPointNotFoundException(@"Unable to locate the ""package.json"" file.");
+	private static (string Program, string EntryPoint) GetDotNetEntryPoint(Application application) {
+		var (project, path) = CSharpProject.ReadFromDirectory(application.Path);
+		if (project is null || path is null) throw new EntryPointNotFoundException(@"Unable to locate the C# project file.");
 
-		var entryPoint = package.Bin?.FirstOrDefault().Value ?? throw new EntryPointNotFoundException("Unable to determine the application entry point.");
+		var directory = Path.GetDirectoryName(path);
+		var entryPoint = (AssemblyName: "", OutDir: "");
+		foreach (var group in project.PropertyGroup) {
+			if (application.Description.Length == 0 && !string.IsNullOrWhiteSpace(group.Description)) application.Description = group.Description;
+			if (entryPoint.AssemblyName.Length == 0 && !string.IsNullOrWhiteSpace(group.AssemblyName)) entryPoint.AssemblyName = group.AssemblyName;
+			if (entryPoint.OutDir.Length == 0 && !string.IsNullOrWhiteSpace(group.OutDir)) entryPoint.OutDir = Path.Join(directory, group.OutDir);
+		}
+
+		if (entryPoint.AssemblyName.Length == 0) entryPoint.AssemblyName = Path.GetFileNameWithoutExtension(path);
+		if (entryPoint.OutDir.Length == 0) entryPoint.OutDir = Path.Join(directory, "bin");
+
 		var program = GetPathFromEnvironment("dotnet") ?? throw new EntryPointNotFoundException(@"Unable to locate the ""dotnet"" program.");
-		return (Program: program.FullName, EntryPoint: Path.GetFullPath(Path.Join(application.Path, entryPoint)));
+		return (Program: program.FullName, EntryPoint: Path.GetFullPath(Path.Join(entryPoint.OutDir, $"{entryPoint.AssemblyName}.dll")));
 	}
 
 	/// <summary>
@@ -90,9 +102,9 @@ public sealed class InstallCommand: Command {
 	/// <param name="application">The application configuration.</param>
 	/// <returns>The paths of the program and the entry point of the Node.js application.</returns>
 	/// <exception cref="EntryPointNotFoundException">The program and/or entry point could not be determined.</exception>
-	private static (string Program, string EntryPoint) GetNodeApplicationPaths(Application application) {
+	private static (string Program, string EntryPoint) GetNodeEntryPoint(Application application) {
 		var package = NodePackage.ReadFromDirectory(application.Path) ?? throw new EntryPointNotFoundException(@"Unable to locate the ""package.json"" file.");
-		if (!string.IsNullOrWhiteSpace(package.Description)) application.Description = package.Description;
+		if (application.Description.Length == 0 && !string.IsNullOrWhiteSpace(package.Description)) application.Description = package.Description;
 
 		var entryPoint = package.Bin?.FirstOrDefault().Value ?? throw new EntryPointNotFoundException("Unable to determine the application entry point.");
 		var program = GetPathFromEnvironment("node") ?? throw new EntryPointNotFoundException(@"Unable to locate the ""node"" program.");

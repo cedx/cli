@@ -1,6 +1,5 @@
 namespace Belin.Cli.Nssm;
 
-using System.ComponentModel;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -14,12 +13,12 @@ public sealed record CSharpProject(CSharpPropertyGroup[] PropertyGroup) {
 	/// <summary>
 	/// Reads the C# project file located in the specified directory.
 	/// </summary>
-	/// <param name="input">The path to the root directory of the Node.js project.</param>
-	/// <returns>The C# project of the specified Node.js project, or <see langword="null"/> if not found.</returns>
-	public static CSharpProject? ReadFromDirectory(string input) {
-		var paths = Directory.EnumerateFiles(input, "*.csproj");
+	/// <param name="input">The directory path.</param>
+	/// <returns>The contents and the path of the C# project file, or <see langword="null"/> if not found.</returns>
+	public static (CSharpProject? Project, string? Path) ReadFromDirectory(string input) {
+		var path = Directory.EnumerateFiles(Path.Join(input, "src"), "*.csproj", SearchOption.AllDirectories).FirstOrDefault();
 		var serializer = new XmlSerializer(typeof(CSharpProject));
-		return paths.Any() ? (CSharpProject?) serializer.Deserialize(XmlReader.Create(paths.First())) : null;
+		return path is null ? default : (Project: (CSharpProject?) serializer.Deserialize(XmlReader.Create(path)), Path: path);
 	}
 }
 
