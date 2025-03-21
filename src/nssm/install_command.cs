@@ -1,7 +1,6 @@
 namespace Belin.Cli.Nssm;
 
 using System.Diagnostics;
-using System.Reflection;
 using System.ServiceProcess;
 
 /// <summary>
@@ -78,18 +77,18 @@ public sealed class InstallCommand: Command {
 	/// <returns>The paths of the program and the entry point of the C# application.</returns>
 	/// <exception cref="EntryPointNotFoundException">The program and/or entry point could not be determined.</exception>
 	private static (string Program, string EntryPoint) GetDotNetEntryPoint(Application application) {
-		var (project, path) = CSharpProject.ReadFromDirectory(application.Path);
-		if (project is null || path is null) throw new EntryPointNotFoundException(@"Unable to locate the C# project file.");
-
-		var directory = Path.GetDirectoryName(path);
+		var project = CSharpProject.ReadFromDirectory(application.Path) ?? throw new EntryPointNotFoundException(@"Unable to locate the C# project file.");
+		var directory = Path.GetDirectoryName(project.Path);
 		var entryPoint = (AssemblyName: "", OutDir: "");
-		foreach (var group in project.PropertyGroup) {
-			if (application.Description.Length == 0 && !string.IsNullOrWhiteSpace(group.Description)) application.Description = group.Description;
-			if (entryPoint.AssemblyName.Length == 0 && !string.IsNullOrWhiteSpace(group.AssemblyName)) entryPoint.AssemblyName = group.AssemblyName;
-			if (entryPoint.OutDir.Length == 0 && !string.IsNullOrWhiteSpace(group.OutDir)) entryPoint.OutDir = Path.Join(directory, group.OutDir);
+
+		foreach (var group in project.PropertyGroups) {
+			if (application.Description.Length == 0) application.Description = group.Description;
+			if (application.Name.Length == 0) application.Name = group.Product;
+			if (entryPoint.AssemblyName.Length == 0) entryPoint.AssemblyName = group.AssemblyName;
+			if (entryPoint.OutDir.Length == 0) entryPoint.OutDir = Path.Join(directory, group.OutDir);
 		}
 
-		if (entryPoint.AssemblyName.Length == 0) entryPoint.AssemblyName = Path.GetFileNameWithoutExtension(path);
+		if (entryPoint.AssemblyName.Length == 0) entryPoint.AssemblyName = Path.GetFileNameWithoutExtension(project.Path);
 		if (entryPoint.OutDir.Length == 0) entryPoint.OutDir = Path.Join(directory, "bin");
 
 		var program = GetPathFromEnvironment("dotnet") ?? throw new EntryPointNotFoundException(@"Unable to locate the ""dotnet"" program.");
@@ -104,7 +103,8 @@ public sealed class InstallCommand: Command {
 	/// <exception cref="EntryPointNotFoundException">The program and/or entry point could not be determined.</exception>
 	private static (string Program, string EntryPoint) GetNodeEntryPoint(Application application) {
 		var package = NodePackage.ReadFromDirectory(application.Path) ?? throw new EntryPointNotFoundException(@"Unable to locate the ""package.json"" file.");
-		if (application.Description.Length == 0 && !string.IsNullOrWhiteSpace(package.Description)) application.Description = package.Description;
+		if (application.Description.Length == 0) application.Description = package.Description;
+		if (application.Name.Length == 0) application.Name = package.Name;
 
 		var entryPoint = package.Bin?.FirstOrDefault().Value ?? throw new EntryPointNotFoundException("Unable to determine the application entry point.");
 		var program = GetPathFromEnvironment("node") ?? throw new EntryPointNotFoundException(@"Unable to locate the ""node"" program.");
