@@ -46,7 +46,7 @@ public sealed class InstallCommand: Command {
 
 			var properties = new Dictionary<string, string> {
 				["AppDirectory"] = application.Path,
-				["AppEnvironmentExtra"] = $"{(isDotNet ? "ASPNETCORE_ENVIRONMENT" : "NODE_ENV")}=Production",
+				["AppEnvironmentExtra"] = isDotNet ? "ASPNETCORE_ENVIRONMENT=Production" : "NODE_ENV=production",
 				["AppNoConsole"] = "1",
 				["AppStderr"] = Path.Join(application.Path, @"var\stderr.log"),
 				["AppStdout"] = Path.Join(application.Path, @"var\stdout.log"),
