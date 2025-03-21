@@ -22,7 +22,7 @@ public class Application {
 	/// <summary>
 	/// The application name.
 	/// </summary>
-	public required string Name { get; init; }
+	public string Name { get; set; } = string.Empty;
 
 	/// <summary>
 	/// The path to the application root directory.
@@ -36,7 +36,7 @@ public class Application {
 	/// <param name="input">The path to the root directory of the application.</param>
 	/// <returns>The configuration of the specified application, or <see langword="null"/> if not found.</returns>
 	public static Application? ReadFromDirectory(string input) {
-		foreach (var folder in new[] { "lib/server", "lib", "src/server", "src" }) {
+		foreach (var folder in new[] { "src/server", "src" }) {
 			var path = Join(input, folder, "appsettings.json");
 			if (File.Exists(path)) {
 				var application = JsonSerializer.Deserialize<Application>(File.ReadAllText(path), JsonSerializerOptions.Web);

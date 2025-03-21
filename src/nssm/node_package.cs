@@ -5,9 +5,10 @@ using System.Text.Json;
 /// <summary>
 /// Represents the contents of a <c>package.json</c> file.
 /// </summary>
-/// <param name="Bin">The map of package commands.</param>
+/// <param name="Name">The package name.</param>
 /// <param name="Description">The package description.</param>
-public sealed record NodePackage(IDictionary<string, string>? Bin = null, string Description = "") {
+/// <param name="Bin">The map of package commands.</param>
+public sealed record NodePackage(string Name, string Description = "", IDictionary<string, string>? Bin = null) {
 
 	/// <summary>
 	/// Reads the <c>package.json</c> file located in the specified directory.

@@ -47,7 +47,7 @@ Task("version")
 Task("watch")
 	.Description("Watches for file changes.")
 	.IsDependentOn("fetch")
-	.Does(() => StartProcess("dotnet", new ProcessSettings { Arguments = "watch build" }));
+	.Does(() => StartProcess("dotnet", new ProcessSettings { Arguments = "watch build", WorkingDirectory = "src" }));
 
 Task("default")
 	.Description("The default task.")
