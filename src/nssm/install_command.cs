@@ -46,7 +46,7 @@ public sealed class InstallCommand: Command {
 			if (installProcess.ExitCode != 0) throw new ProcessException("nssm", $"The \"install\" command failed with exit code {installProcess.ExitCode}.");
 
 			var properties = new Dictionary<string, string> {
-				["AppDirectory"] = isDotNet ? Path.GetDirectoryName(entryPoint)! : application.Path,
+				["AppDirectory"] = application.Path,
 				["AppEnvironmentExtra"] = $"{(isDotNet ? "DOTNET_ENVIRONMENT" : "NODE_ENV")}={application.Environment}",
 				["AppNoConsole"] = "1",
 				["AppStderr"] = Path.Join(application.Path, @"var\stderr.log"),
