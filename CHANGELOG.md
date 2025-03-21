@@ -1,7 +1,7 @@
 # Changelog
 
 ## Version [2.1.0](https://github.com/cedx/cli/compare/v2.0.0...v2.1.0)
-- Add support for [C#](https://learn.microsoft.com/en-us/dotnet/csharp) applications to the `nssm install` command.
+- Added support for [C#](https://learn.microsoft.com/en-us/dotnet/csharp) applications to the `nssm install` command.
 
 ## Version [2.0.0](https://github.com/cedx/cli/compare/v1.2.3...v2.0.0)
 - Breaking change: dropped support for **Linux** and **macOS** platforms.
