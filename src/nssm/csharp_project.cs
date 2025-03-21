@@ -6,9 +6,13 @@ using System.Xml.Serialization;
 /// <summary>
 /// Represents the contents of a C# project file.
 /// </summary>
-/// <param name="PropertyGroup">The property groups.</param>
 [XmlRoot("Project")]
-public sealed record CSharpProject(CSharpPropertyGroup[] PropertyGroup) {
+public sealed record CSharpProject {
+
+	/// <summary>
+	/// The property groups.
+	/// </summary>
+	public CSharpPropertyGroup[] PropertyGroup { get; set; } = [];
 
 	/// <summary>
 	/// Reads the C# project file located in the specified directory.
@@ -25,7 +29,25 @@ public sealed record CSharpProject(CSharpPropertyGroup[] PropertyGroup) {
 /// <summary>
 /// Represents a group of project properties.
 /// </summary>
-/// <param name="AssemblyName">The assembly name.</param>
-/// <param name="Description">The project description.</param>
-/// <param name="OutDir">The relative path of the project assemblies.</param>
-public sealed record CSharpPropertyGroup(string AssemblyName = "", string Description = "", string OutDir = "");
+public sealed record CSharpPropertyGroup {
+
+	/// <summary>
+	/// The assembly name.
+	/// </summary>
+	public string AssemblyName { get; set; } = string.Empty;
+
+	/// <summary>
+	/// The project description.
+	/// </summary>
+	public string Description { get; set; } = string.Empty;
+
+	/// <summary>
+	/// The product name.
+	/// </summary>
+	public string Product { get; set; } = string.Empty;
+
+	/// <summary>
+	/// The relative path of the project assemblies.
+	/// </summary>
+	public string OutDir { get; set; } = string.Empty;
+}
