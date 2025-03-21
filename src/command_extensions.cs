@@ -99,10 +99,8 @@ public static class CommandExtensions {
 	/// <returns>The standard output of the underlying process.</returns>
 	/// <exception cref="ProcessException">An error occurred when starting the underlying process.</exception>
 	public static string GetExecutableVersion(this Command _, DirectoryInfo output, string executable) {
-		var startInfo = new ProcessStartInfo {
-			Arguments = "--version",
+		var startInfo = new ProcessStartInfo(Path.Join(output.FullName, executable), "--version") {
 			CreateNoWindow = true,
-			FileName = Path.Join(output.FullName, executable),
 			RedirectStandardOutput = true
 		};
 
