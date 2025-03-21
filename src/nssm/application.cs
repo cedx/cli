@@ -15,6 +15,11 @@ public class Application {
 	public string Description { get; set; } = string.Empty;
 
 	/// <summary>
+	/// The environment name.
+	/// </summary>
+	public string Environment { get; set; } = string.Empty;
+
+	/// <summary>
 	/// The application identifier.
 	/// </summary>
 	public required string Id { get; init; }

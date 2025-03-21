@@ -38,6 +38,7 @@ public sealed class InstallCommand: Command {
 				?? throw new EntryPointNotFoundException("Unable to locate the application configuration file.");
 
 			var isDotNet = Directory.EnumerateFiles(application.Path, "*.slnx").Any();
+			if (application.Environment.Length == 0) application.Environment = isDotNet ? "Production" : "production";
 			var (program, entryPoint) = isDotNet ? GetDotNetEntryPoint(application) : GetNodeEntryPoint(application);
 
 			using var installProcess = Process.Start("nssm", ["install", application.Id, program, entryPoint]) ?? throw new ProcessException("nssm");
@@ -45,8 +46,8 @@ public sealed class InstallCommand: Command {
 			if (installProcess.ExitCode != 0) throw new ProcessException("nssm", $"The \"install\" command failed with exit code {installProcess.ExitCode}.");
 
 			var properties = new Dictionary<string, string> {
-				["AppDirectory"] = application.Path,
-				["AppEnvironmentExtra"] = isDotNet ? "ASPNETCORE_ENVIRONMENT=Production" : "NODE_ENV=production",
+				["AppDirectory"] = isDotNet ? Path.GetDirectoryName(entryPoint)! : application.Path,
+				["AppEnvironmentExtra"] = $"{(isDotNet ? "DOTNET_ENVIRONMENT" : "NODE_ENV")}={application.Environment}",
 				["AppNoConsole"] = "1",
 				["AppStderr"] = Path.Join(application.Path, @"var\stderr.log"),
 				["AppStdout"] = Path.Join(application.Path, @"var\stdout.log"),
