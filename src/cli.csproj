@@ -2,25 +2,19 @@
 	<PropertyGroup>
 		<Copyright>© Cédric Belin</Copyright>
 		<Product>Belin.io CLI</Product>
-		<Version>2.0.0</Version>
+		<Version>2.1.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<ApplicationIcon>res/favicon.ico</ApplicationIcon>
+		<ApplicationIcon>../res/favicon.ico</ApplicationIcon>
 		<AssemblyName>Belin.Cli</AssemblyName>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<OutDir>bin</OutDir>
+		<OutDir>../bin</OutDir>
 		<OutputType>Exe</OutputType>
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 		<TargetFramework>net9.0-windows</TargetFramework>
-
-		<!-- TODO
-		<PackageOutputPath>var/nuget</PackageOutputPath>
-		<PackAsTool>true</PackAsTool>
-		<ToolCommandName>belin-cli</ToolCommandName>
-		-->
 	</PropertyGroup>
 
 	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">

@@ -42,7 +42,7 @@ Task("setup")
 Task("version")
 	.Description("Updates the version number in the sources.")
 	.Does(() => ReplaceInFile("setup.iss", @"version ""\d+(\.\d+){2}""", $"version \"{version}\""))
-	.DoesForEach(GetFiles("src/*.csproj"), file => ReplaceInFile(file, @"<Version>\d+(\.\d+){2}</Version>", $"<Version>{version}</Version>"));
+	.Does(() => ReplaceInFile("src/cli.csproj", @"<Version>\d+(\.\d+){2}</Version>", $"<Version>{version}</Version>"));
 
 Task("watch")
 	.Description("Watches for file changes.")
