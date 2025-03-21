@@ -1,18 +1,23 @@
 namespace Belin.Cli.Nssm;
 
+using System.ComponentModel;
 using System.Xml;
 using System.Xml.Serialization;
 
 /// <summary>
 /// Represents the contents of a C# project file.
 /// </summary>
+[DesignerCategory("code")]
+[Serializable]
 [XmlRoot("Project")]
-public sealed record CSharpProject {
+[XmlType(AnonymousType = true)]
+public partial class CSharpProject {
 
 	/// <summary>
 	/// The property groups.
 	/// </summary>
-	public CSharpPropertyGroup[] PropertyGroup { get; set; } = [];
+	[XmlElement("PropertyGroup")]
+	public CSharpPropertyGroup[] PropertyGroups { get; set; } = [];
 
 	/// <summary>
 	/// Reads the C# project file located in the specified directory.
@@ -29,7 +34,10 @@ public sealed record CSharpProject {
 /// <summary>
 /// Represents a group of project properties.
 /// </summary>
-public sealed record CSharpPropertyGroup {
+[DesignerCategory("code")]
+[Serializable]
+[XmlType(AnonymousType = true)]
+public partial class CSharpPropertyGroup {
 
 	/// <summary>
 	/// The assembly name.
