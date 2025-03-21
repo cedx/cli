@@ -48,7 +48,7 @@ public sealed class IconvCommand: Command {
 			return Task.FromResult(1);
 		}
 
-		var resources = Path.GetFullPath(Path.Join(Path.GetDirectoryName(Environment.ProcessPath), "../res/file_extensions"));
+		var resources = Path.GetFullPath(Path.Join(AppContext.BaseDirectory, "../res/file_extensions"));
 		if (binaryExtensions.Count == 0) binaryExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "binary.json"))) ?? []);
 		if (textExtensions.Count == 0) textExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "text.json"))) ?? []);
 
