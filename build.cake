@@ -20,7 +20,7 @@ Task("fetch")
 	.Description("Fetches the remote resources.")
 	.DoesForEach(["binary", "text"], type => {
 		var path = $"sindresorhus/{type}-extensions/refs/heads/main/{type}-extensions.json";
-		DownloadFile($"https://raw.githubusercontent.com/{path}", $"res/file_extensions/{type}.json");
+		DownloadFile($"https://raw.githubusercontent.com/{path}", $"res/{type}_extensions.json");
 	});
 
 Task("format")

@@ -48,9 +48,11 @@ public sealed class IconvCommand: Command {
 			return Task.FromResult(1);
 		}
 
-		var resources = Path.GetFullPath(Path.Join(AppContext.BaseDirectory, "../res/file_extensions"));
-		if (binaryExtensions.Count == 0) binaryExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "binary.json"))) ?? []);
-		if (textExtensions.Count == 0) textExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "text.json"))) ?? []);
+		var resources = Path.GetFullPath(Path.Join(AppContext.BaseDirectory, "../res"));
+		if (binaryExtensions.Count == 0)
+			binaryExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "binary_extensions.json"))) ?? []);
+		if (textExtensions.Count == 0)
+			textExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "text_extensions.json"))) ?? []);
 
 		var files = fileOrDirectory switch {
 			DirectoryInfo directory => directory.EnumerateFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly),

@@ -26,5 +26,5 @@ WizardStyle = modern
 [Files]
 Source: "*.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "bin\*"; DestDir: "{app}\bin"; Excludes: "*.pdb"; Flags: ignoreversion recursesubdirs
-Source: "res\file_extensions\*"; DestDir: "{app}\res\file_extensions"; Flags: ignoreversion recursesubdirs
+Source: "res\*"; DestDir: "{app}\res"; Flags: ignoreversion recursesubdirs
 Source: "run.ps1"; DestDir: "{app}"; DestName: "belin.cli.ps1"; Flags: ignoreversion
