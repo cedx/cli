@@ -25,7 +25,7 @@ Task("fetch")
 
 Task("format")
 	.Description("Formats the source code.")
-	.Does(() => DotNetFormat("cli.slnx"));
+	.Does(() => DotNetFormat("src"));
 
 Task("publish")
 	.Description("Publishes the package.")
