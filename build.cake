@@ -6,22 +6,22 @@ var release = HasArgument("r") || HasArgument("release");
 var target = Argument<string>("t", null) ?? Argument("target", "default");
 var version = Context.Configuration.GetValue("package_version");
 
+Task("assets")
+	.Description("Deploys the assets.")
+	.DoesForEach(["binary", "text"], type => {
+		var path = $"sindresorhus/{type}-extensions/refs/heads/main/{type}-extensions.json";
+		DownloadFile($"https://raw.githubusercontent.com/{path}", $"res/{type}_extensions.json");
+	});
+
 Task("build")
 	.Description("Builds the project.")
-	.IsDependentOn("fetch")
+	.IsDependentOn("assets")
 	.Does(() => DotNetBuild("cli.slnx", new() { Configuration = release ? "Release" : "Debug" }));
 
 Task("clean")
 	.Description("Deletes all generated files.")
 	.DoesForEach(["bin", "src/obj"], folder => EnsureDirectoryDoesNotExist(folder))
 	.Does(() => CleanDirectory("var", fileSystemInfo => fileSystemInfo.Path.Segments[^1] != ".gitkeep"));
-
-Task("fetch")
-	.Description("Fetches the remote resources.")
-	.DoesForEach(["binary", "text"], type => {
-		var path = $"sindresorhus/{type}-extensions/refs/heads/main/{type}-extensions.json";
-		DownloadFile($"https://raw.githubusercontent.com/{path}", $"res/{type}_extensions.json");
-	});
 
 Task("format")
 	.Description("Formats the source code.")
@@ -41,12 +41,13 @@ Task("setup")
 
 Task("version")
 	.Description("Updates the version number in the sources.")
+	.Does(() => ReplaceInFile("README.md", @"project/v\d+(\.\d+){2}", $"project/v{version}"))
 	.Does(() => ReplaceInFile("setup.iss", @"version ""\d+(\.\d+){2}""", $"version \"{version}\""))
 	.Does(() => ReplaceInFile("src/cli.csproj", @"<Version>\d+(\.\d+){2}</Version>", $"<Version>{version}</Version>"));
 
 Task("watch")
 	.Description("Watches for file changes.")
-	.IsDependentOn("fetch")
+	.IsDependentOn("assets")
 	.Does(() => StartProcess("dotnet", new ProcessSettings { Arguments = "watch build", WorkingDirectory = "src" }));
 
 Task("default")
