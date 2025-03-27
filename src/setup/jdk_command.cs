@@ -14,16 +14,16 @@ public sealed class JdkCommand: Command {
 
 		Add(javaOption.FromAmong(["21", "17", "11", "8"]));
 		Add(outputOption);
-		this.SetHandler(Execute, outputOption, javaOption);
+		this.SetHandler(Invoke, outputOption, javaOption);
 	}
 
 	/// <summary>
-	/// Executes this command.
+	/// Invokes this command.
 	/// </summary>
 	/// <param name="output">The path to the output directory.</param>
 	/// <param name="java">The major version of the Java development kit.</param>
 	/// <returns>The exit code.</returns>
-	public async Task<int> Execute(DirectoryInfo output, int java) {
+	public async Task<int> Invoke(DirectoryInfo output, int java) {
 		if (!this.CheckPrivilege(output)) return 1;
 
 		using var httpClient = this.CreateHttpClient();

@@ -21,16 +21,16 @@ public sealed class InstallCommand: Command {
 		var startOption = new Option<bool>(["-s", "--start"], "Whether to start the service after its registration.");
 		Add(directoryArgument);
 		Add(startOption);
-		this.SetHandler(Execute, directoryArgument, startOption);
+		this.SetHandler(Invoke, directoryArgument, startOption);
 	}
 
 	/// <summary>
-	/// Executes this command.
+	/// Invokes this command.
 	/// </summary>
 	/// <param name="directory">The path to the root directory of the Node.js application.</param>
 	/// <param name="start">Value indicating whether to start the service after its registration.</param>
 	/// <returns>The exit code.</returns>
-	public Task<int> Execute(DirectoryInfo directory, bool start = false) {
+	public Task<int> Invoke(DirectoryInfo directory, bool start = false) {
 		if (!this.CheckPrivilege()) return Task.FromResult(1);
 
 		try {

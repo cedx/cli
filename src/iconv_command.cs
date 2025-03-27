@@ -31,18 +31,18 @@ public sealed class IconvCommand: Command {
 		Add(fromOption);
 		Add(toOption);
 		Add(recursiveOption);
-		this.SetHandler(Execute, fileOrDirectoryArgument, fromOption, toOption, recursiveOption);
+		this.SetHandler(Invoke, fileOrDirectoryArgument, fromOption, toOption, recursiveOption);
 	}
 
 	/// <summary>
-	/// Executes this command.
+	/// Invokes this command.
 	/// </summary>
 	/// <param name="fileOrDirectory">The path to the file or directory to process.</param>
 	/// <param name="from">The input encoding.</param>
 	/// <param name="to">The output encoding.</param>
 	/// <param name="recursive">Value indicating whether to process the directory recursively.</param>
 	/// <returns>The exit code.</returns>
-	public Task<int> Execute(FileSystemInfo fileOrDirectory, string from, string to, bool recursive = false) {
+	public Task<int> Invoke(FileSystemInfo fileOrDirectory, string from, string to, bool recursive = false) {
 		if (!fileOrDirectory.Exists) {
 			Console.WriteLine("Unable to locate the specified file or directory.");
 			return Task.FromResult(1);

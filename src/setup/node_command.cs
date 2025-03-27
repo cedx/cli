@@ -24,16 +24,16 @@ public sealed class NodeCommand: Command {
 
 		Add(configOption);
 		Add(outputOption);
-		this.SetHandler(Execute, outputOption, configOption);
+		this.SetHandler(Invoke, outputOption, configOption);
 	}
 
 	/// <summary>
-	/// Executes this command.
+	/// Invokes this command.
 	/// </summary>
 	/// <param name="output">The path to the output directory.</param>
 	/// <param name="config">The path to the NSSM configuration file.</param>
 	/// <returns>The exit code.</returns>
-	public async Task<int> Execute(DirectoryInfo output, FileInfo? config) {
+	public async Task<int> Invoke(DirectoryInfo output, FileInfo? config) {
 		services.Clear();
 		if (config is not null) {
 			var serviceIds = ReadNssmConfiguration(config);

@@ -16,15 +16,15 @@ public sealed class PhpCommand: Command {
 	public PhpCommand(): base("php", "Set up the latest PHP release.") {
 		var outputOption = new OutputOption(new DirectoryInfo(OperatingSystem.IsWindows() ? @"C:\Program Files\PHP" : "/usr/local"));
 		Add(outputOption);
-		this.SetHandler(Execute, outputOption);
+		this.SetHandler(Invoke, outputOption);
 	}
 
 	/// <summary>
-	/// Executes this command.
+	/// Invokes this command.
 	/// </summary>
 	/// <param name="output">The path to the output directory.</param>
 	/// <returns>The exit code.</returns>
-	public async Task<int> Execute(DirectoryInfo output) {
+	public async Task<int> Invoke(DirectoryInfo output) {
 		if (!this.CheckPrivilege()) return 1;
 
 		using var httpClient = this.CreateHttpClient();

@@ -22,11 +22,11 @@ public sealed class BackupCommand: Command {
 		Add(formatOption.FromAmong(BackupFormat.JsonLines, BackupFormat.SqlDump));
 		Add(schemaOption);
 		Add(tableOption);
-		this.SetHandler(Execute, dsnOption, directoryArgument, formatOption, schemaOption, tableOption);
+		this.SetHandler(Invoke, dsnOption, directoryArgument, formatOption, schemaOption, tableOption);
 	}
 
 	/// <summary>
-	/// Executes this command.
+	/// Invokes this command.
 	/// </summary>
 	/// <param name="dsn">The connection string.</param>
 	/// <param name="directory">The path to the output directory.</param>
@@ -34,7 +34,7 @@ public sealed class BackupCommand: Command {
 	/// <param name="schemaName">The schema name.</param>
 	/// <param name="tableNames">The table names.</param>
 	/// <returns>The exit code.</returns>
-	public Task<int> Execute(Uri dsn, DirectoryInfo directory, string format, string? schemaName, string[] tableNames) {
+	public Task<int> Invoke(Uri dsn, DirectoryInfo directory, string format, string? schemaName, string[] tableNames) {
 		var noSchema = string.IsNullOrWhiteSpace(schemaName);
 		if (tableNames.Length > 0 && noSchema) {
 			Console.WriteLine($"The table \"{tableNames[0]}\" requires that a schema be specified.");

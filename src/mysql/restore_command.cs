@@ -17,17 +17,17 @@ public sealed class RestoreCommand: Command {
 
 		Add(fileOrDirectoryArgument);
 		Add(recursiveOption);
-		this.SetHandler(Execute, dsnOption, fileOrDirectoryArgument, recursiveOption);
+		this.SetHandler(Invoke, dsnOption, fileOrDirectoryArgument, recursiveOption);
 	}
 
 	/// <summary>
-	/// Executes this command.
+	/// Invokes this command.
 	/// </summary>
 	/// <param name="dsn">The connection string.</param>
 	/// <param name="fileOrDirectory">The path to a file or directory to process.</param>
 	/// <param name="recursive">Value indicating whether to process the directory recursively.</param>
 	/// <returns>The exit code.</returns>
-	public Task<int> Execute(Uri dsn, FileSystemInfo fileOrDirectory, bool recursive = false) {
+	public Task<int> Invoke(Uri dsn, FileSystemInfo fileOrDirectory, bool recursive = false) {
 		if (!fileOrDirectory.Exists) {
 			Console.WriteLine("Unable to locate the specified file or directory.");
 			return Task.FromResult(1);

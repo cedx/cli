@@ -19,15 +19,15 @@ public sealed class RemoveCommand: Command {
 		);
 
 		Add(directoryArgument);
-		this.SetHandler(Execute, directoryArgument);
+		this.SetHandler(Invoke, directoryArgument);
 	}
 
 	/// <summary>
-	/// Executes this command.
+	/// Invokes this command.
 	/// </summary>
 	/// <param name="directory">The path to the root directory of the Node.js application.</param>
 	/// <returns>The exit code.</returns>
-	public Task<int> Execute(DirectoryInfo directory) {
+	public Task<int> Invoke(DirectoryInfo directory) {
 		if (!this.CheckPrivilege()) return Task.FromResult(1);
 
 		var application = Application.ReadFromDirectory(directory.FullName);
