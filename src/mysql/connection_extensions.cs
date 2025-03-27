@@ -3,7 +3,7 @@ namespace Belin.Cli.MySql;
 using MySqlConnector;
 
 /// <summary>
-/// Provides extension methods for commands.
+/// Provides extension methods for database connections.
 /// </summary>
 public static class ConnectionExtensions {
 
