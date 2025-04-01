@@ -45,7 +45,7 @@ public sealed class EngineCommand: Command {
 		using var disableForeignKeys = connection.CreateCommand();
 		disableForeignKeys.CommandText = "SET foreign_key_checks = 0";
 		disableForeignKeys.ExecuteNonQuery();
-		foreach (var table in tables.Where(item => !string.Equals(item.Collation, engine, StringComparison.InvariantCultureIgnoreCase)))
+		foreach (var table in tables.Where(item => !item.Engine.Equals(engine, StringComparison.OrdinalIgnoreCase)))
 			AlterTable(connection, table, engine);
 
 		using var enableForeignKeys = connection.CreateCommand();
