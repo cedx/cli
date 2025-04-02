@@ -54,7 +54,7 @@ public sealed class NodeCommand: Command {
 
 		var path = await DownloadArchive(httpClient, version);
 		StopServices();
-		SetupCommand.ExtractZipFile(path, output, strip: 1);
+		path.ExtractTo(output, strip: 1);
 		StartServices();
 
 		Console.WriteLine(SetupCommand.GetExecutableVersion(output, "node"));

@@ -27,7 +27,8 @@ public sealed class JdkCommand: Command {
 		if (!this.CheckPrivilege(output)) return 1;
 
 		using var httpClient = SetupCommand.CreateHttpClient();
-		SetupCommand.ExtractZipFile(await DownloadArchive(httpClient, java), output, strip: 1);
+		var path = await DownloadArchive(httpClient, java);
+		path.ExtractTo(output, strip: 1);
 		Console.WriteLine(SetupCommand.GetExecutableVersion(output, "bin/java"));
 		return 0;
 	}

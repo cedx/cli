@@ -36,7 +36,7 @@ public sealed class PhpCommand: Command {
 		var path = await DownloadArchive(httpClient, version);
 		using var serviceController = new ServiceController("W3SVC");
 		StopWebServer(serviceController);
-		SetupCommand.ExtractZipFile(path, output);
+		path.ExtractTo(output);
 		StartWebServer(serviceController);
 		RegisterEventLog(version, output);
 

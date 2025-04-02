@@ -121,7 +121,7 @@ public sealed class BackupCommand: Command {
 /// <summary>
 /// Defines the format of the output files.
 /// </summary>
-internal static class BackupFormat {
+public static class BackupFormat {
 
 	/// <summary>
 	/// The JSON Lines format.
