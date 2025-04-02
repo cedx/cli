@@ -90,14 +90,13 @@ public sealed class BackupCommand: Command {
 	/// <param name="tableNames">The tables to export.</param>
 	/// <param name="directory">The path to the output directory.</param>
 	/// <exception cref="ProcessException">An error occurred when starting the underlying process.</exception>
-	private void ExportToSqlDump(Uri dsn, Schema schema, string[] tableNames, DirectoryInfo directory) {
+	private static void ExportToSqlDump(Uri dsn, Schema schema, string[] tableNames, DirectoryInfo directory) {
 		var entity = tableNames.Length == 1 ? $"{schema.Name}.{tableNames[0]}" : schema.Name;
 		var file = $"{entity}.{BackupFormat.SqlDump}";
 
-		var query = MySqlCommand.ParseQueryString(dsn.Query);
 		var userInfo = dsn.UserInfo.Split(':').Select(Uri.UnescapeDataString);
 		var args = new List<string> {
-			$"--default-character-set={query["charset"] ?? "utf8mb4"}",
+			$"--default-character-set={dsn.ParseQueryString()["charset"] ?? "utf8mb4"}",
 			$"--host={dsn.Host}",
 			$"--password={userInfo.Last()}",
 			$"--port={(dsn.IsDefaultPort ? 3306 : dsn.Port)}",

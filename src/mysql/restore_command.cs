@@ -53,10 +53,9 @@ public sealed class RestoreCommand: Command {
 		var entity = Path.GetFileNameWithoutExtension(file.FullName);
 		Console.WriteLine($"Importing: {entity}");
 
-		var query = MySqlCommand.ParseQueryString(dsn.Query);
 		var userInfo = dsn.UserInfo.Split(':').Select(Uri.UnescapeDataString);
 		var args = new List<string> {
-			$"--default-character-set={query["charset"] ?? "utf8mb4"}",
+			$"--default-character-set={dsn.ParseQueryString()["charset"] ?? "utf8mb4"}",
 			$"--execute=USE {entity.Split('.').First()}; SOURCE {file.FullName.Replace('\\', '/')};",
 			$"--host={dsn.Host}",
 			$"--password={userInfo.Last()}",
