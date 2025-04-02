@@ -26,9 +26,9 @@ public sealed class JdkCommand: Command {
 	public async Task<int> Invoke(DirectoryInfo output, int java) {
 		if (!this.CheckPrivilege(output)) return 1;
 
-		using var httpClient = this.CreateHttpClient();
-		this.ExtractZipFile(await DownloadArchive(httpClient, java), output, strip: 1);
-		Console.WriteLine(this.GetExecutableVersion(output, "bin/java"));
+		using var httpClient = SetupCommand.CreateHttpClient();
+		SetupCommand.ExtractZipFile(await DownloadArchive(httpClient, java), output, strip: 1);
+		Console.WriteLine(SetupCommand.GetExecutableVersion(output, "bin/java"));
 		return 0;
 	}
 

@@ -53,7 +53,7 @@ public sealed class RestoreCommand: Command {
 		var entity = Path.GetFileNameWithoutExtension(file.FullName);
 		Console.WriteLine($"Importing: {entity}");
 
-		var query = this.ParseQueryString(dsn.Query);
+		var query = MySqlCommand.ParseQueryString(dsn.Query);
 		var userInfo = dsn.UserInfo.Split(':').Select(Uri.UnescapeDataString);
 		var args = new List<string> {
 			$"--default-character-set={query["charset"] ?? "utf8mb4"}",

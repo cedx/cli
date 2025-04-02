@@ -3,7 +3,6 @@ namespace Belin.Cli.Setup;
 using Microsoft.Win32;
 using System.Net.Http.Json;
 using System.ServiceProcess;
-using System.Text.Json.Serialization;
 
 /// <summary>
 /// Downloads and installs the latest PHP release.
@@ -27,7 +26,7 @@ public sealed class PhpCommand: Command {
 	public async Task<int> Invoke(DirectoryInfo output) {
 		if (!this.CheckPrivilege()) return 1;
 
-		using var httpClient = this.CreateHttpClient();
+		using var httpClient = SetupCommand.CreateHttpClient();
 		var version = await FetchLatestVersion(httpClient);
 		if (version is null) {
 			Console.WriteLine("Unable to fetch the list of PHP releases.");
@@ -37,11 +36,11 @@ public sealed class PhpCommand: Command {
 		var path = await DownloadArchive(httpClient, version);
 		using var serviceController = new ServiceController("W3SVC");
 		StopWebServer(serviceController);
-		this.ExtractZipFile(path, output);
+		SetupCommand.ExtractZipFile(path, output);
 		StartWebServer(serviceController);
 		RegisterEventLog(version, output);
 
-		Console.WriteLine(this.GetExecutableVersion(output, "php"));
+		Console.WriteLine(SetupCommand.GetExecutableVersion(output, "php"));
 		return 0;
 	}
 

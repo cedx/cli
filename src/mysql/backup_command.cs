@@ -46,7 +46,7 @@ public sealed class BackupCommand: Command {
 			if (format == BackupFormat.JsonLines) Console.WriteLine(@"Warning: the ""JSON Lines"" format does not export INVISIBLE columns.");
 			directory.Create();
 
-			using var connection = this.CreateMySqlConnection(dsn);
+			using var connection = new InformationSchema().OpenConnection(dsn);
 			foreach (var schema in noSchema ? connection.GetSchemas() : [new Schema { Name = schemaName! }]) {
 				var entity = tableNames.Length == 1 ? $"{schema.Name}.{tableNames[0]}" : schema.Name;
 				Console.WriteLine($"Exporting: {entity}");
@@ -94,7 +94,7 @@ public sealed class BackupCommand: Command {
 		var entity = tableNames.Length == 1 ? $"{schema.Name}.{tableNames[0]}" : schema.Name;
 		var file = $"{entity}.{BackupFormat.SqlDump}";
 
-		var query = this.ParseQueryString(dsn.Query);
+		var query = MySqlCommand.ParseQueryString(dsn.Query);
 		var userInfo = dsn.UserInfo.Split(':').Select(Uri.UnescapeDataString);
 		var args = new List<string> {
 			$"--default-character-set={query["charset"] ?? "utf8mb4"}",

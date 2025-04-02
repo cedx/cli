@@ -37,7 +37,7 @@ public sealed class EngineCommand: Command {
 			return Task.FromResult(1);
 		}
 
-		using var connection = this.CreateMySqlConnection(dsn);
+		using var connection = new InformationSchema().OpenConnection(dsn);
 		var schemas = noSchema ? connection.GetSchemas() : [new Schema { Name = schemaName! }];
 		var tables = schemas.SelectMany(schema => tableNames.Length > 0
 			? tableNames.Select(table => new Table { Name = table, Schema = schema.Name })

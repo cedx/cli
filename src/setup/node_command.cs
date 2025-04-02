@@ -3,7 +3,6 @@ namespace Belin.Cli.Setup;
 using System.Net.Http.Json;
 using System.ServiceProcess;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 /// <summary>
 /// Downloads and installs the latest Node.js release.
@@ -46,7 +45,7 @@ public sealed class NodeCommand: Command {
 
 		if (!this.CheckPrivilege(services.Count > 0 ? null : output)) return 2;
 
-		using var httpClient = this.CreateHttpClient();
+		using var httpClient = SetupCommand.CreateHttpClient();
 		var version = await FetchLatestVersion(httpClient);
 		if (version is null) {
 			Console.WriteLine("Unable to fetch the list of Node.js releases.");
@@ -55,10 +54,10 @@ public sealed class NodeCommand: Command {
 
 		var path = await DownloadArchive(httpClient, version);
 		StopServices();
-		this.ExtractZipFile(path, output, strip: 1);
+		SetupCommand.ExtractZipFile(path, output, strip: 1);
 		StartServices();
 
-		Console.WriteLine(this.GetExecutableVersion(output, "node"));
+		Console.WriteLine(SetupCommand.GetExecutableVersion(output, "node"));
 		return 0;
 	}
 
