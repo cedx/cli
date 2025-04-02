@@ -1,6 +1,7 @@
 namespace Belin.Cli.MySql;
 
-using MySqlConnector;
+using Dapper;
+using System.Data;
 
 /// <summary>
 /// Alters the character set of MariaDB/MySQL tables.
@@ -42,15 +43,11 @@ public sealed class CharsetCommand: Command {
 			? tableNames.Select(table => new Table { Name = table, Schema = schema.Name })
 			: connection.GetTables(schema));
 
-		using var disableForeignKeys = connection.CreateCommand();
-		disableForeignKeys.CommandText = "SET foreign_key_checks = 0";
-		disableForeignKeys.ExecuteNonQuery();
+		connection.Execute("SET foreign_key_checks = 0");
 		foreach (var table in tables.Where(item => !item.Collation.Equals(collation, StringComparison.OrdinalIgnoreCase)))
 			AlterTable(connection, table, collation);
 
-		using var enableForeignKeys = connection.CreateCommand();
-		enableForeignKeys.CommandText = "SET foreign_key_checks = 1";
-		enableForeignKeys.ExecuteNonQuery();
+		connection.Execute("SET foreign_key_checks = 1");
 		return Task.FromResult(0);
 	}
 
@@ -60,12 +57,9 @@ public sealed class CharsetCommand: Command {
 	/// <param name="connection">The database connection.</param>
 	/// <param name="table">The table to alter.</param>
 	/// <param name="collation">The name of the new character set.</param>
-	private static void AlterTable(MySqlConnection connection, Table table, string collation) {
+	private static void AlterTable(IDbConnection connection, Table table, string collation) {
 		var qualifiedName = table.GetQualifiedName(escape: true);
 		Console.WriteLine($"Processing: {qualifiedName}");
-
-		using var command = connection.CreateCommand();
-		command.CommandText = $"ALTER TABLE {qualifiedName} CONVERT TO CHARACTER SET {collation.Split('_')[0]} COLLATE {collation}";
-		command.ExecuteNonQuery();
+		connection.Execute($"ALTER TABLE {qualifiedName} CONVERT TO CHARACTER SET {collation.Split('_')[0]} COLLATE {collation}");
 	}
 }

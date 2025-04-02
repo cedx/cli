@@ -1,30 +1,29 @@
 namespace Belin.Cli.MySql;
 
-using System.Data;
+using System.ComponentModel.DataAnnotations.Schema;
 
 /// <summary>
 /// Provides the metadata of a database table.
 /// </summary>
+[Table("TABLES")]
 public class Table {
-
-	/// <summary>
-	/// The name of the database table associated with this class.
-	/// </summary>
-	public const string TableName = "TABLES";
 
 	/// <summary>
 	/// The default collation.
 	/// </summary>
+	[Column("TABLE_COLLATION")]
 	public string Collation { get; init; } = string.Empty;
 
 	/// <summary>
 	/// The storage engine.
 	/// </summary>
+	[Column("ENGINE")]
 	public string Engine { get; init; } = TableEngine.None;
 
 	/// <summary>
 	/// The table name.
 	/// </summary>
+	[Column("TABLE_NAME")]
 	public required string Name { get; init; }
 
 	/// <summary>
@@ -35,11 +34,13 @@ public class Table {
 	/// <summary>
 	/// The schema containing this table.
 	/// </summary>
+	[Column("TABLE_SCHEMA")]
 	public string Schema { get; init; } = string.Empty;
 
 	/// <summary>
 	/// The table type.
 	/// </summary>
+	[Column("TABLE_TYPE")]
 	public string Type { get; init; } = TableType.BaseTable;
 
 	/// <summary>
@@ -51,19 +52,6 @@ public class Table {
 		Func<string, string> escapeFunc = escape ? identifier => $"`{identifier}`" : identifier => identifier;
 		return $"{escapeFunc(Schema)}.{escapeFunc(Name)}";
 	}
-
-	/// <summary>
-	/// Creates a new column from the specified database record.
-	/// </summary>
-	/// <param name="record">A database record providing values to initialize the instance.</param>
-	/// <returns>The newly created column.</returns>
-	public static Table OfRecord(IDataRecord record) => new() {
-		Collation = record["TABLE_COLLATION"] is DBNull ? string.Empty : (string) record["TABLE_COLLATION"],
-		Engine = record["ENGINE"] is DBNull ? TableEngine.None : (string) record["ENGINE"],
-		Name = record["TABLE_NAME"] is DBNull ? string.Empty : (string) record["TABLE_NAME"],
-		Schema = record["TABLE_SCHEMA"] is DBNull ? string.Empty : (string) record["TABLE_SCHEMA"],
-		Type = record["TABLE_TYPE"] is DBNull ? TableType.BaseTable : (string) record["TABLE_TYPE"]
-	};
 }
 
 /// <summary>

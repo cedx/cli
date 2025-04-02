@@ -1,6 +1,7 @@
 namespace Belin.Cli.MySql;
 
-using MySqlConnector;
+using Dapper;
+using System.Data;
 
 /// <summary>
 /// Alters the storage engine of MariaDB/MySQL tables.
@@ -42,15 +43,11 @@ public sealed class EngineCommand: Command {
 			? tableNames.Select(table => new Table { Name = table, Schema = schema.Name })
 			: connection.GetTables(schema));
 
-		using var disableForeignKeys = connection.CreateCommand();
-		disableForeignKeys.CommandText = "SET foreign_key_checks = 0";
-		disableForeignKeys.ExecuteNonQuery();
+		connection.Execute("SET foreign_key_checks = 0");
 		foreach (var table in tables.Where(item => !item.Engine.Equals(engine, StringComparison.OrdinalIgnoreCase)))
 			AlterTable(connection, table, engine);
 
-		using var enableForeignKeys = connection.CreateCommand();
-		enableForeignKeys.CommandText = "SET foreign_key_checks = 1";
-		enableForeignKeys.ExecuteNonQuery();
+		connection.Execute("SET foreign_key_checks = 1");
 		return Task.FromResult(0);
 	}
 
@@ -60,12 +57,9 @@ public sealed class EngineCommand: Command {
 	/// <param name="connection">The database connection.</param>
 	/// <param name="table">The table to alter.</param>
 	/// <param name="engine">The name of the new storage engine.</param>
-	private static void AlterTable(MySqlConnection connection, Table table, string engine) {
+	private static void AlterTable(IDbConnection connection, Table table, string engine) {
 		var qualifiedName = table.GetQualifiedName(escape: true);
 		Console.WriteLine($"Processing: {qualifiedName}");
-
-		using var command = connection.CreateCommand();
-		command.CommandText = $"ALTER TABLE {qualifiedName} ENGINE = {engine}";
-		command.ExecuteNonQuery();
+		connection.Execute($"ALTER TABLE {qualifiedName} ENGINE = {engine}");
 	}
 }

@@ -1,6 +1,7 @@
 namespace Belin.Cli.MySql;
 
-using MySqlConnector;
+using Dapper;
+using System.Data;
 using System.Diagnostics;
 using System.Text.Json;
 
@@ -68,14 +69,11 @@ public sealed class BackupCommand: Command {
 	/// <param name="schema">The schema to export.</param>
 	/// <param name="tableNames">The tables to export.</param>
 	/// <param name="directory">The path to the output directory.</param>
-	private static void ExportToJsonLines(MySqlConnection connection, Schema schema, string[] tableNames, DirectoryInfo directory) {
+	private static void ExportToJsonLines(IDbConnection connection, Schema schema, string[] tableNames, DirectoryInfo directory) {
 		var tables = tableNames.Length > 0 ? tableNames.Select(table => new Table { Name = table, Schema = schema.Name }) : connection.GetTables(schema);
 		foreach (var table in tables) {
-			using var command = connection.CreateCommand();
-			command.CommandText = $"SELECT * FROM {table.GetQualifiedName(escape: true)}";
-
 			using var file = File.CreateText(Path.Join(directory.FullName, $"{table.QualifiedName}.{BackupFormat.JsonLines}"));
-			using var reader = command.ExecuteReader();
+			using var reader = connection.ExecuteReader($"SELECT * FROM {table.GetQualifiedName(escape: true)}");
 			while (reader.Read()) {
 				var record = new Dictionary<string, object?>();
 				for (var i = 0; i < reader.FieldCount; i++) record[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);

@@ -1,6 +1,7 @@
 namespace Belin.Cli.MySql;
 
-using MySqlConnector;
+using Dapper;
+using System.Data;
 
 /// <summary>
 /// Provides extension methods for database connections.
@@ -13,21 +14,15 @@ public static class ConnectionExtensions {
 	/// <param name="connection">The database connectinon.</param>
 	/// <param name="table">The database table.</param>
 	/// <returns>The columns contained in the specified table.</returns>
-	public static IList<Column> GetColumns(this MySqlConnection connection, Table table) {
-		using var command = connection.CreateCommand();
-		command.Parameters.AddWithValue("@name", table.Name);
-		command.Parameters.AddWithValue("@schema", table.Schema);
-		command.CommandText = $"""
+	public static IEnumerable<Column> GetColumns(this IDbConnection connection, Table table) {
+		var sql = """
 			SELECT *
-			FROM information_schema.{Column.TableName}
-			WHERE TABLE_SCHEMA = @schema AND TABLE_NAME = @name
+			FROM information_schema.COLUMNS
+			WHERE TABLE_SCHEMA = @Schema AND TABLE_NAME = @Name
 			ORDER BY ORDINAL_POSITION
-		""";
+			""";
 
-		using var reader = command.ExecuteReader();
-		var columns = new List<Column>();
-		while (reader.Read()) columns.Add(Column.OfRecord(reader));
-		return columns;
+		return connection.Query<Column>(sql, new { table.Schema, table.Name });
 	}
 
 	/// <summary>
@@ -35,20 +30,13 @@ public static class ConnectionExtensions {
 	/// </summary>
 	/// <param name="connection">The database connectinon.</param>
 	/// <returns>The schemas hosted by the database.</returns>
-	public static IList<Schema> GetSchemas(this MySqlConnection connection) {
-		using var command = connection.CreateCommand();
-		command.CommandText = $"""
+	public static IEnumerable<Schema> GetSchemas(this IDbConnection connection) =>
+		connection.Query<Schema>("""
 			SELECT *
-			FROM information_schema.{Schema.TableName}
+			FROM information_schema.SCHEMATA
 			WHERE SCHEMA_NAME NOT IN ('information_schema', 'mysql', 'performance_schema', 'sys')
 			ORDER BY SCHEMA_NAME
-		""";
-
-		using var reader = command.ExecuteReader();
-		var schemas = new List<Schema>();
-		while (reader.Read()) schemas.Add(Schema.OfRecord(reader));
-		return schemas;
-	}
+			""");
 
 	/// <summary>
 	/// Gets the list of tables contained in the specified schema.
@@ -56,20 +44,14 @@ public static class ConnectionExtensions {
 	/// <param name="connection">The database connectinon.</param>
 	/// <param name="schema">The database schema.</param>
 	/// <returns>The tables contained in the specified schema.</returns>
-	public static IList<Table> GetTables(this MySqlConnection connection, Schema schema) {
-		using var command = connection.CreateCommand();
-		command.Parameters.AddWithValue("@schema", schema.Name);
-		command.Parameters.AddWithValue("@type", TableType.BaseTable);
-		command.CommandText = $"""
+	public static IEnumerable<Table> GetTables(this IDbConnection connection, Schema schema) {
+		var sql = """
 			SELECT *
-			FROM information_schema.{Table.TableName}
-			WHERE TABLE_SCHEMA = @schema AND TABLE_TYPE = @type
+			FROM information_schema.TABLES
+			WHERE TABLE_SCHEMA = @Name AND TABLE_TYPE = @Type
 			ORDER BY TABLE_NAME
-		""";
+			""";
 
-		using var reader = command.ExecuteReader();
-		var tables = new List<Table>();
-		while (reader.Read()) tables.Add(Table.OfRecord(reader));
-		return tables;
+		return connection.Query<Table>(sql, new { schema.Name, Type = TableType.BaseTable });
 	}
 }
