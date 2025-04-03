@@ -20,5 +20,5 @@
 		<File Path="res/binary_extensions.json" />
 		<File Path="res/text_extensions.json" />
 	</Folder>
-	<Project Path="src/cli.csproj" />
+	<Project Path="src/Cli.csproj" />
 </Solution>
