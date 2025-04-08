@@ -8,9 +8,10 @@ var version = Context.Configuration.GetValue("package_version");
 
 Task("assets")
 	.Description("Deploys the assets.")
-	.DoesForEach(["binary", "text"], type => {
-		var path = $"sindresorhus/{type}-extensions/refs/heads/main/{type}-extensions.json";
-		DownloadFile($"https://raw.githubusercontent.com/{path}", $"res/{type}_extensions.json");
+	.DoesForEach(["Binary", "Text"], type => {
+		var file = $"{type.ToLowerInvariant()}-extensions";
+		var path = $"sindresorhus/{file}/refs/heads/main/{file}.json";
+		DownloadFile($"https://raw.githubusercontent.com/{path}", $"res/{type}Extensions.json");
 	});
 
 Task("build")
