@@ -35,7 +35,7 @@ public sealed class InformationSchema {
 			Database = "information_schema",
 			UserID = userInfo.First(),
 			Password = userInfo.Last(),
-			ConvertZeroDateTime = true,
+			ConvertZeroDateTime = true, // TODO: probably not needed...
 			Pooling = false,
 			UseCompression = !localHosts.Contains(uri.Host)
 		};
