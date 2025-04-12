@@ -41,7 +41,7 @@ public class Application {
 	/// <param name="input">The path to the root directory of the application.</param>
 	/// <returns>The configuration of the specified application, or <see langword="null"/> if not found.</returns>
 	public static Application? ReadFromDirectory(string input) {
-		foreach (var folder in new[] { "src/server", "src" }) {
+		foreach (var folder in new[] { "src/Server", "src" }) {
 			var path = Join(input, folder, "appsettings.json");
 			if (File.Exists(path)) {
 				var application = JsonSerializer.Deserialize<Application>(File.ReadAllText(path), JsonSerializerOptions.Web);
