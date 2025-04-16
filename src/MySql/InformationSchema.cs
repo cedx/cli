@@ -5,7 +5,7 @@ using MySqlConnector;
 using System.Data;
 
 /// <summary>
-/// Represents a session to TODO.
+/// Represents a session to the information schema.
 /// </summary>
 public sealed class InformationSchema {
 
@@ -41,7 +41,7 @@ public sealed class InformationSchema {
 		};
 
 		var connection = new MySqlConnection(builder.ConnectionString);
-		connection.Open();
+		connection.Open(); // TODO not needed with Dapper
 		return connection;
 	}
 }
