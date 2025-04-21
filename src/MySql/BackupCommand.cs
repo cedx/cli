@@ -1,6 +1,5 @@
 namespace Belin.Cli.MySql;
 
-using Dapper;
 using System.Data;
 using System.Diagnostics;
 using System.Text.Json;

@@ -27,6 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Using Include="Dapper" />
 		<Using Include="System.CommandLine" />
 	</ItemGroup>
 </Project>
