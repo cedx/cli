@@ -42,7 +42,7 @@ Task("setup")
 
 Task("version")
 	.Description("Updates the version number in the sources.")
-	.Does(() => ReplaceInFile("README.md", @"project/v\d+(\.\d+){2}", $"project/v{version}"))
+	.Does(() => ReplaceInFile("ReadMe.md", @"project/v\d+(\.\d+){2}", $"project/v{version}"))
 	.Does(() => ReplaceInFile("setup.iss", @"version ""\d+(\.\d+){2}""", $"version \"{version}\""))
 	.Does(() => ReplaceInFile("src/Cli.csproj", @"<Version>\d+(\.\d+){2}</Version>", $"<Version>{version}</Version>"));
 
