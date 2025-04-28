@@ -38,12 +38,12 @@ Task("setup")
 	.Description("Builds the Windows installer.")
 	.WithCriteria(release, @"the ""Release"" configuration must be enabled")
 	.IsDependentOn("default")
-	.Does(() => InnoSetup("setup.iss"));
+	.Does(() => InnoSetup("Setup.iss"));
 
 Task("version")
 	.Description("Updates the version number in the sources.")
 	.Does(() => ReplaceInFile("ReadMe.md", @"project/v\d+(\.\d+){2}", $"project/v{version}"))
-	.Does(() => ReplaceInFile("setup.iss", @"version ""\d+(\.\d+){2}""", $"version \"{version}\""))
+	.Does(() => ReplaceInFile("Setup.iss", @"version ""\d+(\.\d+){2}""", $"version \"{version}\""))
 	.Does(() => ReplaceInFile("src/Cli.csproj", @"<Version>\d+(\.\d+){2}</Version>", $"<Version>{version}</Version>"));
 
 Task("watch")
