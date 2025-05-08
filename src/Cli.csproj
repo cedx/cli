@@ -9,7 +9,7 @@
 
 	<PropertyGroup>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<ApplicationIcon>program.ico</ApplicationIcon>
+		<ApplicationIcon>Program.ico</ApplicationIcon>
 		<AssemblyName>Belin.Cli</AssemblyName>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
