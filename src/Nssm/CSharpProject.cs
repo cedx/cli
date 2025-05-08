@@ -31,7 +31,8 @@ public sealed class CSharpProject {
 		var path = Directory.EnumerateFiles(Join(input, "src"), "*.csproj", SearchOption.AllDirectories).FirstOrDefault();
 		if (path is null) return null;
 
-		var project = (CSharpProject?) new XmlSerializer(typeof(CSharpProject)).Deserialize(XmlReader.Create(path));
+		using var xmlReader = XmlReader.Create(path);
+		var project = (CSharpProject?) new XmlSerializer(typeof(CSharpProject)).Deserialize(xmlReader);
 		if (project is not null) project.Path = path;
 		return project;
 	}
