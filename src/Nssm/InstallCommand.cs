@@ -34,7 +34,7 @@ public sealed class InstallCommand: Command {
 		if (!this.CheckPrivilege()) return Task.FromResult(1);
 
 		try {
-			var application = Application.ReadFromDirectory(directory.FullName)
+			var application = WebApplication.ReadFromDirectory(directory.FullName)
 				?? throw new EntryPointNotFoundException("Unable to locate the application configuration file.");
 
 			var isDotNet = Directory.EnumerateFiles(application.Path, "*.slnx").Any();
@@ -77,7 +77,7 @@ public sealed class InstallCommand: Command {
 	/// <param name="application">The application configuration.</param>
 	/// <returns>The paths of the program and the entry point of the C# application.</returns>
 	/// <exception cref="EntryPointNotFoundException">The program and/or entry point could not be determined.</exception>
-	private static (string Program, string EntryPoint) GetDotNetEntryPoint(Application application) {
+	private static (string Program, string EntryPoint) GetDotNetEntryPoint(WebApplication application) {
 		var project = CSharpProject.ReadFromDirectory(application.Path) ?? throw new EntryPointNotFoundException(@"Unable to locate the C# project file.");
 		var directory = Path.GetDirectoryName(project.Path);
 		var entryPoint = (AssemblyName: "", OutDir: "");
@@ -102,7 +102,7 @@ public sealed class InstallCommand: Command {
 	/// <param name="application">The application configuration.</param>
 	/// <returns>The paths of the program and the entry point of the Node.js application.</returns>
 	/// <exception cref="EntryPointNotFoundException">The program and/or entry point could not be determined.</exception>
-	private static (string Program, string EntryPoint) GetNodeEntryPoint(Application application) {
+	private static (string Program, string EntryPoint) GetNodeEntryPoint(WebApplication application) {
 		var package = NodePackage.ReadFromDirectory(application.Path) ?? throw new EntryPointNotFoundException(@"Unable to locate the ""package.json"" file.");
 		if (application.Description.Length == 0 && package.Description.Length > 0) application.Description = package.Description;
 		if (application.Name.Length == 0 && package.Name.Length > 0) application.Name = package.Name;
@@ -129,7 +129,7 @@ public sealed class InstallCommand: Command {
 	/// Starts the specified application.
 	/// </summary>
 	/// <param name="application">The application configuration.</param>
-	private static void StartApplication(Application application) {
+	private static void StartApplication(WebApplication application) {
 		using var serviceController = new ServiceController(application.Id);
 		if (serviceController.Status == ServiceControllerStatus.Stopped) {
 			serviceController.Start();

@@ -7,7 +7,7 @@ using static System.IO.Path;
 /// <summary>
 /// Provides information about a Web application.
 /// </summary>
-public class Application {
+public class WebApplication {
 
 	/// <summary>
 	/// The application description.
@@ -40,11 +40,11 @@ public class Application {
 	/// </summary>
 	/// <param name="input">The path to the root directory of the application.</param>
 	/// <returns>The configuration of the specified application, or <see langword="null"/> if not found.</returns>
-	public static Application? ReadFromDirectory(string input) {
+	public static WebApplication? ReadFromDirectory(string input) {
 		foreach (var folder in new[] { "src/Server", "src" }) {
 			var path = Join(input, folder, "appsettings.json");
 			if (File.Exists(path)) {
-				var application = JsonSerializer.Deserialize<Application>(File.ReadAllText(path), JsonSerializerOptions.Web);
+				var application = JsonSerializer.Deserialize<WebApplication>(File.ReadAllText(path), JsonSerializerOptions.Web);
 				if (application is not null) application.Path = input;
 				return application;
 			}
