@@ -18,7 +18,7 @@ public class Column {
 	/// The column position.
 	/// </summary>
 	[Column("ORDINAL_POSITION")]
-	public int Position { get; init; } = 0;
+	public int Position { get; init; }
 
 	/// <summary>
 	/// The schema containing this column.
