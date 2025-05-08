@@ -1,9 +1,9 @@
 # Changelog
 
 ## Version [2.2.0](https://github.com/cedx/cli/compare/v2.1.0...v2.2.0)
-- Use [Dapper](https://github.com/DapperLib/Dapper) to handle object mapping.
 - Ported the [NSSM](https://nssm.cc) configuration file to [XML](https://www.w3.org/XML) format.
 - Renamed the `Belin.Cli.Nssm.Application` class to `WebApplication`.
+- Use [Dapper](https://github.com/DapperLib/Dapper) to handle object mapping.
 
 ## Version [2.1.0](https://github.com/cedx/cli/compare/v2.0.0...v2.1.0)
 - Added support for [C#](https://learn.microsoft.com/en-us/dotnet/csharp) applications to the `nssm install` command.
