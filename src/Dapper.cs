@@ -1,4 +1,4 @@
-namespace Belin.Cli;
+namespace Dapper;
 
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
@@ -12,10 +12,10 @@ public class ColumnAttributeTypeMap<T>(): SqlMapper.ITypeMap {
 	/// <summary>
 	/// The custom type map used to find the properties annotated with a <see cref="ColumnAttribute"/> attribute.
 	/// </summary>
-	private readonly CustomPropertyTypeMap customMapper = new(
-		typeof(T),
-		(type, column) => type.GetProperties().FirstOrDefault(property => property.GetCustomAttribute<ColumnAttribute>()?.Name == column)!
-	);
+	private readonly CustomPropertyTypeMap customMapper = new(typeof(T), (type, column) => {
+		var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+		return properties.FirstOrDefault(property => property.GetCustomAttribute<ColumnAttribute>()?.Name == column)!;
+	});
 
 	/// <summary>
 	/// The default type map used when the custom type map was unable to find a matching property.
@@ -28,19 +28,15 @@ public class ColumnAttributeTypeMap<T>(): SqlMapper.ITypeMap {
 	/// <param name="names">The column names.</param>
 	/// <param name="types">The column types.</param>
 	/// <returns>The matching constructor or the default one.</returns>
-	public ConstructorInfo? FindConstructor(string[] names, Type[] types) {
-		try { return customMapper.FindConstructor(names, types); }
-		catch { return defaultMapper.FindConstructor(names, types); }
-	}
+	public ConstructorInfo? FindConstructor(string[] names, Type[] types) =>
+		customMapper.FindConstructor(names, types) ?? defaultMapper.FindConstructor(names, types);
 
 	/// <summary>
 	/// Finds the constructor which should always be used.
 	/// </summary>
 	/// <returns>The constructor which should always be used.</returns>
-	public ConstructorInfo? FindExplicitConstructor() {
-		var constructor = customMapper.FindExplicitConstructor();
-		return constructor ?? defaultMapper.FindExplicitConstructor();
-	}
+	public ConstructorInfo? FindExplicitConstructor() =>
+		customMapper.FindExplicitConstructor() ?? defaultMapper.FindExplicitConstructor();
 
 	/// <summary>
 	/// Gets the mapping for a constructor parameter.
@@ -58,8 +54,6 @@ public class ColumnAttributeTypeMap<T>(): SqlMapper.ITypeMap {
 	/// </summary>
 	/// <param name="column">The column name.</param>
 	/// <returns>The mapping implementation.</returns>
-	public SqlMapper.IMemberMap? GetMember(string column) {
-		try { return customMapper.GetMember(column); }
-		catch { return defaultMapper.GetMember(column); }
-	}
+	public SqlMapper.IMemberMap? GetMember(string column) =>
+		customMapper.GetMember(column) ?? defaultMapper.GetMember(column);
 }
