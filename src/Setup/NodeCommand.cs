@@ -1,5 +1,6 @@
 namespace Belin.Cli.Setup;
 
+using Belin.Cli.Nssm;
 using System.Net.Http.Json;
 using System.ServiceProcess;
 using System.Text.Json;
@@ -35,8 +36,10 @@ public sealed class NodeCommand: Command {
 	public async Task<int> Invoke(DirectoryInfo output, FileInfo? config) {
 		services.Clear();
 		if (config is not null) {
-			var serviceIds = ReadNssmConfiguration(config);
-			if (serviceIds is not null) services.AddRange(serviceIds);
+			var nssm = NssmConfiguration.ReadFromFile(config.FullName);
+			if (nssm is not null) services.AddRange(nssm.Machines
+				.Where(machine => machine.Name == Environment.MachineName)
+				.SelectMany(machine => machine.Services.Select(service => service.Id)));
 			else {
 				Console.WriteLine("Unable to locate or parse the specified configuration file.");
 				return 1;
@@ -93,17 +96,6 @@ public sealed class NodeCommand: Command {
 		var releases = await httpClient.GetFromJsonAsync<List<NodeRelease>>("https://nodejs.org/dist/index.json");
 		var latestRelease = releases?.FirstOrDefault();
 		return latestRelease is not null ? new Version(latestRelease.Version[1..]) : null;
-	}
-
-	/// <summary>
-	/// Reads the NSSM configuration file located at the specified path.
-	/// </summary>
-	/// <param name="file">The path to the NSSM configuration file.</param>
-	/// <returns>The list of parsed service identifiers or <see langword="null"/> if an error occurred.</returns>
-	private static string[]? ReadNssmConfiguration(FileInfo file) {
-		if (!file.Exists) return null;
-		var map = JsonSerializer.Deserialize<Dictionary<string, string[]>>(File.ReadAllText(file.FullName));
-		return (map?.TryGetValue(Environment.MachineName, out var serviceIds) ?? false) ? serviceIds : null;
 	}
 
 	/// <summary>
