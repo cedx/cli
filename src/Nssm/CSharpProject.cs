@@ -28,7 +28,7 @@ public sealed class CSharpProject {
 	/// <param name="input">The directory path.</param>
 	/// <returns>The contents of the C# project file, or <see langword="null"/> if not found.</returns>
 	public static CSharpProject? ReadFromDirectory(string input) {
-		var path = Directory.EnumerateFiles(Join(input, "src"), "*.csproj", SearchOption.AllDirectories).FirstOrDefault();
+		var path = Directory.EnumerateFiles(Join(input, "src"), "*.csproj", SearchOption.AllDirectories).SingleOrDefault();
 		if (path is null) return null;
 
 		using var xmlReader = XmlReader.Create(path);
