@@ -34,13 +34,11 @@ public sealed class InformationSchema {
 			Database = "information_schema",
 			UserID = userInfo.First(),
 			Password = userInfo.Last(),
-			ConvertZeroDateTime = true, // TODO: probably not needed...
+			ConvertZeroDateTime = true,
 			Pooling = false,
 			UseCompression = !localHosts.Contains(uri.Host)
 		};
 
-		var connection = new MySqlConnection(builder.ConnectionString);
-		connection.Open(); // TODO not needed with Dapper
-		return connection;
+		return new MySqlConnection(builder.ConnectionString);
 	}
 }
