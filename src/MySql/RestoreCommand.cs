@@ -6,7 +6,7 @@ using System.IO;
 /// <summary>
 /// Restores a set of MariaDB/MySQL tables.
 /// </summary>
-public sealed class RestoreCommand: Command {
+public class RestoreCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.

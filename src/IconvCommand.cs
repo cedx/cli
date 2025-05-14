@@ -6,7 +6,7 @@ using System.Text.Json;
 /// <summary>
 /// Converts the encoding of input files.
 /// </summary>
-public sealed class IconvCommand: Command {
+public class IconvCommand: Command {
 
 	/// <summary>
 	/// The list of binary file extensions.

@@ -7,7 +7,7 @@ using System.Net.Http.Headers;
 /// <summary>
 /// Downloads and installs a runtime environment.
 /// </summary>
-public sealed class SetupCommand: Command {
+public class SetupCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.

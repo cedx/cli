@@ -8,7 +8,7 @@ using System.Text.Json;
 /// <param name="Name">The package name.</param>
 /// <param name="Description">The package description.</param>
 /// <param name="Bin">The map of package commands.</param>
-public sealed record NodePackage(string Name, string Description = "", IDictionary<string, string>? Bin = null) {
+public record NodePackage(string Name, string Description = "", IDictionary<string, string>? Bin = null) {
 
 	/// <summary>
 	/// Reads the <c>package.json</c> file located in the specified directory.

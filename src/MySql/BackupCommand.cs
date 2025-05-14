@@ -7,7 +7,7 @@ using System.Text.Json;
 /// <summary>
 /// Backups a set of MariaDB/MySQL tables.
 /// </summary>
-public sealed class BackupCommand: Command {
+public class BackupCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.

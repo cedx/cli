@@ -3,12 +3,11 @@ namespace Belin.Cli.Setup;
 using Belin.Cli.Nssm;
 using System.Net.Http.Json;
 using System.ServiceProcess;
-using System.Text.Json;
 
 /// <summary>
 /// Downloads and installs the latest Node.js release.
 /// </summary>
-public sealed class NodeCommand: Command {
+public class NodeCommand: Command {
 
 	/// <summary>
 	/// The identifiers of the NSSM services to restart.
@@ -131,4 +130,4 @@ public sealed class NodeCommand: Command {
 /// Represents a Node.js release.
 /// </summary>
 /// <param name="Version">The version number.</param>
-internal sealed record NodeRelease(string Version);
+internal record NodeRelease(string Version);

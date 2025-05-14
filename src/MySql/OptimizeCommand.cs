@@ -5,7 +5,7 @@ using System.Data;
 /// <summary>
 /// Optimizes a set of MariaDB/MySQL tables.
 /// </summary>
-public sealed class OptimizeCommand: Command {
+public class OptimizeCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.

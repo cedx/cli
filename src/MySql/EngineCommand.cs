@@ -5,7 +5,7 @@ using System.Data;
 /// <summary>
 /// Alters the storage engine of MariaDB/MySQL tables.
 /// </summary>
-public sealed class EngineCommand: Command {
+public class EngineCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.

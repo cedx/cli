@@ -3,7 +3,7 @@ namespace Belin.Cli.Setup;
 /// <summary>
 /// Downloads and installs the latest OpenJDK release.
 /// </summary>
-public sealed class JdkCommand: Command {
+public class JdkCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.

@@ -5,7 +5,7 @@ using Belin.Cli.MySql;
 /// <summary>
 /// Manages MariaDB/MySQL databases.
 /// </summary>
-public sealed class MySqlCommand: Command {
+public class MySqlCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.

@@ -8,7 +8,7 @@ using static System.IO.Path;
 /// Represents the contents of a C# project file.
 /// </summary>
 [XmlRoot("Project")]
-public sealed class CSharpProject {
+public class CSharpProject {
 
 	/// <summary>
 	/// The path to the project file.
@@ -41,7 +41,7 @@ public sealed class CSharpProject {
 /// <summary>
 /// Represents a group of project properties.
 /// </summary>
-public sealed class CSharpPropertyGroup {
+public class CSharpPropertyGroup {
 
 	/// <summary>
 	/// The assembly name.

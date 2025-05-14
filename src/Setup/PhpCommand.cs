@@ -7,7 +7,7 @@ using System.ServiceProcess;
 /// <summary>
 /// Downloads and installs the latest PHP release.
 /// </summary>
-public sealed class PhpCommand: Command {
+public class PhpCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.
@@ -114,4 +114,4 @@ public sealed class PhpCommand: Command {
 /// Represents a PHP release.
 /// </summary>
 /// <param name="Version">The version number.</param>
-internal sealed record PhpRelease(string Version);
+internal record PhpRelease(string Version);

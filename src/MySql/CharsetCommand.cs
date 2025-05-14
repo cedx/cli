@@ -5,7 +5,7 @@ using System.Data;
 /// <summary>
 /// Alters the character set of MariaDB/MySQL tables.
 /// </summary>
-public sealed class CharsetCommand: Command {
+public class CharsetCommand: Command {
 
 	/// <summary>
 	/// Creates a new command.
