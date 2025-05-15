@@ -59,18 +59,11 @@ public class BackupCommand: Command {
 		/// </summary>
 		/// <param name="context">The invocation context.</param>
 		/// <returns>The exit code.</returns>
-		public int Invoke(InvocationContext context) => InvokeAsync(context).Result;
-
-		/// <summary>
-		/// Invokes this command.
-		/// </summary>
-		/// <param name="context">The invocation context.</param>
-		/// <returns>The exit code.</returns>
-		public Task<int> InvokeAsync(InvocationContext context) {
+		public int Invoke(InvocationContext context) {
 			var noSchema = string.IsNullOrWhiteSpace(Schema);
 			if (Table.Length > 0 && noSchema) {
 				logger.LogError(@"The table ""{Table}"" requires that a schema be specified.", Table[0]);
-				return Task.FromResult(1);
+				return 1;
 			}
 
 			try {
@@ -85,13 +78,20 @@ public class BackupCommand: Command {
 					else ExportToSqlDump(schema);
 				}
 
-				return Task.FromResult(0);
+				return 0;
 			}
 			catch (Exception e) {
 				logger.LogError("{Message}", e.Message);
-				return Task.FromResult(2);
+				return 2;
 			}
 		}
+
+		/// <summary>
+		/// Invokes this command.
+		/// </summary>
+		/// <param name="context">The invocation context.</param>
+		/// <returns>The exit code.</returns>
+		public Task<int> InvokeAsync(InvocationContext context) => Task.FromResult(Invoke(context));
 
 		/// <summary>
 		/// Exports the specified schema to a set of JSON Lines files in the specified directory.

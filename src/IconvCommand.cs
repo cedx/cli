@@ -63,17 +63,10 @@ public class IconvCommand: Command {
 		/// </summary>
 		/// <param name="context">The invocation context.</param>
 		/// <returns>The exit code.</returns>
-		public int Invoke(InvocationContext context) => InvokeAsync(context).Result;
-
-		/// <summary>
-		/// Invokes this command.
-		/// </summary>
-		/// <param name="context">The invocation context.</param>
-		/// <returns>The exit code.</returns>
-		public Task<int> InvokeAsync(InvocationContext context) {
+		public int Invoke(InvocationContext context) {
 			if (!FileOrDirectory.Exists) {
 				logger.LogError("Unable to locate the specified file or directory.");
-				return Task.FromResult(1);
+				return 1;
 			}
 
 			var resources = Path.GetFullPath(Path.Join(environment.ContentRootPath, "../res"));
@@ -89,8 +82,15 @@ public class IconvCommand: Command {
 			var fromEncoding = Encoding.GetEncoding(From);
 			var toEncoding = Encoding.GetEncoding(To);
 			foreach (var file in files) ConvertFileEncoding(file, fromEncoding, toEncoding);
-			return Task.FromResult(0);
+			return 0;
 		}
+
+		/// <summary>
+		/// Invokes this command.
+		/// </summary>
+		/// <param name="context">The invocation context.</param>
+		/// <returns>The exit code.</returns>
+		public Task<int> InvokeAsync(InvocationContext context) => Task.FromResult(Invoke(context));
 
 		/// <summary>
 		/// Converts the encoding of the specified file.
