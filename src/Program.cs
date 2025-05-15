@@ -13,7 +13,7 @@ var rootCommand = new RootCommand("Command line interface of Cédric Belin, full
 	new SetupCommand()
 };
 
-var builder = new CommandLineBuilder(rootCommand)
+var commandLineBuilder = new CommandLineBuilder(rootCommand)
 	.UseDefaults()
 	.UseHost(_ => Host.CreateDefaultBuilder(args).UseContentRoot(AppContext.BaseDirectory), builder => builder
 		.ConfigureServices(Container.AddServices)
@@ -22,4 +22,4 @@ var builder = new CommandLineBuilder(rootCommand)
 
 // Start the application.
 if (args.Length == 0) args = ["--help"];
-return await builder.Build().InvokeAsync(args);
+return await commandLineBuilder.Build().InvokeAsync(args);
