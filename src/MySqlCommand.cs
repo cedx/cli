@@ -14,10 +14,10 @@ public class MySqlCommand: Command {
 	public MySqlCommand(): base("mysql", "Manage MariaDB/MySQL databases.") {
 		AddGlobalOption(new DsnOption());
 		Add(new BackupCommand());
-		// Add(new CharsetCommand());
-		// Add(new EngineCommand());
-		// Add(new OptimizeCommand());
-		// Add(new RestoreCommand());
+		Add(new CharsetCommand());
+		Add(new EngineCommand());
+		Add(new OptimizeCommand());
+		Add(new RestoreCommand());
 	}
 }
 
