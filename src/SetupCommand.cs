@@ -13,9 +13,9 @@ public class SetupCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public SetupCommand(): base("setup", "Download and install a runtime environment.") {
-		Add(new JdkCommand());
-		Add(new NodeCommand());
-		Add(new PhpCommand());
+		// Add(new JdkCommand());
+		// Add(new NodeCommand());
+		// Add(new PhpCommand());
 	}
 
 	/// <summary>

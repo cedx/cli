@@ -10,15 +10,10 @@ public class CharsetCommand: Command {
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public CharsetCommand(DsnOption dsnOption): base("charset", "Alter the character set of MariaDB/MySQL tables.") {
-		var collationArgument = new Argument<string>("collation", "The name of the new character set.");
-		var schemaOption = new SchemaOption();
-		var tableOption = new TableOption();
-
-		Add(collationArgument);
-		Add(schemaOption);
-		Add(tableOption);
-		this.SetHandler(Invoke, dsnOption, collationArgument, schemaOption, tableOption);
+	public CharsetCommand(): base("charset", "Alter the character set of MariaDB/MySQL tables.") {
+		Add(new Argument<string>("collation", "The name of the new character set."));
+		Add(new SchemaOption());
+		Add(new TableOption());
 	}
 
 	/// <summary>
@@ -36,7 +31,7 @@ public class CharsetCommand: Command {
 			return Task.FromResult(1);
 		}
 
-		using var connection = new InformationSchema().OpenConnection(dsn);
+		using var connection = new InformationSchema().CreateConnection(dsn);
 		var schemas = noSchema ? connection.GetSchemas() : [new Schema { Name = schemaName! }];
 		var tables = schemas.SelectMany(schema => tableNames.Length > 0
 			? tableNames.Select(table => new Table { Name = table, Schema = schema.Name })

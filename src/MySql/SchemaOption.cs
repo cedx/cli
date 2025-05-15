@@ -8,7 +8,6 @@ public class SchemaOption: Option<string> {
 	/// <summary>
 	/// Creates a new option.
 	/// </summary>
-	public SchemaOption(): base(["-s", "--schema"], "The schema name.") {
+	public SchemaOption(): base(["-s", "--schema"], "The schema name.") =>
 		ArgumentHelpName = "name";
-	}
 }

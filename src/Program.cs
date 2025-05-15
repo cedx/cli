@@ -1,4 +1,5 @@
 using Belin.Cli;
+using Belin.Cli.MySql;
 using Microsoft.Extensions.Hosting;
 using System.CommandLine.Builder;
 using System.CommandLine.Hosting;
@@ -7,15 +8,16 @@ using System.CommandLine.Parsing;
 // Configure the command line.
 var rootCommand = new RootCommand("Command line interface of Cédric Belin, full stack developer.") {
 	new IconvCommand(),
-	//new MySqlCommand(),
-	//new NssmCommand(),
-	//new SetupCommand()
+	new MySqlCommand(),
+	new NssmCommand(),
+	new SetupCommand()
 };
 
 var builder = new CommandLineBuilder(rootCommand)
 	.UseDefaults()
 	.UseHost(_ => Host.CreateDefaultBuilder(args).UseContentRoot(AppContext.BaseDirectory), builder => builder
-		// TODO ??? .ConfigureServices(Container.AddServices)
+		.ConfigureServices(Container.AddServices)
+		.UseCommandHandler<BackupCommand, BackupCommand.CommandHandler>()
 		.UseCommandHandler<IconvCommand, IconvCommand.CommandHandler>());
 
 // Start the application.

@@ -12,11 +12,8 @@ public class PhpCommand: Command {
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public PhpCommand(): base("php", "Set up the latest PHP release.") {
-		var outputOption = new OutputOption(new DirectoryInfo(OperatingSystem.IsWindows() ? @"C:\Program Files\PHP" : "/usr/local"));
-		Add(outputOption);
-		this.SetHandler(Invoke, outputOption);
-	}
+	public PhpCommand(): base("php", "Set up the latest PHP release.") =>
+		Add(new OutputOption(new DirectoryInfo(OperatingSystem.IsWindows() ? @"C:\Program Files\PHP" : "/usr/local")));
 
 	/// <summary>
 	/// Invokes this command.

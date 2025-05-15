@@ -1,5 +1,7 @@
 namespace Belin.Cli.MySql;
 
+using Microsoft.Extensions.Logging;
+using System.CommandLine.Invocation;
 using System.Data;
 using System.Diagnostics;
 using System.Text.Json;
@@ -12,108 +14,134 @@ public class BackupCommand: Command {
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public BackupCommand(DsnOption dsnOption): base("backup", "Backup a set of MariaDB/MySQL tables.") {
-		var directoryArgument = new Argument<DirectoryInfo>("directory", "The path to the output directory.");
-		var formatOption = new Option<string>(["-f", "--format"], () => BackupFormat.SqlDump, "The format of the output files.");
-		var schemaOption = new SchemaOption();
-		var tableOption = new TableOption();
-
-		Add(directoryArgument);
-		Add(formatOption.FromAmong(BackupFormat.JsonLines, BackupFormat.SqlDump));
-		Add(schemaOption);
-		Add(tableOption);
-		this.SetHandler(Invoke, dsnOption, directoryArgument, formatOption, schemaOption, tableOption);
+	public BackupCommand(): base("backup", "Backup a set of MariaDB/MySQL tables.") {
+		var backupFormats = new[] { BackupFormat.JsonLines, BackupFormat.SqlDump };
+		Add(new Argument<DirectoryInfo>("directory", "The path to the output directory."));
+		Add(new Option<string>(["-f", "--format"], () => BackupFormat.SqlDump, "The format of the output files.").FromAmong(backupFormats));
+		Add(new SchemaOption());
+		Add(new TableOption());
 	}
 
 	/// <summary>
-	/// Invokes this command.
+	/// The command handler.
 	/// </summary>
-	/// <param name="dsn">The connection string.</param>
-	/// <param name="directory">The path to the output directory.</param>
-	/// <param name="format">The format of the output files.</param>
-	/// <param name="schemaName">The schema name.</param>
-	/// <param name="tableNames">The table names.</param>
-	/// <returns>The exit code.</returns>
-	public Task<int> Invoke(Uri dsn, DirectoryInfo directory, string format, string? schemaName, string[] tableNames) {
-		var noSchema = string.IsNullOrWhiteSpace(schemaName);
-		if (tableNames.Length > 0 && noSchema) {
-			Console.WriteLine($"The table \"{tableNames[0]}\" requires that a schema be specified.");
-			return Task.FromResult(1);
-		}
+	/// <param name="db">The dabase context.</param>
+	/// <param name="logger">The logging service.</aparam>
+	public class CommandHandler(InformationSchema db, ILogger<BackupCommand> logger): ICommandHandler {
 
-		try {
-			if (format == BackupFormat.JsonLines) Console.WriteLine(@"Warning: the ""JSON Lines"" format does not export INVISIBLE columns.");
-			directory.Create();
+		/// <summary>
+		/// The path to the output directory.
+		/// </summary>
+		public required DirectoryInfo Directory { get; set; }
 
-			using var connection = new InformationSchema().OpenConnection(dsn);
-			foreach (var schema in noSchema ? connection.GetSchemas() : [new Schema { Name = schemaName! }]) {
-				var entity = tableNames.Length == 1 ? $"{schema.Name}.{tableNames[0]}" : schema.Name;
-				Console.WriteLine($"Exporting: {entity}");
-				if (format == BackupFormat.JsonLines) ExportToJsonLines(connection, schema, tableNames, directory);
-				else ExportToSqlDump(dsn, schema, tableNames, directory);
+		/// <summary>
+		/// The connection string.
+		/// </summary>
+		public required Uri Dsn { get; set; }
+
+		/// <summary>
+		/// The format of the output files.
+		/// </summary>
+		public string Format { get; set; } = BackupFormat.SqlDump;
+
+		/// <summary>
+		/// The schema name.
+		/// </summary>
+		public string Schema { get; set; } = string.Empty;
+
+		/// <summary>
+		/// The table names.
+		/// </summary>
+		public string[] Table { get; set; } = [];
+
+		/// <summary>
+		/// Invokes this command.
+		/// </summary>
+		/// <param name="context">The invocation context.</param>
+		/// <returns>The exit code.</returns>
+		public int Invoke(InvocationContext context) => InvokeAsync(context).Result;
+
+		/// <summary>
+		/// Invokes this command.
+		/// </summary>
+		/// <param name="context">The invocation context.</param>
+		/// <returns>The exit code.</returns>
+		public Task<int> InvokeAsync(InvocationContext context) {
+			var noSchema = string.IsNullOrWhiteSpace(Schema);
+			if (Table.Length > 0 && noSchema) {
+				logger.LogError(@"The table ""{Table}"" requires that a schema be specified.", Table[0]);
+				return Task.FromResult(1);
 			}
 
-			return Task.FromResult(0);
-		}
-		catch (Exception e) {
-			Console.WriteLine(e.Message);
-			return Task.FromResult(2);
-		}
-	}
+			try {
+				if (Format == BackupFormat.JsonLines) Console.WriteLine(@"Warning: the ""JSON Lines"" format does not export INVISIBLE columns.");
+				Directory.Create();
 
-	/// <summary>
-	/// Exports a data source to a set of JSON Lines files in the specified directory.
-	/// </summary>
-	/// <param name="connection">The database connection.</param>
-	/// <param name="schema">The schema to export.</param>
-	/// <param name="tableNames">The tables to export.</param>
-	/// <param name="directory">The path to the output directory.</param>
-	private static void ExportToJsonLines(IDbConnection connection, Schema schema, string[] tableNames, DirectoryInfo directory) {
-		var tables = tableNames.Length > 0 ? tableNames.Select(table => new Table { Name = table, Schema = schema.Name }) : connection.GetTables(schema);
-		foreach (var table in tables) {
-			using var file = File.CreateText(Path.Join(directory.FullName, $"{table.QualifiedName}.{BackupFormat.JsonLines}"));
-			using var reader = connection.ExecuteReader($"SELECT * FROM {table.GetQualifiedName(escape: true)}");
-			while (reader.Read()) {
-				var record = new Dictionary<string, object?>();
-				for (var i = 0; i < reader.FieldCount; i++) record[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
-				file.WriteLine(JsonSerializer.Serialize(record));
+				using var connection = db.CreateConnection(Dsn);
+				foreach (var schema in noSchema ? connection.GetSchemas() : [new Schema { Name = Schema }]) {
+					var entity = Table.Length == 1 ? $"{schema.Name}.{Table[0]}" : schema.Name;
+					logger.LogInformation("Exporting: {Entity}", entity);
+					if (Format == BackupFormat.JsonLines) ExportToJsonLines(connection, schema);
+					else ExportToSqlDump(schema);
+				}
+
+				return Task.FromResult(0);
+			}
+			catch (Exception e) {
+				logger.LogError("{Message}", e.Message);
+				return Task.FromResult(2);
 			}
 		}
-	}
 
-	/// <summary>
-	/// Exports a data source to a SQL dump in the specified directory.
-	/// </summary>
-	/// <param name="dsn">The connection string.</param>
-	/// <param name="schema">The schema to export.</param>
-	/// <param name="tableNames">The tables to export.</param>
-	/// <param name="directory">The path to the output directory.</param>
-	/// <exception cref="ProcessException">An error occurred when starting the underlying process.</exception>
-	private static void ExportToSqlDump(Uri dsn, Schema schema, string[] tableNames, DirectoryInfo directory) {
-		var entity = tableNames.Length == 1 ? $"{schema.Name}.{tableNames[0]}" : schema.Name;
-		var file = $"{entity}.{BackupFormat.SqlDump}";
+		/// <summary>
+		/// Exports the specified schema to a set of JSON Lines files in the specified directory.
+		/// </summary>
+		/// <param name="connection">The database connection.</param>
+		/// <param name="schema">The schema to export.</param>
+		private void ExportToJsonLines(IDbConnection connection, Schema schema) {
+			var tables = Table.Length > 0 ? Table.Select(table => new Table { Name = table, Schema = schema.Name }) : connection.GetTables(schema);
+			foreach (var table in tables) {
+				using var file = File.CreateText(Path.Join(Directory.FullName, $"{table.QualifiedName}.{BackupFormat.JsonLines}"));
+				using var reader = connection.ExecuteReader($"SELECT * FROM {table.GetQualifiedName(escape: true)}");
+				while (reader.Read()) {
+					var record = new Dictionary<string, object?>();
+					for (var i = 0; i < reader.FieldCount; i++) record[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+					file.WriteLine(JsonSerializer.Serialize(record));
+				}
+			}
+		}
 
-		var userInfo = dsn.UserInfo.Split(':').Select(Uri.UnescapeDataString);
-		var args = new List<string> {
-			$"--default-character-set={dsn.ParseQueryString()["charset"] ?? "utf8mb4"}",
-			$"--host={dsn.Host}",
-			$"--password={userInfo.Last()}",
-			$"--port={(dsn.IsDefaultPort ? 3306 : dsn.Port)}",
-			$"--result-file={Path.Join(directory.FullName, file)}",
-			$"--user={userInfo.First()}"
-		};
+		/// <summary>
+		/// Exports the specified schema to a SQL dump in the specified directory.
+		/// </summary>
+		/// <param name="schema">The schema to export.</param>
+		/// <exception cref="ProcessException">An error occurred when starting the underlying process.</exception>
+		private void ExportToSqlDump(Schema schema) {
+			var entity = Table.Length == 1 ? $"{schema.Name}.{Table[0]}" : schema.Name;
+			var file = $"{entity}.{BackupFormat.SqlDump}";
 
-		var hosts = new[] { "::1", "127.0.0.1", "localhost" };
-		if (!hosts.Contains(dsn.Host)) args.Add("--compress");
-		args.Add(schema.Name);
-		args.AddRange(tableNames);
+			var userInfo = Dsn.UserInfo.Split(':').Select(Uri.UnescapeDataString);
+			var args = new List<string> {
+				$"--default-character-set={Dsn.ParseQueryString()["charset"] ?? "utf8mb4"}",
+				$"--host={Dsn.Host}",
+				$"--password={userInfo.Last()}",
+				$"--port={(Dsn.IsDefaultPort ? 3306 : Dsn.Port)}",
+				$"--result-file={Path.Join(Directory.FullName, file)}",
+				$"--user={userInfo.First()}"
+			};
 
-		var startInfo = new ProcessStartInfo("mysqldump", args) { CreateNoWindow = true, RedirectStandardError = true };
-		using var process = Process.Start(startInfo) ?? throw new ProcessException(startInfo.FileName);
+			var hosts = new[] { "::1", "127.0.0.1", "localhost" };
+			if (!hosts.Contains(Dsn.Host)) args.Add("--compress");
+			args.Add(schema.Name);
+			args.AddRange(Table);
 
-		var stderr = process.StandardError.ReadToEnd().Trim();
-		process.WaitForExit();
-		if (process.ExitCode != 0) throw new ProcessException(startInfo.FileName, stderr);
+			var startInfo = new ProcessStartInfo("mysqldump", args) { CreateNoWindow = true, RedirectStandardError = true };
+			using var process = Process.Start(startInfo) ?? throw new ProcessException(startInfo.FileName);
+
+			var stderr = process.StandardError.ReadToEnd().Trim();
+			process.WaitForExit();
+			if (process.ExitCode != 0) throw new ProcessException(startInfo.FileName, stderr);
+		}
 	}
 }
 
