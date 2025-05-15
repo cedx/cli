@@ -12,16 +12,13 @@ public class InstallCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public InstallCommand(): base("install", "Register the Windows service.") {
-		var directoryArgument = new Argument<DirectoryInfo>(
+		Add(new Argument<DirectoryInfo>(
 			name: "directory",
 			description: "The path to the root directory of the Node.js application.",
 			getDefaultValue: () => new DirectoryInfo(Environment.CurrentDirectory)
-		);
+		));
 
-		var startOption = new Option<bool>(["-s", "--start"], "Whether to start the service after its registration.");
-		Add(directoryArgument);
-		Add(startOption);
-		this.SetHandler(Invoke, directoryArgument, startOption);
+		Add(new Option<bool>(["-s", "--start"], "Whether to start the service after its registration."));
 	}
 
 	/// <summary>

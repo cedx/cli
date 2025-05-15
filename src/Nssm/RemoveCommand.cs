@@ -11,16 +11,12 @@ public class RemoveCommand: Command {
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public RemoveCommand(): base("remove", "Unregister the Windows service.") {
-		var directoryArgument = new Argument<DirectoryInfo>(
+	public RemoveCommand(): base("remove", "Unregister the Windows service.") =>
+		Add(new Argument<DirectoryInfo>(
 			name: "directory",
 			description: "The path to the root directory of the Node.js application.",
 			getDefaultValue: () => new DirectoryInfo(Environment.CurrentDirectory)
-		);
-
-		Add(directoryArgument);
-		this.SetHandler(Invoke, directoryArgument);
-	}
+		));
 
 	/// <summary>
 	/// Invokes this command.

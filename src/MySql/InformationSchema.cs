@@ -1,7 +1,6 @@
 namespace Belin.Cli.MySql;
 
 using MySqlConnector;
-using System.Data;
 
 /// <summary>
 /// Represents a session to the information schema.
@@ -22,11 +21,11 @@ public sealed class InformationSchema {
 	}
 
 	/// <summary>
-	/// Creates and opens a new database connection.
+	/// Creates a new database connection.
 	/// </summary>
 	/// <param name="uri">The connection URI used to connect to the database.</param>
-	/// <returns>The newly created database connection.</returns>
-	public IDbConnection OpenConnection(Uri uri) {
+	/// <returns>The newly created connection.</returns>
+	public MySqlConnection CreateConnection(Uri uri) {
 		var userInfo = uri.UserInfo.Split(':').Select(Uri.UnescapeDataString);
 		var builder = new MySqlConnectionStringBuilder {
 			Server = uri.Host,

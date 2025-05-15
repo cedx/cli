@@ -18,12 +18,8 @@ public class NodeCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public NodeCommand(): base("node", "Set up the latest Node.js release.") {
-		var configOption = new Option<FileInfo>(["-c", "--config"], "The path to the NSSM configuration file.");
-		var outputOption = new OutputOption(new DirectoryInfo(OperatingSystem.IsWindows() ? @"C:\Program Files\Node.js" : "/usr/local"));
-
-		Add(configOption);
-		Add(outputOption);
-		this.SetHandler(Invoke, outputOption, configOption);
+		Add(new Option<FileInfo>(["-c", "--config"], "The path to the NSSM configuration file."));
+		Add(new OutputOption(new DirectoryInfo(OperatingSystem.IsWindows() ? @"C:\Program Files\Node.js" : "/usr/local")));
 	}
 
 	/// <summary>

@@ -10,15 +10,10 @@ public class EngineCommand: Command {
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public EngineCommand(DsnOption dsnOption): base("engine", "Alter the storage engine of MariaDB/MySQL tables.") {
-		var engineArgument = new Argument<string>("engine", "The name of the new storage engine.");
-		var schemaOption = new SchemaOption();
-		var tableOption = new TableOption();
-
-		Add(engineArgument);
-		Add(schemaOption);
-		Add(tableOption);
-		this.SetHandler(Invoke, dsnOption, engineArgument, schemaOption, tableOption);
+	public EngineCommand(): base("engine", "Alter the storage engine of MariaDB/MySQL tables.") {
+		Add(new Argument<string>("engine", "The name of the new storage engine."));
+		Add(new SchemaOption());
+		Add(new TableOption());
 	}
 
 	/// <summary>
@@ -36,7 +31,7 @@ public class EngineCommand: Command {
 			return Task.FromResult(1);
 		}
 
-		using var connection = new InformationSchema().OpenConnection(dsn);
+		using var connection = new InformationSchema().CreateConnection(dsn);
 		var schemas = noSchema ? connection.GetSchemas() : [new Schema { Name = schemaName! }];
 		var tables = schemas.SelectMany(schema => tableNames.Length > 0
 			? tableNames.Select(table => new Table { Name = table, Schema = schema.Name })

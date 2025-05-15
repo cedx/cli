@@ -8,7 +8,6 @@ public class TableOption: Option<string[]> {
 	/// <summary>
 	/// Creates a new option.
 	/// </summary>
-	public TableOption(): base(["-t", "--table"], "The table names (requires a schema).") {
+	public TableOption(): base(["-t", "--table"], "The table names (requires a schema).") =>
 		ArgumentHelpName = "name";
-	}
 }

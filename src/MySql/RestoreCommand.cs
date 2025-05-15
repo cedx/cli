@@ -11,13 +11,9 @@ public class RestoreCommand: Command {
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public RestoreCommand(DsnOption dsnOption): base("restore", "Restore a set of MariaDB/MySQL tables.") {
-		var fileOrDirectoryArgument = new Argument<DirectoryInfo>("fileOrDirectory", "The path to a file or directory to process.");
-		var recursiveOption = new Option<bool>(["-r", "--recursive"], "Whether to process the directory recursively.");
-
-		Add(fileOrDirectoryArgument);
-		Add(recursiveOption);
-		this.SetHandler(Invoke, dsnOption, fileOrDirectoryArgument, recursiveOption);
+	public RestoreCommand(): base("restore", "Restore a set of MariaDB/MySQL tables.") {
+		Add(new Argument<DirectoryInfo>("fileOrDirectory", "The path to a file or directory to process."));
+		Add(new Option<bool>(["-r", "--recursive"], "Whether to process the directory recursively."));
 	}
 
 	/// <summary>

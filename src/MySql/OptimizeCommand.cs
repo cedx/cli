@@ -10,12 +10,9 @@ public class OptimizeCommand: Command {
 	/// <summary>
 	/// Creates a new command.
 	/// </summary>
-	public OptimizeCommand(DsnOption dsnOption): base("optimize", "Optimize a set of MariaDB/MySQL tables.") {
-		var schemaOption = new SchemaOption();
-		var tableOption = new TableOption();
-		Add(schemaOption);
-		Add(tableOption);
-		this.SetHandler(Invoke, dsnOption, schemaOption, tableOption);
+	public OptimizeCommand(): base("optimize", "Optimize a set of MariaDB/MySQL tables.") {
+		Add(new SchemaOption());
+		Add(new TableOption());
 	}
 
 	/// <summary>
@@ -32,7 +29,7 @@ public class OptimizeCommand: Command {
 			return Task.FromResult(1);
 		}
 
-		using var connection = new InformationSchema().OpenConnection(dsn);
+		using var connection = new InformationSchema().CreateConnection(dsn);
 		var schemas = noSchema ? connection.GetSchemas() : [new Schema { Name = schemaName! }];
 		var tables = schemas.SelectMany(schema => tableNames.Length > 0
 			? tableNames.Select(table => new Table { Name = table, Schema = schema.Name })

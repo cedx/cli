@@ -11,7 +11,7 @@ public class NssmCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public NssmCommand(): base("nssm", "Register a Node.js application as a Windows service.") {
-		Add(new InstallCommand());
-		Add(new RemoveCommand());
+		// Add(new InstallCommand());
+		// Add(new RemoveCommand());
 	}
 }
