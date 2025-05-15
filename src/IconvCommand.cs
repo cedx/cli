@@ -1,5 +1,6 @@
 namespace Belin.Cli;
 
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.CommandLine.Invocation;
 using System.Text;
@@ -23,8 +24,9 @@ public class IconvCommand: Command {
 	/// <summary>
 	/// The command handler.
 	/// </summary>
+	/// <param name="environment">The host environment.</param>
 	/// <param name="logger">The logging service.</aparam>
-	public class CommandHandler(ILogger<IconvCommand> logger): ICommandHandler {
+	public class CommandHandler(IHostEnvironment environment, ILogger<IconvCommand> logger): ICommandHandler {
 
 		/// <summary>
 		/// The path to the file or directory to process.
@@ -74,11 +76,9 @@ public class IconvCommand: Command {
 				return Task.FromResult(1);
 			}
 
-			var resources = Path.GetFullPath(Path.Join(AppContext.BaseDirectory, "../res"));
-			if (binaryExtensions.Count == 0)
-				binaryExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "BinaryExtensions.json"))) ?? []);
-			if (textExtensions.Count == 0)
-				textExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "TextExtensions.json"))) ?? []);
+			var resources = Path.GetFullPath(Path.Join(environment.ContentRootPath, "../res"));
+			binaryExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "BinaryExtensions.json"))) ?? []);
+			textExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "TextExtensions.json"))) ?? []);
 
 			var files = FileOrDirectory switch {
 				DirectoryInfo directory => directory.EnumerateFiles("*.*", Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly),
