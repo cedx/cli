@@ -1,5 +1,7 @@
 namespace Belin.Cli;
 
+using Microsoft.Extensions.Logging;
+using System.CommandLine.Invocation;
 using System.Text;
 using System.Text.Json;
 
@@ -9,80 +11,105 @@ using System.Text.Json;
 public class IconvCommand: Command {
 
 	/// <summary>
-	/// The list of binary file extensions.
-	/// </summary>
-	private readonly List<string> binaryExtensions = [];
-
-	/// <summary>
-	/// The list of text file extensions.
-	/// </summary>
-	private readonly List<string> textExtensions = [];
-
-	/// <summary>
 	/// Creates a new command.
 	/// </summary>
 	public IconvCommand(): base("iconv", "Convert the encoding of input files.") {
-		var fileOrDirectoryArgument = new Argument<FileSystemInfo>("fileOrDirectory", "The path to the file or directory to process.");
-		var fromOption = new EncodingOption(["-f", "--from"], Encoding.Latin1.WebName, "The input encoding.");
-		var toOption = new EncodingOption(["-t", "--to"], Encoding.UTF8.WebName, "The output encoding.");
-		var recursiveOption = new Option<bool>(["-r", "--recursive"], "Whether to process the directory recursively.");
-
-		Add(fileOrDirectoryArgument);
-		Add(fromOption);
-		Add(toOption);
-		Add(recursiveOption);
-		this.SetHandler(Invoke, fileOrDirectoryArgument, fromOption, toOption, recursiveOption);
+		Add(new Argument<FileSystemInfo>("fileOrDirectory", "The path to the file or directory to process."));
+		Add(new EncodingOption(["-f", "--from"], Encoding.Latin1.WebName, "The input encoding."));
+		Add(new EncodingOption(["-t", "--to"], Encoding.UTF8.WebName, "The output encoding."));
+		Add(new Option<bool>(["-r", "--recursive"], "Whether to process the directory recursively."));
 	}
 
 	/// <summary>
-	/// Invokes this command.
+	/// The command handler.
 	/// </summary>
-	/// <param name="fileOrDirectory">The path to the file or directory to process.</param>
-	/// <param name="from">The input encoding.</param>
-	/// <param name="to">The output encoding.</param>
-	/// <param name="recursive">Value indicating whether to process the directory recursively.</param>
-	/// <returns>The exit code.</returns>
-	public Task<int> Invoke(FileSystemInfo fileOrDirectory, string from, string to, bool recursive = false) {
-		if (!fileOrDirectory.Exists) {
-			Console.WriteLine("Unable to locate the specified file or directory.");
-			return Task.FromResult(1);
+	/// <param name="logger">The logging service.</aparam>
+	public class CommandHandler(ILogger<IconvCommand> logger): ICommandHandler {
+
+		/// <summary>
+		/// The path to the file or directory to process.
+		/// </summary>
+		public required FileSystemInfo FileOrDirectory { get; set; }
+
+		/// <summary>
+		/// The input encoding.
+		/// </summary>
+		public string From { get; set; } = Encoding.Latin1.WebName;
+
+		/// <summary>
+		/// Value indicating whether to process the directory recursively.
+		/// </summary>
+		public bool Recursive { get; set; }
+
+		/// <summary>
+		/// The output encoding.
+		/// </summary>
+		public string To { get; set; } = Encoding.UTF8.WebName;
+
+		/// <summary>
+		/// The list of binary file extensions.
+		/// </summary>
+		private readonly List<string> binaryExtensions = [];
+
+		/// <summary>
+		/// The list of text file extensions.
+		/// </summary>
+		private readonly List<string> textExtensions = [];
+
+		/// <summary>
+		/// Invokes this command.
+		/// </summary>
+		/// <param name="context">The invocation context.</param>
+		/// <returns>The exit code.</returns>
+		public int Invoke(InvocationContext context) => InvokeAsync(context).Result;
+
+		/// <summary>
+		/// Invokes this command.
+		/// </summary>
+		/// <param name="context">The invocation context.</param>
+		/// <returns>The exit code.</returns>
+		public Task<int> InvokeAsync(InvocationContext context) {
+			if (!FileOrDirectory.Exists) {
+				logger.LogError("Unable to locate the specified file or directory.");
+				return Task.FromResult(1);
+			}
+
+			var resources = Path.GetFullPath(Path.Join(AppContext.BaseDirectory, "../res"));
+			if (binaryExtensions.Count == 0)
+				binaryExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "BinaryExtensions.json"))) ?? []);
+			if (textExtensions.Count == 0)
+				textExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "TextExtensions.json"))) ?? []);
+
+			var files = FileOrDirectory switch {
+				DirectoryInfo directory => directory.EnumerateFiles("*.*", Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly),
+				FileInfo file => [file],
+				_ => []
+			};
+
+			var fromEncoding = Encoding.GetEncoding(From);
+			var toEncoding = Encoding.GetEncoding(To);
+			foreach (var file in files) ConvertFileEncoding(file, fromEncoding, toEncoding);
+			return Task.FromResult(0);
 		}
 
-		var resources = Path.GetFullPath(Path.Join(AppContext.BaseDirectory, "../res"));
-		if (binaryExtensions.Count == 0)
-			binaryExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "BinaryExtensions.json"))) ?? []);
-		if (textExtensions.Count == 0)
-			textExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "TextExtensions.json"))) ?? []);
+		/// <summary>
+		/// Converts the encoding of the specified file.
+		/// </summary>
+		/// <param name="file">The path to the file to be converted.</param>
+		/// <param name="from">The input encoding.</param>
+		/// <param name="to">The output encoding.</param>
+		private void ConvertFileEncoding(FileInfo file, Encoding from, Encoding to) {
+			var extension = file.Extension.ToLowerInvariant();
+			var isBinary = extension.Length > 0 && binaryExtensions.Contains(extension[1..]);
+			if (isBinary) return;
 
-		var files = fileOrDirectory switch {
-			DirectoryInfo directory => directory.EnumerateFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly),
-			FileInfo file => [file],
-			_ => []
-		};
+			var bytes = File.ReadAllBytes(file.FullName);
+			var isText = extension.Length > 0 && textExtensions.Contains(extension[1..]);
+			if (!isText && Array.IndexOf(bytes, '\0', 0, Math.Min(bytes.Length, 8_000)) > 0) return;
 
-		var fromEncoding = Encoding.GetEncoding(from);
-		var toEncoding = Encoding.GetEncoding(to);
-		foreach (var file in files) ConvertFileEncoding(file, fromEncoding, toEncoding);
-		return Task.FromResult(0);
-	}
-
-	/// <summary>
-	/// Converts the encoding of the specified file.
-	/// </summary>
-	/// <param name="file">The path to the file to be converted.</param>
-	/// <param name="from">The input encoding.</param>
-	/// <param name="to">The output encoding.</param>
-	private void ConvertFileEncoding(FileInfo file, Encoding from, Encoding to) {
-		var extension = file.Extension.ToLowerInvariant();
-		var isBinary = extension.Length > 0 && binaryExtensions.Contains(extension[1..]);
-		if (isBinary) return;
-
-		var bytes = File.ReadAllBytes(file.FullName);
-		var isText = extension.Length > 0 && textExtensions.Contains(extension[1..]);
-		if (!isText && Array.IndexOf(bytes, '\0', 0, Math.Min(bytes.Length, 8_000)) > 0) return;
-
-		Console.WriteLine($"Converting: {file}");
-		File.WriteAllBytes(file.FullName, Encoding.Convert(from, to, bytes));
+			logger.LogInformation("Converting: {File}", file);
+			File.WriteAllBytes(file.FullName, Encoding.Convert(from, to, bytes));
+		}
 	}
 }
 
