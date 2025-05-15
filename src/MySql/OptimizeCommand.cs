@@ -29,7 +29,7 @@ public class OptimizeCommand: Command {
 			return Task.FromResult(1);
 		}
 
-		using var connection = new InformationSchema().CreateConnection(dsn);
+		using var connection = db.CreateConnection(Dsn);
 		var schemas = noSchema ? connection.GetSchemas() : [new Schema { Name = schemaName! }];
 		var tables = schemas.SelectMany(schema => tableNames.Length > 0
 			? tableNames.Select(table => new Table { Name = table, Schema = schema.Name })
