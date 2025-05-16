@@ -3,6 +3,7 @@ namespace Belin.Cli;
 using Belin.Cli.MySql;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Net.Http.Headers;
 
 /// <summary>
 /// Configures the dependency container.
@@ -15,5 +16,10 @@ public static class Container {
 	/// <param name="_">The host builder context.</param>
 	/// <param name="services">The collection of service descriptors.</param>
 	public static void AddServices(HostBuilderContext _, IServiceCollection services) => services
-		.AddSingleton<InformationSchema>();
+		.AddSingleton<InformationSchema>()
+		.AddTransient(_ => {
+			var httpClient = new HttpClient();
+			httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(".NET", Environment.Version.ToString(3)));
+			return httpClient;
+		});
 }

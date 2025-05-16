@@ -20,8 +20,9 @@ public class PhpCommand: Command {
 	/// <summary>
 	/// The command handler.
 	/// </summary>
+	/// <param name="httpClient">The HTTP client.</param>
 	/// <param name="logger">The logging service.</aparam>
-	public class CommandHandler(ILogger<PhpCommand> logger): ICommandHandler {
+	public class CommandHandler(HttpClient httpClient, ILogger<PhpCommand> logger): ICommandHandler {
 
 		/// <summary>
 		/// The path to the output directory.
@@ -46,14 +47,13 @@ public class PhpCommand: Command {
 				return 1;
 			}
 
-			using var httpClient = SetupCommand.CreateHttpClient();
-			var version = await FetchLatestVersion(httpClient);
+			var version = await FetchLatestVersion();
 			if (version is null) {
 				logger.LogError("Unable to fetch the list of PHP releases.");
 				return 2;
 			}
 
-			var path = await DownloadArchive(httpClient, version);
+			var path = await DownloadArchive(version);
 			using var serviceController = new ServiceController("W3SVC");
 			StopWebServer(serviceController);
 			logger.LogInformation(@"Extracting file ""{Input}"" into directory ""{Output}""...", path.Name, Out.Name);
@@ -68,10 +68,9 @@ public class PhpCommand: Command {
 		/// <summary>
 		/// Downloads the PHP release corresponding to the specified version.
 		/// </summary>
-		/// <param name="httpClient">The HTTP client.</param>
 		/// <param name="version">The version number of the PHP release to download.</param>
 		/// <returns>The path to the downloaded ZIP archive.</returns>
-		private async Task<FileInfo> DownloadArchive(HttpClient httpClient, Version version) {
+		private async Task<FileInfo> DownloadArchive(Version version) {
 			var vs = version >= new Version("8.4.0") ? "vs17" : "vs16";
 			var file = $"php-{version}-nts-Win32-{vs}-x64.zip";
 			logger.LogInformation(@"Downloading file ""{File}""...", file);
@@ -85,9 +84,8 @@ public class PhpCommand: Command {
 		/// <summary>
 		/// Fetches the latest version number of the PHP releases.
 		/// </summary>
-		/// <param name="httpClient">The HTTP client.</param>
 		/// <returns>The version number of the latest PHP release, or <see langword="null"/> if not found.</returns>
-		private async Task<Version?> FetchLatestVersion(HttpClient httpClient) {
+		private async Task<Version?> FetchLatestVersion() {
 			logger.LogInformation("Fetching the list of PHP releases...");
 			var releases = await httpClient.GetFromJsonAsync<Dictionary<string, PhpRelease>>("https://www.php.net/releases/?json");
 			var latestRelease = releases?.FirstOrDefault().Value;

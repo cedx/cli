@@ -20,8 +20,9 @@ public class JdkCommand: Command {
 	/// <summary>
 	/// The command handler.
 	/// </summary>
+	/// <param name="httpClient">The HTTP client.</param>
 	/// <param name="logger">The logging service.</aparam>
-	public class CommandHandler(ILogger<JdkCommand> logger): ICommandHandler {
+	public class CommandHandler(HttpClient httpClient, ILogger<JdkCommand> logger): ICommandHandler {
 
 		/// <summary>
 		/// The major version of the Java development kit.
@@ -46,15 +47,12 @@ public class JdkCommand: Command {
 		/// <param name="context">The invocation context.</param>
 		/// <returns>The exit code.</returns>
 		public async Task<int> InvokeAsync(InvocationContext context) {
-			Console.WriteLine(Java);
-			Console.WriteLine(Out);
-
 			if (!this.CheckPrivilege(Out)) {
 				logger.LogError("You must run this command in an elevated prompt.");
 				return 1;
 			}
 
-			var path = await DownloadArchive(SetupCommand.CreateHttpClient());
+			var path = await DownloadArchive();
 			logger.LogInformation(@"Extracting file ""{Input}"" into directory ""{Output}""...", path.Name, Out.Name);
 			path.ExtractTo(Out, strip: 1);
 			logger.LogInformation("{Version}", SetupCommand.GetExecutableVersion(Out, "bin/java"));
@@ -64,9 +62,8 @@ public class JdkCommand: Command {
 		/// <summary>
 		/// Downloads the OpenJDK release corresponding to the specified Java version.
 		/// </summary>
-		/// <param name="httpClient">The HTTP client.</param>
 		/// <returns>The path to the downloaded ZIP archive.</returns>
-		private async Task<FileInfo> DownloadArchive(HttpClient httpClient) {
+		private async Task<FileInfo> DownloadArchive() {
 			var (operatingSystem, fileExtension) = true switch {
 				true when OperatingSystem.IsMacOS() => ("macOS", "tar.gz"),
 				true when OperatingSystem.IsWindows() => ("windows", "zip"),

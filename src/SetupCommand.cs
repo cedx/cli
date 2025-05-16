@@ -19,16 +19,6 @@ public class SetupCommand: Command {
 	}
 
 	/// <summary>
-	/// Creates a new HTTP client.
-	/// </summary>
-	/// <returns>The newly created HTTP client.</returns>
-	internal static HttpClient CreateHttpClient() {
-		var httpClient = new HttpClient();
-		httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(".NET", Environment.Version.ToString(3)));
-		return httpClient;
-	}
-
-	/// <summary>
 	/// Runs the specified executable with the <c>--version</c> argument.
 	/// </summary>
 	/// <param name="output">The path to the output directory.</param>
