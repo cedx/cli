@@ -1,5 +1,7 @@
 namespace Belin.Cli.MySql;
 
+using Microsoft.Extensions.Logging;
+using System.CommandLine.Invocation;
 using System.Data;
 
 /// <summary>
@@ -17,43 +19,72 @@ public class EngineCommand: Command {
 	}
 
 	/// <summary>
-	/// Invokes this command.
+	/// The command handler.
 	/// </summary>
-	/// <param name="dsn">The connection string.</param>
-	/// <param name="engine">The name of the new storage engine.</param>
-	/// <param name="schemaName">The schema name.</param>
-	/// <param name="tableNames">The table names.</param>
-	/// <returns>The exit code.</returns>
-	public Task<int> Invoke(Uri dsn, string engine, string? schemaName, string[] tableNames) {
-		var noSchema = string.IsNullOrWhiteSpace(schemaName);
-		if (tableNames.Length > 0 && noSchema) {
-			Console.WriteLine($"The table \"{tableNames[0]}\" requires that a schema be specified.");
-			return Task.FromResult(1);
+	/// <param name="db">The dabase context.</param>
+	/// <param name="logger">The logging service.</aparam>
+	public class CommandHandler(InformationSchema db, ILogger<BackupCommand> logger): ICommandHandler {
+
+		/// <summary>
+		/// The connection string.
+		/// </summary>
+		public required Uri Dsn { get; set; }
+
+		/// <summary>
+		/// The name of the new storage engine.
+		/// </summary>
+		public required string Engine { get; set; }
+
+		/// <summary>
+		/// The schema name.
+		/// </summary>
+		public string Schema { get; set; } = string.Empty;
+
+		/// <summary>
+		/// The table names.
+		/// </summary>
+		public string[] Table { get; set; } = [];
+
+		/// <summary>
+		/// Invokes this command.
+		/// </summary>
+		/// <param name="context">The invocation context.</param>
+		/// <returns>The exit code.</returns>
+		public int Invoke(InvocationContext context) {
+			var noSchema = string.IsNullOrWhiteSpace(Schema);
+			if (Table.Length > 0 && noSchema) {
+				logger.LogError(@"The table ""{Table}"" requires that a schema be specified.", Table[0]);
+				return 1;
+			}
+
+			using var connection = db.CreateConnection(Dsn);
+			var schemas = noSchema ? connection.GetSchemas() : [new Schema { Name = Schema }];
+			var tables = schemas.SelectMany(schema => Table.Length > 0
+				? Table.Select(table => new Table { Name = table, Schema = schema.Name })
+				: connection.GetTables(schema));
+
+			connection.Execute("SET foreign_key_checks = 0");
+			foreach (var table in tables.Where(item => !item.Engine.Equals(Engine, StringComparison.OrdinalIgnoreCase))) AlterTable(connection, table);
+			connection.Execute("SET foreign_key_checks = 1");
+			return 0;
 		}
 
-		using var connection = db.CreateConnection(Dsn);
-		var schemas = noSchema ? connection.GetSchemas() : [new Schema { Name = schemaName! }];
-		var tables = schemas.SelectMany(schema => tableNames.Length > 0
-			? tableNames.Select(table => new Table { Name = table, Schema = schema.Name })
-			: connection.GetTables(schema));
+		/// <summary>
+		/// Invokes this command.
+		/// </summary>
+		/// <param name="context">The invocation context.</param>
+		/// <returns>The exit code.</returns>
+		public Task<int> InvokeAsync(InvocationContext context) => Task.FromResult(Invoke(context));
 
-		connection.Execute("SET foreign_key_checks = 0");
-		foreach (var table in tables.Where(item => !item.Engine.Equals(engine, StringComparison.OrdinalIgnoreCase)))
-			AlterTable(connection, table, engine);
-
-		connection.Execute("SET foreign_key_checks = 1");
-		return Task.FromResult(0);
-	}
-
-	/// <summary>
-	/// Alters the specified database table.
-	/// </summary>
-	/// <param name="connection">The database connection.</param>
-	/// <param name="table">The table to alter.</param>
-	/// <param name="engine">The name of the new storage engine.</param>
-	private static void AlterTable(IDbConnection connection, Table table, string engine) {
-		var qualifiedName = table.GetQualifiedName(escape: true);
-		Console.WriteLine($"Processing: {qualifiedName}");
-		connection.Execute($"ALTER TABLE {qualifiedName} ENGINE = {engine}");
+		/// <summary>
+		/// Alters the specified database table.
+		/// </summary>
+		/// <param name="connection">The database connection.</param>
+		/// <param name="table">The table to alter.</param>
+		private void AlterTable(IDbConnection connection, Table table) {
+			var qualifiedName = table.GetQualifiedName(escape: true);
+			logger.LogInformation("Processing: {QualifiedName}", qualifiedName);
+			connection.Execute($"ALTER TABLE {qualifiedName} ENGINE = {Engine}");
+		}
 	}
 }

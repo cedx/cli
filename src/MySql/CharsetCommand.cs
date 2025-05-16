@@ -64,9 +64,7 @@ public class CharsetCommand: Command {
 				: connection.GetTables(schema));
 
 			connection.Execute("SET foreign_key_checks = 0");
-			foreach (var table in tables.Where(item => !item.Collation.Equals(Collation, StringComparison.OrdinalIgnoreCase)))
-				AlterTable(connection, table, Collation);
-
+			foreach (var table in tables.Where(item => !item.Collation.Equals(Collation, StringComparison.OrdinalIgnoreCase))) AlterTable(connection, table);
 			connection.Execute("SET foreign_key_checks = 1");
 			return 0;
 		}
@@ -83,11 +81,10 @@ public class CharsetCommand: Command {
 		/// </summary>
 		/// <param name="connection">The database connection.</param>
 		/// <param name="table">The table to alter.</param>
-		/// <param name="collation">The name of the new character set.</param>
-		private static void AlterTable(IDbConnection connection, Table table, string collation) {
+		private void AlterTable(IDbConnection connection, Table table) {
 			var qualifiedName = table.GetQualifiedName(escape: true);
-			Console.WriteLine($"Processing: {qualifiedName}");
-			connection.Execute($"ALTER TABLE {qualifiedName} CONVERT TO CHARACTER SET {collation.Split('_')[0]} COLLATE {collation}");
+			logger.LogInformation("Processing: {QualifiedName}", qualifiedName);
+			connection.Execute($"ALTER TABLE {qualifiedName} CONVERT TO CHARACTER SET {Collation.Split('_')[0]} COLLATE {Collation}");
 		}
 	}
 }

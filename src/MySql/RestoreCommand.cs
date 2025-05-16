@@ -1,5 +1,7 @@
 namespace Belin.Cli.MySql;
 
+using Microsoft.Extensions.Logging;
+using System.CommandLine.Invocation;
 using System.Diagnostics;
 using System.IO;
 
@@ -17,56 +19,83 @@ public class RestoreCommand: Command {
 	}
 
 	/// <summary>
-	/// Invokes this command.
+	/// The command handler.
 	/// </summary>
-	/// <param name="dsn">The connection string.</param>
-	/// <param name="fileOrDirectory">The path to a file or directory to process.</param>
-	/// <param name="recursive">Value indicating whether to process the directory recursively.</param>
-	/// <returns>The exit code.</returns>
-	public Task<int> Invoke(Uri dsn, FileSystemInfo fileOrDirectory, bool recursive = false) {
-		if (!fileOrDirectory.Exists) {
-			Console.WriteLine("Unable to locate the specified file or directory.");
-			return Task.FromResult(1);
+	/// <param name="db">The dabase context.</param>
+	/// <param name="logger">The logging service.</aparam>
+	public class CommandHandler(InformationSchema db, ILogger<BackupCommand> logger): ICommandHandler {
+
+		/// <summary>
+		/// The connection string.
+		/// </summary>
+		public required Uri Dsn { get; set; }
+
+		/// <summary>
+		/// The path to the file or directory to process.
+		/// </summary>
+		public required FileSystemInfo FileOrDirectory { get; set; }
+
+		/// <summary>
+		/// Value indicating whether to process the directory recursively.
+		/// </summary>
+		public bool Recursive { get; set; }
+
+		/// <summary>
+		/// Invokes this command.
+		/// </summary>
+		/// <param name="context">The invocation context.</param>
+		/// <returns>The exit code.</returns>
+		public int Invoke(InvocationContext context) {
+			if (!FileOrDirectory.Exists) {
+				logger.LogError("Unable to locate the specified file or directory.");
+				return 1;
+			}
+
+			var files = FileOrDirectory switch {
+				DirectoryInfo directory => directory.EnumerateFiles("*.sql", Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly),
+				FileInfo file => [file],
+				_ => []
+			};
+
+			foreach (var file in files) ImportFile(file);
+			return 0;
 		}
 
-		var files = fileOrDirectory switch {
-			DirectoryInfo directory => directory.EnumerateFiles("*.sql", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly),
-			FileInfo file => [file],
-			_ => []
-		};
+		/// <summary>
+		/// Invokes this command.
+		/// </summary>
+		/// <param name="context">The invocation context.</param>
+		/// <returns>The exit code.</returns>
+		public Task<int> InvokeAsync(InvocationContext context) => Task.FromResult(Invoke(context));
 
-		foreach (var file in files) ImportFile(dsn, file);
-		return Task.FromResult(0);
-	}
+		/// <summary>
+		/// Imports a SQL dump into the database.
+		/// </summary>
+		/// <param name="file">The path of the file to be restored.</param>
+		/// <exception cref="ProcessException">An error occurred when starting the underlying process.</exception>
+		private void ImportFile(FileInfo file) {
+			var entity = Path.GetFileNameWithoutExtension(file.FullName);
+			logger.LogInformation("Importing: {Entity}", entity);
 
-	/// <summary>
-	/// Imports a SQL dump into the database.
-	/// </summary>
-	/// <param name="dsn">The connection string.</param>
-	/// <param name="file">The path of the file to be restored.</param>
-	/// <exception cref="ProcessException">An error occurred when starting the underlying process.</exception>
-	private void ImportFile(Uri dsn, FileInfo file) {
-		var entity = Path.GetFileNameWithoutExtension(file.FullName);
-		Console.WriteLine($"Importing: {entity}");
+			var userInfo = Dsn.UserInfo.Split(':').Select(Uri.UnescapeDataString);
+			var args = new List<string> {
+				$"--default-character-set={Dsn.ParseQueryString()["charset"] ?? "utf8mb4"}",
+				$"--execute=USE {entity.Split('.').First()}; SOURCE {file.FullName.Replace('\\', '/')};",
+				$"--host={Dsn.Host}",
+				$"--password={userInfo.Last()}",
+				$"--port={(Dsn.IsDefaultPort ? 3306 : Dsn.Port)}",
+				$"--user={userInfo.First()}"
+			};
 
-		var userInfo = dsn.UserInfo.Split(':').Select(Uri.UnescapeDataString);
-		var args = new List<string> {
-			$"--default-character-set={dsn.ParseQueryString()["charset"] ?? "utf8mb4"}",
-			$"--execute=USE {entity.Split('.').First()}; SOURCE {file.FullName.Replace('\\', '/')};",
-			$"--host={dsn.Host}",
-			$"--password={userInfo.Last()}",
-			$"--port={(dsn.IsDefaultPort ? 3306 : dsn.Port)}",
-			$"--user={userInfo.First()}"
-		};
+			var hosts = new[] { "::1", "127.0.0.1", "localhost" };
+			if (!hosts.Contains(Dsn.Host)) args.Add("--compress");
 
-		var hosts = new[] { "::1", "127.0.0.1", "localhost" };
-		if (!hosts.Contains(dsn.Host)) args.Add("--compress");
+			var startInfo = new ProcessStartInfo("mysql", args) { CreateNoWindow = true, RedirectStandardError = true };
+			using var process = Process.Start(startInfo) ?? throw new ProcessException(startInfo.FileName);
 
-		var startInfo = new ProcessStartInfo("mysql", args) { CreateNoWindow = true, RedirectStandardError = true };
-		using var process = Process.Start(startInfo) ?? throw new ProcessException(startInfo.FileName);
-
-		var stderr = process.StandardError.ReadToEnd().Trim();
-		process.WaitForExit();
-		if (process.ExitCode != 0) throw new ProcessException(startInfo.FileName, stderr);
+			var stderr = process.StandardError.ReadToEnd().Trim();
+			process.WaitForExit();
+			if (process.ExitCode != 0) throw new ProcessException(startInfo.FileName, stderr);
+		}
 	}
 }
