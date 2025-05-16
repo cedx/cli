@@ -67,7 +67,7 @@ public class BackupCommand: Command {
 			}
 
 			try {
-				if (Format == BackupFormat.JsonLines) logger.LogWarning(@"Warning: the ""JSON Lines"" format does not export INVISIBLE columns.");
+				if (Format == BackupFormat.JsonLines) logger.LogWarning(@"The ""JSON Lines"" format does not export INVISIBLE columns.");
 				Directory.Create();
 
 				using var connection = db.CreateConnection(Dsn);

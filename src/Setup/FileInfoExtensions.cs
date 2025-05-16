@@ -14,8 +14,6 @@ public static class FileInfoExtensions {
 	/// <param name="output">The path to the output directory.</param>
 	/// <param name="strip">The number of leading directory components to remove from file names on extraction.</param>
 	public static void ExtractTo(this FileInfo input, DirectoryInfo output, int strip = 0) {
-		Console.WriteLine($"Extracting file \"{input.Name}\" into directory \"{output.FullName}\"...");
-
 		using var zipArchive = ZipFile.OpenRead(input.FullName);
 		if (strip == 0) zipArchive.ExtractToDirectory(output.FullName, overwriteFiles: true);
 		else foreach (var entry in zipArchive.Entries) {
