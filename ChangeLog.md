@@ -1,7 +1,7 @@
 # Changelog
 
 ## Version [2.3.0](https://github.com/cedx/cli/compare/v2.2.0...v2.3.0)
-- Use generic host and dependency injection to handle commands and services.
+- Use a generic host and dependency injection to handle commands and services.
 
 ## Version [2.2.0](https://github.com/cedx/cli/compare/v2.1.0...v2.2.0)
 - Ported the [NSSM](https://nssm.cc) configuration file to [XML](https://www.w3.org/XML) format.
