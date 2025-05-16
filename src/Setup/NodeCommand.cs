@@ -33,7 +33,7 @@ public class NodeCommand: Command {
 		/// <summary>
 		/// The path to the output directory.
 		/// </summary>
-		public required DirectoryInfo Output { get; set; }
+		public required DirectoryInfo Out { get; set; }
 
 		/// <summary>
 		/// The identifiers of the NSSM services to restart.
@@ -65,8 +65,8 @@ public class NodeCommand: Command {
 				}
 			}
 
-			if (!this.CheckPrivilege(services.Count > 0 ? null : Output)) {
-				logger.LogCritical("You must run this command in an elevated prompt.");
+			if (!this.CheckPrivilege(services.Count > 0 ? null : Out)) {
+				logger.LogError("You must run this command in an elevated prompt.");
 				return 2;
 			}
 
@@ -79,11 +79,11 @@ public class NodeCommand: Command {
 
 			var path = await DownloadArchive(httpClient, version);
 			StopServices();
-			logger.LogInformation(@"Extracting file ""{Input}"" into directory ""{Output}""...", path.Name, Output.Name);
-			path.ExtractTo(Output, strip: 1);
+			logger.LogInformation(@"Extracting file ""{Input}"" into directory ""{Output}""...", path.Name, Out.Name);
+			path.ExtractTo(Out, strip: 1);
 			StartServices();
 
-			logger.LogInformation("{Version}", SetupCommand.GetExecutableVersion(Output, "node"));
+			logger.LogInformation("{Version}", SetupCommand.GetExecutableVersion(Out, "node"));
 			return 0;
 		}
 

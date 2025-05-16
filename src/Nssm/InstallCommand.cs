@@ -46,7 +46,7 @@ public class InstallCommand: Command {
 		/// <returns>The exit code.</returns>
 		public int Invoke(InvocationContext context) {
 			if (!this.CheckPrivilege()) {
-				logger.LogCritical("You must run this command in an elevated prompt.");
+				logger.LogError("You must run this command in an elevated prompt.");
 				return 1;
 			}
 
