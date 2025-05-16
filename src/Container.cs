@@ -17,7 +17,7 @@ public static class Container {
 	/// <param name="services">The collection of service descriptors.</param>
 	public static void AddServices(HostBuilderContext _, IServiceCollection services) => services
 		.AddSingleton<InformationSchema>()
-		.AddTransient(_ => {
+		.AddScoped(_ => {
 			var httpClient = new HttpClient();
 			httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(".NET", Environment.Version.ToString(3)));
 			return httpClient;
