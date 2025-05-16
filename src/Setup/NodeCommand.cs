@@ -22,8 +22,9 @@ public class NodeCommand: Command {
 	/// <summary>
 	/// The command handler.
 	/// </summary>
+	/// <param name="httpClient">The HTTP client.</param>
 	/// <param name="logger">The logging service.</aparam>
-	public class CommandHandler(ILogger<NodeCommand> logger): ICommandHandler {
+	public class CommandHandler(HttpClient httpClient, ILogger<NodeCommand> logger): ICommandHandler {
 
 		/// <summary>
 		/// The path to the NSSM configuration file.
@@ -70,14 +71,13 @@ public class NodeCommand: Command {
 				return 2;
 			}
 
-			using var httpClient = SetupCommand.CreateHttpClient();
-			var version = await FetchLatestVersion(httpClient);
+			var version = await FetchLatestVersion();
 			if (version is null) {
 				logger.LogError("Unable to fetch the list of Node.js releases.");
 				return 3;
 			}
 
-			var path = await DownloadArchive(httpClient, version);
+			var path = await DownloadArchive(version);
 			StopServices();
 			logger.LogInformation(@"Extracting file ""{Input}"" into directory ""{Output}""...", path.Name, Out.Name);
 			path.ExtractTo(Out, strip: 1);
@@ -90,10 +90,9 @@ public class NodeCommand: Command {
 		/// <summary>
 		/// Downloads the PHP release corresponding to the specified version.
 		/// </summary>
-		/// <param name="httpClient">The HTTP client.</param>
 		/// <param name="version">The version number of the PHP release to download.</param>
 		/// <returns>The path to the downloaded ZIP archive.</returns>
-		private async Task<FileInfo> DownloadArchive(HttpClient httpClient, Version version) {
+		private async Task<FileInfo> DownloadArchive(Version version) {
 			var (operatingSystem, fileExtension) = true switch {
 				true when OperatingSystem.IsMacOS() => ("darwin", "tar.gz"),
 				true when OperatingSystem.IsWindows() => ("win", "zip"),
@@ -112,9 +111,8 @@ public class NodeCommand: Command {
 		/// <summary>
 		/// Fetches the latest version number of the Node.js releases.
 		/// </summary>
-		/// <param name="httpClient">The HTTP client.</param>
 		/// <returns>The version number of the latest Node.js release, or <see langword="null"/> if not found.</returns>
-		private async Task<Version?> FetchLatestVersion(HttpClient httpClient) {
+		private async Task<Version?> FetchLatestVersion() {
 			logger.LogInformation("Fetching the list of Node.js releases...");
 			var releases = await httpClient.GetFromJsonAsync<List<NodeRelease>>("https://nodejs.org/dist/index.json");
 			var latestRelease = releases?.FirstOrDefault();
