@@ -20,6 +20,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Content Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Dapper" Version="2.*" />
 		<PackageReference Include="MySqlConnector" Version="2.*" />
 		<PackageReference Include="System.CommandLine" Version="2.*-*" />

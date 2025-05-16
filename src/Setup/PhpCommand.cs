@@ -26,7 +26,7 @@ public class PhpCommand: Command {
 		/// <summary>
 		/// The path to the output directory.
 		/// </summary>
-		public required DirectoryInfo Output { get; set; }
+		public required DirectoryInfo Out { get; set; }
 
 		/// <summary>
 		/// Invokes this command.
@@ -42,7 +42,7 @@ public class PhpCommand: Command {
 		/// <returns>The exit code.</returns>
 		public async Task<int> InvokeAsync(InvocationContext context) {
 			if (!this.CheckPrivilege()) {
-				logger.LogCritical("You must run this command in an elevated prompt.");
+				logger.LogError("You must run this command in an elevated prompt.");
 				return 1;
 			}
 
@@ -56,12 +56,12 @@ public class PhpCommand: Command {
 			var path = await DownloadArchive(httpClient, version);
 			using var serviceController = new ServiceController("W3SVC");
 			StopWebServer(serviceController);
-			logger.LogInformation(@"Extracting file ""{Input}"" into directory ""{Output}""...", path.Name, Output.Name);
-			path.ExtractTo(Output);
+			logger.LogInformation(@"Extracting file ""{Input}"" into directory ""{Output}""...", path.Name, Out.Name);
+			path.ExtractTo(Out);
 			StartWebServer(serviceController);
 			RegisterEventLog(version);
 
-			logger.LogInformation("{Version}", SetupCommand.GetExecutableVersion(Output, "php"));
+			logger.LogInformation("{Version}", SetupCommand.GetExecutableVersion(Out, "php"));
 			return 0;
 		}
 
@@ -101,7 +101,7 @@ public class PhpCommand: Command {
 		private void RegisterEventLog(Version version) {
 			logger.LogInformation("Registering the PHP interpreter with the event log...");
 			var key = $"HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\EventLog\\Application\\PHP-{version}";
-			Registry.SetValue(key, "EventMessageFile", Path.Join(Output.FullName, $"php{version.Major}.dll"), RegistryValueKind.String);
+			Registry.SetValue(key, "EventMessageFile", Path.Join(Out.FullName, $"php{version.Major}.dll"), RegistryValueKind.String);
 			Registry.SetValue(key, "TypesSupported", 7, RegistryValueKind.DWord);
 		}
 

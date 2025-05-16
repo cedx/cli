@@ -36,7 +36,7 @@ public class IconvCommand: Command {
 		/// <summary>
 		/// The input encoding.
 		/// </summary>
-		public string From { get; set; } = Encoding.Latin1.WebName;
+		public required string From { get; set; }
 
 		/// <summary>
 		/// Value indicating whether to process the directory recursively.
@@ -46,7 +46,7 @@ public class IconvCommand: Command {
 		/// <summary>
 		/// The output encoding.
 		/// </summary>
-		public string To { get; set; } = Encoding.UTF8.WebName;
+		public required string To { get; set; }
 
 		/// <summary>
 		/// The list of binary file extensions.

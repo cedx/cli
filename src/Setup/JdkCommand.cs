@@ -26,12 +26,12 @@ public class JdkCommand: Command {
 		/// <summary>
 		/// The major version of the Java development kit.
 		/// </summary>
-		public int Java { get; set; } = 21;
+		public int Java { get; set; }
 
 		/// <summary>
 		/// The path to the output directory.
 		/// </summary>
-		public required DirectoryInfo Output { get; set; }
+		public required DirectoryInfo Out { get; set; }
 
 		/// <summary>
 		/// Invokes this command.
@@ -46,15 +46,18 @@ public class JdkCommand: Command {
 		/// <param name="context">The invocation context.</param>
 		/// <returns>The exit code.</returns>
 		public async Task<int> InvokeAsync(InvocationContext context) {
-			if (!this.CheckPrivilege(Output)) {
-				logger.LogCritical("You must run this command in an elevated prompt.");
+			Console.WriteLine(Java);
+			Console.WriteLine(Out);
+
+			if (!this.CheckPrivilege(Out)) {
+				logger.LogError("You must run this command in an elevated prompt.");
 				return 1;
 			}
 
 			var path = await DownloadArchive(SetupCommand.CreateHttpClient());
-			logger.LogInformation(@"Extracting file ""{Input}"" into directory ""{Output}""...", path.Name, Output.Name);
-			path.ExtractTo(Output, strip: 1);
-			logger.LogInformation("{Version}", SetupCommand.GetExecutableVersion(Output, "bin/java"));
+			logger.LogInformation(@"Extracting file ""{Input}"" into directory ""{Output}""...", path.Name, Out.Name);
+			path.ExtractTo(Out, strip: 1);
+			logger.LogInformation("{Version}", SetupCommand.GetExecutableVersion(Out, "bin/java"));
 			return 0;
 		}
 
