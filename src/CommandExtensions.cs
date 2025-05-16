@@ -20,7 +20,6 @@ public static class CommandExtensions {
 			if (output.Root.Name != home.Root.Name || output.FullName.StartsWith(home.FullName)) isPrivileged = true;
 		}
 
-		if (!isPrivileged) Console.WriteLine("You must run this command in an elevated prompt.");
 		return isPrivileged;
 	}
 }

@@ -24,7 +24,7 @@ public class RemoveCommand: Command {
 	/// The command handler.
 	/// </summary>
 	/// <param name="logger">The logging service.</aparam>
-	public class CommandHandler(ILogger<InstallCommand> logger): ICommandHandler {
+	public class CommandHandler(ILogger<RemoveCommand> logger): ICommandHandler {
 
 		/// <summary>
 		/// The path to the root directory of the .NET or Node.js application.
@@ -37,7 +37,10 @@ public class RemoveCommand: Command {
 		/// <param name="context">The invocation context.</param>
 		/// <returns>The exit code.</returns>
 		public int Invoke(InvocationContext context) {
-			if (!this.CheckPrivilege()) return 1;
+			if (!this.CheckPrivilege()) {
+				logger.LogCritical("You must run this command in an elevated prompt.");
+				return 1;
+			}
 
 			var application = WebApplication.ReadFromDirectory(Directory.FullName);
 			if (application is null) {

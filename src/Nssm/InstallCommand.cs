@@ -45,44 +45,47 @@ public class InstallCommand: Command {
 		/// <param name="context">The invocation context.</param>
 		/// <returns>The exit code.</returns>
 		public int Invoke(InvocationContext context) {
-			if (!this.CheckPrivilege()) return 1;
+			if (!this.CheckPrivilege()) {
+				logger.LogCritical("You must run this command in an elevated prompt.");
+				return 1;
+			}
 
 			try {
-				var application = WebApplication.ReadFromDirectory(Directory.FullName)
-					?? throw new EntryPointNotFoundException("Unable to locate the application configuration file.");
+					var application = WebApplication.ReadFromDirectory(Directory.FullName)
+						?? throw new EntryPointNotFoundException("Unable to locate the application configuration file.");
 
-				var isDotNet = System.IO.Directory.EnumerateFiles(application.Path, "*.slnx").Any();
-				if (application.Environment.Length == 0) application.Environment = isDotNet ? "Production" : "production";
-				var (program, entryPoint) = isDotNet ? GetDotNetEntryPoint(application) : GetNodeEntryPoint(application);
+					var isDotNet = System.IO.Directory.EnumerateFiles(application.Path, "*.slnx").Any();
+					if (application.Environment.Length == 0) application.Environment = isDotNet ? "Production" : "production";
+					var (program, entryPoint) = isDotNet ? GetDotNetEntryPoint(application) : GetNodeEntryPoint(application);
 
-				using var installProcess = Process.Start("nssm", ["install", application.Id, program, entryPoint]) ?? throw new ProcessException("nssm");
-				installProcess.WaitForExit();
-				if (installProcess.ExitCode != 0) throw new ProcessException("nssm", $"The \"install\" command failed with exit code {installProcess.ExitCode}.");
+					using var installProcess = Process.Start("nssm", ["install", application.Id, program, entryPoint]) ?? throw new ProcessException("nssm");
+					installProcess.WaitForExit();
+					if (installProcess.ExitCode != 0) throw new ProcessException("nssm", $"The \"install\" command failed with exit code {installProcess.ExitCode}.");
 
-				var properties = new Dictionary<string, string> {
-					["AppDirectory"] = application.Path,
-					["AppEnvironmentExtra"] = $"{(isDotNet ? "DOTNET_ENVIRONMENT" : "NODE_ENV")}={application.Environment}",
-					["AppNoConsole"] = "1",
-					["AppStderr"] = Path.Join(application.Path, @"var\stderr.log"),
-					["AppStdout"] = Path.Join(application.Path, @"var\stdout.log"),
-					["Description"] = application.Description,
-					["DisplayName"] = application.Name,
-					["Start"] = "SERVICE_AUTO_START"
-				};
+					var properties = new Dictionary<string, string> {
+						["AppDirectory"] = application.Path,
+						["AppEnvironmentExtra"] = $"{(isDotNet ? "DOTNET_ENVIRONMENT" : "NODE_ENV")}={application.Environment}",
+						["AppNoConsole"] = "1",
+						["AppStderr"] = Path.Join(application.Path, @"var\stderr.log"),
+						["AppStdout"] = Path.Join(application.Path, @"var\stdout.log"),
+						["Description"] = application.Description,
+						["DisplayName"] = application.Name,
+						["Start"] = "SERVICE_AUTO_START"
+					};
 
-				foreach (var (key, value) in properties) {
-					using var setProcess = Process.Start("nssm", ["set", application.Id, key, value]) ?? throw new ProcessException("nssm");
-					setProcess.WaitForExit();
-					if (setProcess.ExitCode != 0) throw new ProcessException("nssm", $"The \"set\" command failed with exit code {setProcess.ExitCode}.");
+					foreach (var (key, value) in properties) {
+						using var setProcess = Process.Start("nssm", ["set", application.Id, key, value]) ?? throw new ProcessException("nssm");
+						setProcess.WaitForExit();
+						if (setProcess.ExitCode != 0) throw new ProcessException("nssm", $"The \"set\" command failed with exit code {setProcess.ExitCode}.");
+					}
+
+					if (Start) StartApplication(application);
+					return 0;
 				}
-
-				if (Start) StartApplication(application);
-				return 0;
-			}
-			catch (Exception e) {
-				logger.LogError("{Message}", e.Message);
-				return 2;
-			}
+				catch (Exception e) {
+					logger.LogError("{Message}", e.Message);
+					return 2;
+				}
 		}
 
 		/// <summary>

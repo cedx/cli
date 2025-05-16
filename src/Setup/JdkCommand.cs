@@ -1,5 +1,8 @@
 namespace Belin.Cli.Setup;
 
+using Microsoft.Extensions.Logging;
+using System.CommandLine.Invocation;
+
 /// <summary>
 /// Downloads and installs the latest OpenJDK release.
 /// </summary>
@@ -15,40 +18,65 @@ public class JdkCommand: Command {
 	}
 
 	/// <summary>
-	/// Invokes this command.
+	/// The command handler.
 	/// </summary>
-	/// <param name="output">The path to the output directory.</param>
-	/// <param name="java">The major version of the Java development kit.</param>
-	/// <returns>The exit code.</returns>
-	public async Task<int> Invoke(DirectoryInfo output, int java) {
-		if (!this.CheckPrivilege(output)) return 1;
+	/// <param name="logger">The logging service.</aparam>
+	public class CommandHandler(ILogger<JdkCommand> logger): ICommandHandler {
 
-		using var httpClient = SetupCommand.CreateHttpClient();
-		var path = await DownloadArchive(httpClient, java);
-		path.ExtractTo(output, strip: 1);
-		Console.WriteLine(SetupCommand.GetExecutableVersion(output, "bin/java"));
-		return 0;
-	}
+		/// <summary>
+		/// The major version of the Java development kit.
+		/// </summary>
+		public int Java { get; set; } = 21;
 
-	/// <summary>
-	/// Downloads the OpenJDK release corresponding to the specified Java version.
-	/// </summary>
-	/// <param name="httpClient">The HTTP client.</param>
-	/// <param name="java">The major version of the Java development kit.</param>
-	/// <returns>The path to the downloaded ZIP archive.</returns>
-	private static async Task<FileInfo> DownloadArchive(HttpClient httpClient, int java) {
-		var (operatingSystem, fileExtension) = true switch {
-			true when OperatingSystem.IsMacOS() => ("macOS", "tar.gz"),
-			true when OperatingSystem.IsWindows() => ("windows", "zip"),
-			_ => ("linux", "tar.gz")
-		};
+		/// <summary>
+		/// The path to the output directory.
+		/// </summary>
+		public required DirectoryInfo Output { get; set; }
 
-		var file = $"microsoft-jdk-{java}-{operatingSystem}-x64.{fileExtension}";
-		Console.WriteLine($"Downloading file \"{file}\"...");
+		/// <summary>
+		/// Invokes this command.
+		/// </summary>
+		/// <param name="context">The invocation context.</param>
+		/// <returns>The exit code.</returns>
+		public int Invoke(InvocationContext context) => InvokeAsync(context).Result;
 
-		var bytes = await httpClient.GetByteArrayAsync($"https://aka.ms/download-jdk/{file}");
-		var path = Path.Join(Path.GetTempPath(), file);
-		File.WriteAllBytes(path, bytes);
-		return new FileInfo(path);
+		/// <summary>
+		/// Invokes this command.
+		/// </summary>
+		/// <param name="context">The invocation context.</param>
+		/// <returns>The exit code.</returns>
+		public async Task<int> InvokeAsync(InvocationContext context) {
+			if (!this.CheckPrivilege(Output)) {
+				logger.LogCritical("You must run this command in an elevated prompt.");
+				return 1;
+			}
+
+			var path = await DownloadArchive(SetupCommand.CreateHttpClient());
+			logger.LogInformation(@"Extracting file ""{Input}"" into directory ""{Output}""...", path.Name, Output.Name);
+			path.ExtractTo(Output, strip: 1);
+			logger.LogInformation("{Version}", SetupCommand.GetExecutableVersion(Output, "bin/java"));
+			return 0;
+		}
+
+		/// <summary>
+		/// Downloads the OpenJDK release corresponding to the specified Java version.
+		/// </summary>
+		/// <param name="httpClient">The HTTP client.</param>
+		/// <returns>The path to the downloaded ZIP archive.</returns>
+		private async Task<FileInfo> DownloadArchive(HttpClient httpClient) {
+			var (operatingSystem, fileExtension) = true switch {
+				true when OperatingSystem.IsMacOS() => ("macOS", "tar.gz"),
+				true when OperatingSystem.IsWindows() => ("windows", "zip"),
+				_ => ("linux", "tar.gz")
+			};
+
+			var file = $"microsoft-jdk-{Java}-{operatingSystem}-x64.{fileExtension}";
+			logger.LogInformation(@"Downloading file ""{File}""...", file);
+
+			var bytes = await httpClient.GetByteArrayAsync($"https://aka.ms/download-jdk/{file}");
+			var path = Path.Join(Path.GetTempPath(), file);
+			File.WriteAllBytes(path, bytes);
+			return new FileInfo(path);
+		}
 	}
 }
