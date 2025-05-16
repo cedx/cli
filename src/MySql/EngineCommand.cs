@@ -23,7 +23,7 @@ public class EngineCommand: Command {
 	/// </summary>
 	/// <param name="db">The dabase context.</param>
 	/// <param name="logger">The logging service.</aparam>
-	public class CommandHandler(InformationSchema db, ILogger<BackupCommand> logger): ICommandHandler {
+	public class CommandHandler(InformationSchema db, ILogger<EngineCommand> logger): ICommandHandler {
 
 		/// <summary>
 		/// The connection string.
@@ -38,7 +38,7 @@ public class EngineCommand: Command {
 		/// <summary>
 		/// The schema name.
 		/// </summary>
-		public string Schema { get; set; } = string.Empty;
+		public string? Schema { get; set; }
 
 		/// <summary>
 		/// The table names.
@@ -58,7 +58,7 @@ public class EngineCommand: Command {
 			}
 
 			using var connection = db.CreateConnection(Dsn);
-			var schemas = noSchema ? connection.GetSchemas() : [new Schema { Name = Schema }];
+			var schemas = noSchema ? connection.GetSchemas() : [new Schema { Name = Schema! }];
 			var tables = schemas.SelectMany(schema => Table.Length > 0
 				? Table.Select(table => new Table { Name = table, Schema = schema.Name })
 				: connection.GetTables(schema));
