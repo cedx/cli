@@ -47,7 +47,7 @@ public class BackupCommand: Command {
 		/// <summary>
 		/// The schema name.
 		/// </summary>
-		public string Schema { get; set; } = string.Empty;
+		public string? Schema { get; set; }
 
 		/// <summary>
 		/// The table names.
@@ -71,7 +71,7 @@ public class BackupCommand: Command {
 				Directory.Create();
 
 				using var connection = db.CreateConnection(Dsn);
-				foreach (var schema in noSchema ? connection.GetSchemas() : [new Schema { Name = Schema }]) {
+				foreach (var schema in noSchema ? connection.GetSchemas() : [new Schema { Name = Schema! }]) {
 					var entity = Table.Length == 1 ? $"{schema.Name}.{Table[0]}" : schema.Name;
 					logger.LogInformation("Exporting: {Entity}", entity);
 					if (Format == BackupFormat.JsonLines) ExportToJsonLines(connection, schema);

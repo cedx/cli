@@ -21,9 +21,8 @@ public class RestoreCommand: Command {
 	/// <summary>
 	/// The command handler.
 	/// </summary>
-	/// <param name="db">The dabase context.</param>
 	/// <param name="logger">The logging service.</aparam>
-	public class CommandHandler(InformationSchema db, ILogger<BackupCommand> logger): ICommandHandler {
+	public class CommandHandler(ILogger<RestoreCommand> logger): ICommandHandler {
 
 		/// <summary>
 		/// The connection string.
