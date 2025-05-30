@@ -1,6 +1,8 @@
 namespace Belin.Cli;
 
 using Belin.Cli.MySql;
+using Microsoft.Extensions.Hosting;
+using System.CommandLine.Hosting;
 using System.CommandLine.Parsing;
 
 /// <summary>
@@ -53,4 +55,22 @@ internal class DsnOption: Option<Uri> {
 			else if (!uri.UserInfo.Contains(':')) result.ErrorMessage = $"The '--{Name}' option requires full credentials to be specified.";
 		}
 	}
+}
+
+/// <summary>
+/// Provides extension methods for the <c>mysql</c> command.
+/// </summary>
+internal static class MySqlCommandExtensions {
+
+	/// <summary>
+	/// Specifies the command handlers to be used by the host.
+	/// </summary>
+	/// <param name="builder">The host builder to configure.</param>
+	/// <returns>The host builder.</returns>
+	public static IHostBuilder UseMySqlHandlers(this IHostBuilder builder) => builder
+		.UseCommandHandler<BackupCommand, BackupCommand.CommandHandler>()
+		.UseCommandHandler<CharsetCommand, CharsetCommand.CommandHandler>()
+		.UseCommandHandler<EngineCommand, EngineCommand.CommandHandler>()
+		.UseCommandHandler<OptimizeCommand, OptimizeCommand.CommandHandler>()
+		.UseCommandHandler<RestoreCommand, RestoreCommand.CommandHandler>();
 }

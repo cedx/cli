@@ -61,7 +61,7 @@ public class PhpCommand: Command {
 			StartWebServer(serviceController);
 			RegisterEventLog(version);
 
-			logger.LogInformation("{Version}", SetupCommand.GetExecutableVersion(Out, "php"));
+			logger.LogInformation("{Version}", this.GetExecutableVersion(Out, "php"));
 			return 0;
 		}
 

@@ -55,7 +55,7 @@ public class JdkCommand: Command {
 			var path = await DownloadArchive();
 			logger.LogInformation(@"Extracting file ""{Input}"" into directory ""{Output}""...", path.Name, Out.Name);
 			path.ExtractTo(Out, strip: 1);
-			logger.LogInformation("{Version}", SetupCommand.GetExecutableVersion(Out, "bin/java"));
+			logger.LogInformation("{Version}", this.GetExecutableVersion(Out, "bin/java"));
 			return 0;
 		}
 

@@ -83,7 +83,7 @@ public class NodeCommand: Command {
 			path.ExtractTo(Out, strip: 1);
 			StartServices();
 
-			logger.LogInformation("{Version}", SetupCommand.GetExecutableVersion(Out, "node"));
+			logger.LogInformation("{Version}", this.GetExecutableVersion(Out, "node"));
 			return 0;
 		}
 
