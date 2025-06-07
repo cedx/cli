@@ -26,8 +26,8 @@
 	<ItemGroup>
 		<PackageReference Include="Dapper" Version="2.*" />
 		<PackageReference Include="MySqlConnector" Version="2.*" />
-		<PackageReference Include="System.CommandLine" Version="2.*-*" />
-		<PackageReference Include="System.CommandLine.Hosting" Version="0.*-*" />
+		<PackageReference Include="System.CommandLine" Version="2.*-beta4.*" />
+		<PackageReference Include="System.CommandLine.Hosting" Version="0.*-alpha.22272.*" />
 		<PackageReference Include="System.ServiceProcess.ServiceController" Version="9.*" />
 	</ItemGroup>
 

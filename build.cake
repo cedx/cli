@@ -28,6 +28,10 @@ Task("format")
 	.Description("Formats the source code.")
 	.Does(() => DotNetFormat("src"));
 
+Task("outdated")
+	.Description("Checks for outdated dependencies.")
+	.Does(() => StartProcess("dotnet", new ProcessSettings { Arguments = "list package --outdated" }));
+
 Task("publish")
 	.Description("Publishes the package.")
 	.WithCriteria(release, @"the ""Release"" configuration must be enabled")
