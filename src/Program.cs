@@ -14,8 +14,9 @@ var rootCommand = new RootCommand("Command line interface of Cédric Belin, full
 
 var commandLineBuilder = new CommandLineBuilder(rootCommand)
 	.UseDefaults()
-	.UseHost(_ => Host.CreateDefaultBuilder(args).UseContentRoot(AppContext.BaseDirectory), builder => builder
+	.UseHost(_ => Host.CreateDefaultBuilder(args), builder => builder
 		.ConfigureServices(Container.AddServices)
+		.UseContentRoot(AppContext.BaseDirectory)
 		.UseCommandHandler<IconvCommand, IconvCommand.CommandHandler>()
 		.UseMySqlHandlers()
 		.UseNssmHandlers()
