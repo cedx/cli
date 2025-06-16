@@ -22,9 +22,9 @@ public class NodeCommand: Command {
 	/// <summary>
 	/// The command handler.
 	/// </summary>
-	/// <param name="httpClient">The HTTP client.</param>
 	/// <param name="logger">The logging service.</aparam>
-	public class CommandHandler(HttpClient httpClient, ILogger<NodeCommand> logger): ICommandHandler {
+	/// <param name="httpClient">The HTTP client.</param>
+	public class CommandHandler(ILogger<NodeCommand> logger, HttpClient httpClient): ICommandHandler {
 
 		/// <summary>
 		/// The path to the NSSM configuration file.

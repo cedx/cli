@@ -21,9 +21,9 @@ public class CharsetCommand: Command {
 	/// <summary>
 	/// The command handler.
 	/// </summary>
-	/// <param name="db">The dabase context.</param>
 	/// <param name="logger">The logging service.</aparam>
-	public class CommandHandler(InformationSchema db, ILogger<CharsetCommand> logger): ICommandHandler {
+	/// <param name="db">The dabase context.</param>
+	public class CommandHandler(ILogger<CharsetCommand> logger, InformationSchema db): ICommandHandler {
 
 		/// <summary>
 		/// The name of the new character set.

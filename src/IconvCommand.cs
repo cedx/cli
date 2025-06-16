@@ -24,9 +24,9 @@ public class IconvCommand: Command {
 	/// <summary>
 	/// The command handler.
 	/// </summary>
-	/// <param name="environment">The host environment.</param>
 	/// <param name="logger">The logging service.</aparam>
-	public class CommandHandler(IHostEnvironment environment, ILogger<IconvCommand> logger): ICommandHandler {
+	/// <param name="environment">The host environment.</param>
+	public class CommandHandler(ILogger<IconvCommand> logger, IHostEnvironment environment): ICommandHandler {
 
 		/// <summary>
 		/// The path to the file or directory to process.

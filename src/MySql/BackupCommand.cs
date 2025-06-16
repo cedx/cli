@@ -25,9 +25,9 @@ public class BackupCommand: Command {
 	/// <summary>
 	/// The command handler.
 	/// </summary>
-	/// <param name="db">The dabase context.</param>
 	/// <param name="logger">The logging service.</aparam>
-	public class CommandHandler(InformationSchema db, ILogger<BackupCommand> logger): ICommandHandler {
+	/// <param name="db">The dabase context.</param>
+	public class CommandHandler(ILogger<BackupCommand> logger, InformationSchema db): ICommandHandler {
 
 		/// <summary>
 		/// The path to the output directory.
