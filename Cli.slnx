@@ -1,3 +1,22 @@
 <Solution>
+	<Folder Name="/.config/">
+		<File Path=".editorconfig" />
+		<File Path=".gitattributes" />
+		<File Path=".gitignore" />
+	</Folder>
+	<Folder Name="/bin/">
+		<File Path="run.ps1" />
+	</Folder>
+	<Folder Name="/build/">
+		<File Path="build.cake" />
+		<File Path="cake.config" />
+		<File Path="Setup.iss" />
+	</Folder>
+	<Folder Name="/doc/">
+		<File Path="Authors.txt" />
+		<File Path="ChangeLog.md" />
+		<File Path="License.md" />
+		<File Path="ReadMe.md" />
+	</Folder>
 	<Project Path="src/Cli.csproj" />
 </Solution>
