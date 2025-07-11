@@ -15,7 +15,7 @@ public class RestoreCommand: Command {
 	/// </summary>
 	public RestoreCommand(): base("restore", "Restore a set of MariaDB/MySQL tables.") {
 		Add(new Argument<DirectoryInfo>("fileOrDirectory", "The path to a file or directory to process."));
-		Add(new Option<bool>(["-r", "--recursive"], "Whether to process the directory recursively."));
+		Add(new Option<bool>("--recursive", ["-r"]) { Description = "Whether to process the directory recursively." });
 	}
 
 	/// <summary>

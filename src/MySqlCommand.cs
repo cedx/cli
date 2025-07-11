@@ -14,12 +14,12 @@ public class MySqlCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public MySqlCommand(): base("mysql", "Manage MariaDB/MySQL databases.") {
-		AddGlobalOption(new DsnOption());
 		Add(new BackupCommand());
 		Add(new CharsetCommand());
 		Add(new EngineCommand());
 		Add(new OptimizeCommand());
 		Add(new RestoreCommand());
+		Add(new DsnOption());
 	}
 }
 
@@ -36,10 +36,12 @@ internal class DsnOption: Option<Uri> {
 	/// <summary>
 	/// Creates a new option.
 	/// </summary>
-	public DsnOption(): base(["-d", "--dsn"], description: "The connection string.") {
-		ArgumentHelpName = "uri";
-		IsRequired = true;
-		AddValidator(Validate);
+	public DsnOption(): base("--dsn", ["-d"]) {
+		Description = "The connection string.";
+		HelpName = "uri";
+		Recursive = true;
+		Required = true;
+		Validators.Add(Validate);
 	}
 
 	/// <summary>
@@ -47,12 +49,12 @@ internal class DsnOption: Option<Uri> {
 	/// </summary>
 	/// <param name="optionResult">The parsed result.</param>
 	private void Validate(OptionResult result) {
-		var uri = result.GetValueForOption(this);
+		var uri = result.GetValue(this);
 		if (uri is not null) {
 			var schemes = string.Join(" or ", allowedSchemes.Select(scheme => $"'{scheme}'"));
-			if (!uri.IsAbsoluteUri) result.ErrorMessage = $"The '--{Name}' option requires an absolute URI.";
-			else if (!allowedSchemes.Contains(uri.Scheme)) result.ErrorMessage = $"The '--{Name}' option only supports the {schemes} scheme.";
-			else if (!uri.UserInfo.Contains(':')) result.ErrorMessage = $"The '--{Name}' option requires full credentials to be specified.";
+			if (!uri.IsAbsoluteUri) result.AddError($"The '--{Name}' option requires an absolute URI.");
+			else if (!allowedSchemes.Contains(uri.Scheme)) result.AddError($"The '--{Name}' option only supports the {schemes} scheme.");
+			else if (!uri.UserInfo.Contains(':')) result.AddError($"The '--{Name}' option requires full credentials to be specified.");
 		}
 	}
 }
