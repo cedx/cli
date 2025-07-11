@@ -13,7 +13,7 @@ public class JdkCommand: Command {
 	/// </summary>
 	public JdkCommand(): base("jdk", "Set up the latest OpenJDK release.") {
 		var versions = new[] { "21", "17", "11", "8" };
-		Add(new Option<int>(["-j", "--java"], () => 21, "The major version of the Java development kit.") { ArgumentHelpName = "version" }.FromAmong(versions));
+		Add(new Option<int>("--java", ["-j"]) { DefaultValueFactory = _ => 21, Description = "The major version of the Java development kit.", HelpName = "version" }.FromAmong(versions));
 		Add(new OutputOption(new DirectoryInfo(OperatingSystem.IsWindows() ? @"C:\Program Files\OpenJDK" : "/opt/openjdk")));
 	}
 

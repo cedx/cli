@@ -15,7 +15,7 @@ public class NodeCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public NodeCommand(): base("node", "Set up the latest Node.js release.") {
-		Add(new Option<FileInfo>(["-c", "--config"], "The path to the NSSM configuration file."));
+		Add(new Option<FileInfo>("--config", ["-c"]) { Description = "The path to the NSSM configuration file." });
 		Add(new OutputOption(new DirectoryInfo(OperatingSystem.IsWindows() ? @"C:\Program Files\Node.js" : "/usr/local")));
 	}
 

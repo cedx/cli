@@ -15,10 +15,10 @@ public class IconvCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public IconvCommand(): base("iconv", "Convert the encoding of input files.") {
-		Add(new Argument<FileSystemInfo>("fileOrDirectory", "The path to the file or directory to process."));
-		Add(new EncodingOption(["-f", "--from"], Encoding.Latin1.WebName, "The input encoding."));
-		Add(new EncodingOption(["-t", "--to"], Encoding.UTF8.WebName, "The output encoding."));
-		Add(new Option<bool>(["-r", "--recursive"], "Whether to process the directory recursively."));
+		Add(new Argument<FileSystemInfo>("fileOrDirectory") { Description = "The path to the file or directory to process." });
+		Add(new EncodingOption("--from", ["-f"], Encoding.Latin1.WebName, "The input encoding."));
+		Add(new EncodingOption("--to", ["-t"], Encoding.UTF8.WebName, "The output encoding."));
+		Add(new Option<bool>("--recursive", ["-r"]) { Description = "Whether to process the directory recursively." });
 	}
 
 	/// <summary>
@@ -121,9 +121,14 @@ internal class EncodingOption: Option<string> {
 	/// <summary>
 	/// Creates a new option.
 	/// </summary>
+	/// <param name="name">The option name.</param>
+	/// <param name="aliases">The option aliases.</param>
 	/// <param name="defaultValue">The default value for the option when it is not specified on the command line.</param>
-	public EncodingOption(string[] aliases, string defaultValue, string description): base(aliases, () => defaultValue, description) {
-		ArgumentHelpName = "encoding";
-		this.FromAmong([Encoding.Latin1.WebName, Encoding.UTF8.WebName]);
+	/// <param name="description">The option description.</param>
+	public EncodingOption(string name, string[] aliases, string defaultValue, string description) : base(name, aliases) {
+		AcceptOnlyFromAmong([Encoding.Latin1.WebName, Encoding.UTF8.WebName]);
+		DefaultValueFactory = _ => defaultValue;
+		Description = description;
+		HelpName = "encoding";
 	}
 }

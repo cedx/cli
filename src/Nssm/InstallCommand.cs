@@ -20,7 +20,7 @@ public class InstallCommand: Command {
 			getDefaultValue: () => new DirectoryInfo(Environment.CurrentDirectory)
 		));
 
-		Add(new Option<bool>(["-s", "--start"], "Whether to start the service after its registration."));
+		Add(new Option<bool>("--start", ["-s"]) { Description = "Whether to start the service after its registration." });
 	}
 
 	/// <summary>
