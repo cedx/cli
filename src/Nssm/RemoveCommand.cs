@@ -14,11 +14,10 @@ public class RemoveCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public RemoveCommand(): base("remove", "Unregister the Windows service.") =>
-		Add(new Argument<DirectoryInfo>(
-			name: "directory",
-			description: "The path to the root directory of the .NET or Node.js application.",
-			getDefaultValue: () => new DirectoryInfo(Environment.CurrentDirectory)
-		));
+		Add(new Argument<DirectoryInfo>("directory") {
+			DefaultValueFactory = _ => new DirectoryInfo(Environment.CurrentDirectory),
+			Description = "The path to the root directory of the .NET or Node.js application."
+		});
 
 	/// <summary>
 	/// The command handler.
