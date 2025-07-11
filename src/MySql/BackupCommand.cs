@@ -16,7 +16,7 @@ public class BackupCommand: Command {
 	/// </summary>
 	public BackupCommand(): base("backup", "Backup a set of MariaDB/MySQL tables.") {
 		var backupFormats = new[] { BackupFormat.JsonLines, BackupFormat.SqlDump };
-		Add(new Argument<DirectoryInfo>("directory", "The path to the output directory."));
+		Add(new Argument<DirectoryInfo>("directory") { Description = "The path to the output directory." });
 		Add(new Option<string>("--format", ["-f"]) { DefaultValueFactory = _ => BackupFormat.SqlDump, Description = "The format of the output files." }.AcceptOnlyFromAmong(backupFormats));
 		Add(new SchemaOption());
 		Add(new TableOption());

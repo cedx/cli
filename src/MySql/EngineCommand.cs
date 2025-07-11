@@ -13,7 +13,7 @@ public class EngineCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public EngineCommand(): base("engine", "Alter the storage engine of MariaDB/MySQL tables.") {
-		Add(new Argument<string>("engine", "The name of the new storage engine."));
+		Add(new Argument<string>("engine") { Description = "The name of the new storage engine." });
 		Add(new SchemaOption());
 		Add(new TableOption());
 	}

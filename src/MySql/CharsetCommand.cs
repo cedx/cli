@@ -13,7 +13,7 @@ public class CharsetCommand: Command {
 	/// Creates a new command.
 	/// </summary>
 	public CharsetCommand(): base("charset", "Alter the character set of MariaDB/MySQL tables.") {
-		Add(new Argument<string>("collation", "The name of the new character set."));
+		Add(new Argument<string>("collation") { Description = "The name of the new character set." });
 		Add(new SchemaOption());
 		Add(new TableOption());
 	}
