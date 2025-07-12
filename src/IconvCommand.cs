@@ -47,7 +47,7 @@ public class IconvCommand: Command {
 	private readonly List<string> textExtensions = [];
 
 	/// <summary>
-	/// Creates a new command.
+	/// Creates a new <c>iconv</c> command.
 	/// </summary>
 	/// <param name="logger">The logging service.</aparam>
 	public IconvCommand(): base("iconv", "Convert the encoding of input files.") {

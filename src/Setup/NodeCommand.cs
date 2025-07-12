@@ -32,7 +32,7 @@ public class NodeCommand: Command {
 	private readonly List<string> services = [];
 
 	/// <summary>
-	/// Creates a new command.
+	/// Creates a new <c>node</c> command.
 	/// </summary>
 	/// <param name="httpClient">The HTTP client.</param>
 	public NodeCommand(HttpClient httpClient): base("node", "Set up the latest Node.js release.") {

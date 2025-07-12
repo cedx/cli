@@ -25,7 +25,7 @@ public class JdkCommand: Command {
 	private readonly HttpClient httpClient;
 
 	/// <summary>
-	/// Creates a new command.
+	/// Creates a new <c>jdk</c> command.
 	/// </summary>
 	/// <param name="httpClient">The HTTP client.</param>
 	public JdkCommand(HttpClient httpClient): base("jdk", "Set up the latest OpenJDK release.") {

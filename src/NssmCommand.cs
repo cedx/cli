@@ -1,8 +1,6 @@
 namespace Belin.Cli;
 
 using Belin.Cli.Nssm;
-using Microsoft.Extensions.Hosting;
-using System.CommandLine.Hosting;
 
 /// <summary>
 /// Registers a .NET or Node.js application as a Windows service.
@@ -10,25 +8,12 @@ using System.CommandLine.Hosting;
 public class NssmCommand: Command {
 
 	/// <summary>
-	/// Creates a new command.
+	/// Creates a new <c>nssm</c> command.
 	/// </summary>
-	public NssmCommand(): base("nssm", "Register a .NET or Node.js application as a Windows service.") {
-		Add(new InstallCommand());
-		Add(new RemoveCommand());
+	/// <param name="install">The <c>install</c> subcommand.</param>
+	/// <param name="remove">The <c>remove</c> subcommand.</param>
+	public NssmCommand(InstallCommand install, RemoveCommand remove): base("nssm", "Register a .NET or Node.js application as a Windows service.") {
+		Subcommands.Add(install);
+		Subcommands.Add(remove);
 	}
-}
-
-/// <summary>
-/// Provides extension methods for the <c>nssm</c> command.
-/// </summary>
-internal static class NssmCommandExtensions {
-
-	/// <summary>
-	/// Specifies the command handlers to be used by the host.
-	/// </summary>
-	/// <param name="builder">The host builder to configure.</param>
-	/// <returns>The host builder.</returns>
-	public static IHostBuilder UseNssmHandlers(this IHostBuilder builder) => builder
-		.UseCommandHandler<InstallCommand, InstallCommand.CommandHandler>()
-		.UseCommandHandler<RemoveCommand, RemoveCommand.CommandHandler>();
 }

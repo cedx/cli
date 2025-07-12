@@ -8,12 +8,13 @@ public class RootCommand: System.CommandLine.RootCommand {
 	/// <summary>
 	/// Creates a new root command.
 	/// </summary>
-	/// <param name="iconvCommand">The `iconv` subcommand.</param>
-	/// <param name="setupCommand">The `setup` subcommand.</param>
-	public RootCommand(IconvCommand iconvCommand, SetupCommand setupCommand): base("Command line interface of Cédric Belin, full stack developer.") {
-		Subcommands.Add(iconvCommand);
+	/// <param name="iconv">The <c>iconv</c> subcommand.</param>
+	/// <param name="nssm">The <c>nssm</c> subcommand.</param>
+	/// <param name="setup">The <c>setup</c> subcommand.</param>
+	public RootCommand(IconvCommand iconv, NssmCommand nssm, SetupCommand setup): base("Command line interface of Cédric Belin, full stack developer.") {
+		Subcommands.Add(iconv);
 		// Add(new MySqlCommand());
-		// Add(new NssmCommand());
-		Subcommands.Add(setupCommand);
+		Subcommands.Add(nssm);
+		Subcommands.Add(setup);
 	}
 }
