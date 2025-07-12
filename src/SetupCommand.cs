@@ -29,7 +29,7 @@ internal static class SetupCommandExtensions {
 	/// <summary>
 	/// Runs the specified executable with the <c>--version</c> argument.
 	/// </summary>
-	/// <param name="_">The current command handler.</param>
+	/// <param name="_">The current command.</param>
 	/// <param name="output">The path to the output directory.</param>
 	/// <param name="executable">The executable path, relative to the output directory.</param>
 	/// <returns>The standard output of the underlying process.</returns>

@@ -8,7 +8,7 @@ public static class CommandExtensions {
 	/// <summary>
 	/// Checks whether this command should be executed in an elevated prompt.
 	/// </summary>
-	/// <param name="_">The current command handler.</param>
+	/// <param name="_">The current command.</param>
 	/// <param name="output">The path to the output directory.</param>
 	/// <returns><see langword="true"/> if this command should be executed in an elevated prompt, otherwise <see langword="false"/>.</returns>
 	public static bool CheckPrivilege(this Command _, DirectoryInfo? output = null) {
