@@ -1,7 +1,5 @@
 namespace Belin.Cli;
 
-using System.CommandLine.Invocation;
-
 /// <summary>
 /// Provides extension methods for commands.
 /// </summary>
@@ -13,7 +11,7 @@ public static class CommandExtensions {
 	/// <param name="_">The current command handler.</param>
 	/// <param name="output">The path to the output directory.</param>
 	/// <returns><see langword="true"/> if this command should be executed in an elevated prompt, otherwise <see langword="false"/>.</returns>
-	public static bool CheckPrivilege(this ICommandHandler _, DirectoryInfo? output = null) {
+	public static bool CheckPrivilege(this Command _, DirectoryInfo? output = null) {
 		var isPrivileged = Environment.IsPrivilegedProcess;
 		if (output is not null) {
 			var home = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
