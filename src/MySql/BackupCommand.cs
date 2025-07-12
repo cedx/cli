@@ -105,7 +105,7 @@ public class BackupCommand: Command {
 	/// <param name="directory">The output directory.</param>
 	/// <param name="connection">The database connection.</param>
 	/// <param name="schema">The schema to export.</param>
-	/// <param name="tableNames">TODO</param>
+	/// <param name="tableNames">The names of the tables to export.</param>
 	private static void ExportToJsonLines(DirectoryInfo directory, IDbConnection connection, Schema schema, string[] tableNames) {
 		var tables = tableNames.Length > 0 ? tableNames.Select(table => new Table { Name = table, Schema = schema.Name }) : connection.GetTables(schema);
 		foreach (var table in tables) {
@@ -125,7 +125,7 @@ public class BackupCommand: Command {
 	/// <param name="directory">The output directory.</param>
 	/// <param name="dsn">The connection string.</param>
 	/// <param name="schema">The schema to export.</param>
-	/// <param name="tableNames">TODO</param>
+	/// <param name="tableNames">The names of the tables to export.</param>
 	/// <exception cref="ProcessException">An error occurred when starting the underlying process.</exception>
 	private static void ExportToSqlDump(DirectoryInfo directory, Uri dsn, Schema schema, string[] tableNames) {
 		var entity = tableNames.Length == 1 ? $"{schema.Name}.{tableNames[0]}" : schema.Name;
