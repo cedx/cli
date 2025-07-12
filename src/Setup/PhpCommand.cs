@@ -70,7 +70,7 @@ public class PhpCommand: Command {
 	private async Task<FileInfo> DownloadArchive(Version version) {
 		var vs = version >= new Version("8.4.0") ? "vs17" : "vs16";
 		var file = $"php-{version}-nts-Win32-{vs}-x64.zip";
-		Console.WriteLine(@"Downloading file ""{File}""...", file);
+		Console.WriteLine(@"Downloading file ""{0}""...", file);
 
 		var bytes = await httpClient.GetByteArrayAsync($"https://windows.php.net/downloads/releases/{file}");
 		var path = Path.Join(Path.GetTempPath(), file);
@@ -94,7 +94,7 @@ public class PhpCommand: Command {
 	/// </summary>
 	/// <param name="version">The version number of the PHP release to register.</param>
 	/// <param name="output">The path to the output directory.</param>
-	private void RegisterEventLog(Version version, DirectoryInfo output) {
+	private static void RegisterEventLog(Version version, DirectoryInfo output) {
 		Console.WriteLine("Registering the PHP interpreter with the event log...");
 		var key = $"HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\EventLog\\Application\\PHP-{version}";
 		Registry.SetValue(key, "EventMessageFile", Path.Join(output.FullName, $"php{version.Major}.dll"), RegistryValueKind.String);
@@ -105,7 +105,7 @@ public class PhpCommand: Command {
 	/// Starts the IIS web server.
 	/// </summary>
 	/// <param name="serviceController">The service controller.</param>
-	private void StartWebServer(ServiceController serviceController) {
+	private static void StartWebServer(ServiceController serviceController) {
 		if (serviceController.Status == ServiceControllerStatus.Stopped) {
 			Console.WriteLine("Starting the IIS web server...");
 			serviceController.Start();
@@ -117,7 +117,7 @@ public class PhpCommand: Command {
 	/// Stops the IIS web server.
 	/// </summary>
 	/// <param name="serviceController">The service controller.</param>
-	private void StopWebServer(ServiceController serviceController) {
+	private static void StopWebServer(ServiceController serviceController) {
 		if (serviceController.Status == ServiceControllerStatus.Running) {
 			Console.WriteLine("Stopping the IIS web server...");
 			serviceController.Stop();
