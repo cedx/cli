@@ -35,6 +35,7 @@ public class InstallCommand: Command {
 	/// <summary>
 	/// Invokes this command.
 	/// </summary>
+	/// <param name="parseResult">The results of parsing the command line input.</param>
 	/// <returns>The exit code.</returns>
 	public int Invoke(ParseResult parseResult) {
 		if (!this.CheckPrivilege()) {
