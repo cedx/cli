@@ -1,8 +1,6 @@
 namespace Belin.Cli;
 
 using Belin.Cli.MySql;
-using Microsoft.Extensions.Hosting;
-using System.CommandLine.Hosting;
 using System.CommandLine.Parsing;
 
 /// <summary>
@@ -11,15 +9,21 @@ using System.CommandLine.Parsing;
 public class MySqlCommand: Command {
 
 	/// <summary>
-	/// Creates a new command.
+	/// The connection string.
 	/// </summary>
-	public MySqlCommand(): base("mysql", "Manage MariaDB/MySQL databases.") {
-		Add(new BackupCommand());
-		Add(new CharsetCommand());
-		Add(new EngineCommand());
-		Add(new OptimizeCommand());
-		Add(new RestoreCommand());
-		Add(new DsnOption());
+	internal static readonly DsnOption dsnOption = new();
+
+	/// <summary>
+	/// Creates a new <c>mysql</c> command.
+	/// </summary>
+	/// <param name="charset">The <c>charset</c> subcommand.</param>
+	public MySqlCommand(CharsetCommand charset): base("mysql", "Manage MariaDB/MySQL databases.") {
+		// Subcommands.Add(backup);
+		Subcommands.Add(charset);
+		// Subcommands.Add(engine);
+		// Subcommands.Add(optimize);
+		// Subcommands.Add(restore);
+		Options.Add(dsnOption);
 	}
 }
 
@@ -49,30 +53,16 @@ internal class DsnOption: Option<Uri> {
 	/// </summary>
 	/// <param name="optionResult">The parsed result.</param>
 	private void Validate(OptionResult result) {
-		var uri = result.GetValue(this);
-		if (uri is not null) {
-			var schemes = string.Join(" or ", allowedSchemes.Select(scheme => $"'{scheme}'"));
-			if (!uri.IsAbsoluteUri) result.AddError($"The '--{Name}' option requires an absolute URI.");
-			else if (!allowedSchemes.Contains(uri.Scheme)) result.AddError($"The '--{Name}' option only supports the {schemes} scheme.");
-			else if (!uri.UserInfo.Contains(':')) result.AddError($"The '--{Name}' option requires full credentials to be specified.");
+		// TODO GetRequiredValue ????
+		Console.WriteLine("dsn: VALIDATE");
+		if (result.GetValue(this) is not Uri uri) {
+			Console.WriteLine("dsn: NULL option");
+			return;
 		}
+
+		var schemes = string.Join(" or ", allowedSchemes.Select(scheme => $"'{scheme}'"));
+		if (!uri.IsAbsoluteUri) result.AddError($"The '--{Name}' option requires an absolute URI.");
+		else if (!allowedSchemes.Contains(uri.Scheme)) result.AddError($"The '--{Name}' option only supports the {schemes} scheme.");
+		else if (!uri.UserInfo.Contains(':')) result.AddError($"The '--{Name}' option requires full credentials to be specified.");
 	}
-}
-
-/// <summary>
-/// Provides extension methods for the <c>mysql</c> command.
-/// </summary>
-internal static class MySqlCommandExtensions {
-
-	/// <summary>
-	/// Specifies the command handlers to be used by the host.
-	/// </summary>
-	/// <param name="builder">The host builder to configure.</param>
-	/// <returns>The host builder.</returns>
-	public static IHostBuilder UseMySqlHandlers(this IHostBuilder builder) => builder
-		.UseCommandHandler<BackupCommand, BackupCommand.CommandHandler>()
-		.UseCommandHandler<CharsetCommand, CharsetCommand.CommandHandler>()
-		.UseCommandHandler<EngineCommand, EngineCommand.CommandHandler>()
-		.UseCommandHandler<OptimizeCommand, OptimizeCommand.CommandHandler>()
-		.UseCommandHandler<RestoreCommand, RestoreCommand.CommandHandler>();
 }

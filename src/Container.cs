@@ -1,6 +1,5 @@
 namespace Belin.Cli;
 
-using Belin.Cli.MySql;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Headers;
 
@@ -15,9 +14,11 @@ public static class Container {
 	/// <param name="services">The collection of service descriptors.</param>
 	public static void AddCommands(this IServiceCollection services) => services
 		.AddTransient<IconvCommand>()
+		.AddTransient<MySqlCommand>()
 		.AddTransient<NssmCommand>()
 		.AddTransient<RootCommand>()
 		.AddTransient<SetupCommand>()
+		.AddTransient<MySql.CharsetCommand>()
 		.AddTransient<Nssm.InstallCommand>()
 		.AddTransient<Nssm.RemoveCommand>()
 		.AddTransient<Setup.JdkCommand>()
@@ -29,7 +30,7 @@ public static class Container {
 	/// </summary>
 	/// <param name="services">The collection of service descriptors.</param>
 	public static void AddServices(this IServiceCollection services) => services
-		.AddSingleton<InformationSchema>()
+		.AddSingleton<MySql.InformationSchema>()
 		.AddTransient(_ => {
 			var httpClient = new HttpClient();
 			httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(".NET", Environment.Version.ToString(3)));
