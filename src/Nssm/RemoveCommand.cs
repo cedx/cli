@@ -35,7 +35,7 @@ public class RemoveCommand: Command {
 			return 1;
 		}
 
-		var application = WebApplication.ReadFromDirectory(parseResult.GetValue(directoryArgument)!.FullName);
+		var application = WebApplication.ReadFromDirectory(parseResult.GetRequiredValue(directoryArgument).FullName);
 		if (application is null) {
 			Console.Error.WriteLine("Unable to locate the application configuration file.");
 			return 2;

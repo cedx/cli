@@ -64,7 +64,7 @@ public class IconvCommand: Command {
 	/// <param name="parseResult">The results of parsing the command line input.</param>
 	/// <returns>The exit code.</returns>
 	public int Invoke(ParseResult parseResult) {
-		var fileOrDirectory = parseResult.GetValue(fileOrDirectoryArgument)!;
+		var fileOrDirectory = parseResult.GetRequiredValue(fileOrDirectoryArgument);
 		if (!fileOrDirectory.Exists) {
 			Console.Error.WriteLine("Unable to locate the specified file or directory.");
 			return 1;
@@ -126,8 +126,8 @@ internal class EncodingOption: Option<string> {
 	/// <param name="aliases">The option aliases.</param>
 	/// <param name="defaultValue">The default value for the option when it is not specified on the command line.</param>
 	public EncodingOption(string name, string[] aliases, string defaultValue): base(name, aliases) {
-		AcceptOnlyFromAmong([Encoding.Latin1.WebName, Encoding.UTF8.WebName]);
 		DefaultValueFactory = _ => defaultValue;
 		HelpName = "encoding";
+		AcceptOnlyFromAmong([Encoding.Latin1.WebName, Encoding.UTF8.WebName]);
 	}
 }

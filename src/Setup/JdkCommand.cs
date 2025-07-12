@@ -42,7 +42,7 @@ public class JdkCommand: Command {
 	/// <param name="cancellationToken">The token to cancel the operation.</param>
 	/// <returns>The exit code.</returns>
 	public async Task<int> InvokeAsync(ParseResult parseResult, CancellationToken cancellationToken) {
-		var output = parseResult.GetValue(outputOption)!;
+		var output = parseResult.GetRequiredValue(outputOption);
 		if (!this.CheckPrivilege(output)) {
 			Console.Error.WriteLine("You must run this command in an elevated prompt.");
 			return 1;
