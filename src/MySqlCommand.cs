@@ -18,11 +18,12 @@ public class MySqlCommand: Command {
 	/// </summary>
 	/// <param name="charset">The <c>charset</c> subcommand.</param>
 	/// <param name="engine">The <c>engine</c> subcommand.</param>
-	public MySqlCommand(CharsetCommand charset, EngineCommand engine): base("mysql", "Manage MariaDB/MySQL databases.") {
+	/// <param name="optimize">The <c>optimize</c> subcommand.</param>
+	public MySqlCommand(CharsetCommand charset, EngineCommand engine, OptimizeCommand optimize): base("mysql", "Manage MariaDB/MySQL databases.") {
 		// Subcommands.Add(backup);
 		Subcommands.Add(charset);
 		Subcommands.Add(engine);
-		// Subcommands.Add(optimize);
+		Subcommands.Add(optimize);
 		// Subcommands.Add(restore);
 		Options.Add(dsnOption);
 	}
@@ -55,12 +56,13 @@ internal class DsnOption: Option<Uri> {
 	/// <param name="optionResult">The parsed result.</param>
 	private void Validate(OptionResult result) {
 		// TODO GetRequiredValue ????
-		Console.WriteLine("dsn: VALIDATE");
+		Console.WriteLine("dsn: VALIDATE"); // TODO remove!
 		if (result.GetValue(this) is not Uri uri) {
-			Console.WriteLine("dsn: NULL option");
+			Console.WriteLine("dsn: NULL option"); // TODO remove!
 			return;
 		}
 
+		Console.WriteLine("dsn: VALIDATING......"); // TODO remove!
 		var schemes = string.Join(" or ", allowedSchemes.Select(scheme => $"'{scheme}'"));
 		if (!uri.IsAbsoluteUri) result.AddError($"The '--{Name}' option requires an absolute URI.");
 		else if (!allowedSchemes.Contains(uri.Scheme)) result.AddError($"The '--{Name}' option only supports the {schemes} scheme.");
