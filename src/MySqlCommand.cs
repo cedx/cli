@@ -35,7 +35,7 @@ public class MySqlCommand: Command {
 /// <summary>
 /// Provides the connection string of a data source.
 /// </summary>
-internal class DsnOption: Option<Uri> {
+internal class DsnOption: Option<string> {
 
 	/// <summary>
 	/// The list of supported schemes.
@@ -58,16 +58,8 @@ internal class DsnOption: Option<Uri> {
 	/// </summary>
 	/// <param name="optionResult">The parsed result.</param>
 	private void Validate(OptionResult result) {
-		// TODO GetRequiredValue ????
-		Console.WriteLine("dsn: VALIDATE"); // TODO remove!
-		if (result.GetValue(this) is not Uri uri) {
-			Console.WriteLine("dsn: NULL option"); // TODO remove!
-			return;
-		}
-
-		Console.WriteLine("dsn: VALIDATING......"); // TODO remove!
 		var schemes = string.Join(" or ", allowedSchemes.Select(scheme => $"'{scheme}'"));
-		if (!uri.IsAbsoluteUri) result.AddError($"The '--{Name}' option requires an absolute URI.");
+		if (!Uri.TryCreate(result.GetValue(this), UriKind.Absolute, out var uri)) result.AddError($"The '--{Name}' option requires a valid URI.");
 		else if (!allowedSchemes.Contains(uri.Scheme)) result.AddError($"The '--{Name}' option only supports the {schemes} scheme.");
 		else if (!uri.UserInfo.Contains(':')) result.AddError($"The '--{Name}' option requires full credentials to be specified.");
 	}
