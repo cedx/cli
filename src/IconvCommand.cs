@@ -1,8 +1,5 @@
 namespace Belin.Cli;
 
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System.CommandLine.Invocation;
 using System.Text;
 using System.Text.Json;
 
@@ -12,104 +9,108 @@ using System.Text.Json;
 public class IconvCommand: Command {
 
 	/// <summary>
+	/// The path to the file or directory to process.
+	/// </summary>
+	private readonly Argument<FileSystemInfo> fileOrDirectoryArgument = new("fileOrDirectory") {
+		Description = "The path to the file or directory to process."
+	};
+
+	/// <summary>
+	/// The input encoding.
+	/// </summary>
+	private readonly EncodingOption fromOption = new("--from", ["-f"], Encoding.Latin1.WebName) {
+		Description = "The input encoding."
+	};
+
+	/// <summary>
+	/// The output encoding.
+	/// </summary>
+	private readonly EncodingOption toOption = new("--to", ["-t"], Encoding.UTF8.WebName) {
+		Description = "The output encoding."
+	};
+
+	/// <summary>
+	/// Value indicating whether to process the directory recursively.
+	/// </summary>
+	private readonly Option<bool> recursiveOption = new("--recursive", ["-r"]) {
+		Description = "Whether to process the directory recursively."
+	};
+
+	/// <summary>
+	/// The list of binary file extensions.
+	/// </summary>
+	private readonly List<string> binaryExtensions = [];
+
+	/// <summary>
+	/// The list of text file extensions.
+	/// </summary>
+	private readonly List<string> textExtensions = [];
+
+	/// <summary>
 	/// Creates a new command.
 	/// </summary>
+	/// <param name="logger">The logging service.</aparam>
 	public IconvCommand(): base("iconv", "Convert the encoding of input files.") {
-		Add(new Argument<FileSystemInfo>("fileOrDirectory") { Description = "The path to the file or directory to process." });
-		Add(new EncodingOption("--from", ["-f"], Encoding.Latin1.WebName, "The input encoding."));
-		Add(new EncodingOption("--to", ["-t"], Encoding.UTF8.WebName, "The output encoding."));
-		Add(new Option<bool>("--recursive", ["-r"]) { Description = "Whether to process the directory recursively." });
+		Add(fileOrDirectoryArgument);
+		Add(fromOption);
+		Add(toOption);
+		Add(recursiveOption);
+		SetAction(InvokeAsync);
 	}
 
 	/// <summary>
-	/// The command handler.
+	/// Invokes this command.
 	/// </summary>
-	/// <param name="logger">The logging service.</aparam>
-	/// <param name="environment">The host environment.</param>
-	public class CommandHandler(ILogger<IconvCommand> logger, IHostEnvironment environment): ICommandHandler {
-
-		/// <summary>
-		/// The path to the file or directory to process.
-		/// </summary>
-		public required FileSystemInfo FileOrDirectory { get; set; }
-
-		/// <summary>
-		/// The input encoding.
-		/// </summary>
-		public required string From { get; set; }
-
-		/// <summary>
-		/// Value indicating whether to process the directory recursively.
-		/// </summary>
-		public bool Recursive { get; set; }
-
-		/// <summary>
-		/// The output encoding.
-		/// </summary>
-		public required string To { get; set; }
-
-		/// <summary>
-		/// The list of binary file extensions.
-		/// </summary>
-		private readonly List<string> binaryExtensions = [];
-
-		/// <summary>
-		/// The list of text file extensions.
-		/// </summary>
-		private readonly List<string> textExtensions = [];
-
-		/// <summary>
-		/// Invokes this command.
-		/// </summary>
-		/// <param name="context">The invocation context.</param>
-		/// <returns>The exit code.</returns>
-		public int Invoke(InvocationContext context) {
-			if (!FileOrDirectory.Exists) {
-				logger.LogError("Unable to locate the specified file or directory.");
-				return 1;
-			}
-
-			var resources = Path.GetFullPath(Path.Join(environment.ContentRootPath, "../res"));
-			binaryExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "BinaryExtensions.json"))) ?? []);
-			textExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "TextExtensions.json"))) ?? []);
-
-			var files = FileOrDirectory switch {
-				DirectoryInfo directory => directory.EnumerateFiles("*.*", Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly),
-				FileInfo file => [file],
-				_ => []
-			};
-
-			var fromEncoding = Encoding.GetEncoding(From);
-			var toEncoding = Encoding.GetEncoding(To);
-			foreach (var file in files) ConvertFileEncoding(file, fromEncoding, toEncoding);
-			return 0;
+	/// <param name="parseResult">The results of parsing the command line input.</param>
+	/// <returns>The exit code.</returns>
+	public int Invoke(ParseResult parseResult) {
+		var fileOrDirectory = parseResult.GetValue(fileOrDirectoryArgument)!;
+		if (!fileOrDirectory.Exists) {
+			Console.Error.WriteLine("Unable to locate the specified file or directory.");
+			return 1;
 		}
 
-		/// <summary>
-		/// Invokes this command.
-		/// </summary>
-		/// <param name="context">The invocation context.</param>
-		/// <returns>The exit code.</returns>
-		public Task<int> InvokeAsync(InvocationContext context) => Task.FromResult(Invoke(context));
+		var resources = Path.GetFullPath(Path.Join(AppContext.BaseDirectory, "../res"));
+		binaryExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "BinaryExtensions.json"))) ?? []);
+		textExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "TextExtensions.json"))) ?? []);
 
-		/// <summary>
-		/// Converts the encoding of the specified file.
-		/// </summary>
-		/// <param name="file">The path to the file to be converted.</param>
-		/// <param name="from">The input encoding.</param>
-		/// <param name="to">The output encoding.</param>
-		private void ConvertFileEncoding(FileInfo file, Encoding from, Encoding to) {
-			var extension = file.Extension.ToLowerInvariant();
-			var isBinary = extension.Length > 0 && binaryExtensions.Contains(extension[1..]);
-			if (isBinary) return;
+		var files = fileOrDirectory switch {
+			DirectoryInfo directory => directory.EnumerateFiles("*.*", parseResult.GetValue(recursiveOption) ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly),
+			FileInfo file => [file],
+			_ => []
+		};
 
-			var bytes = File.ReadAllBytes(file.FullName);
-			var isText = extension.Length > 0 && textExtensions.Contains(extension[1..]);
-			if (!isText && Array.IndexOf(bytes, '\0', 0, Math.Min(bytes.Length, 8_000)) > 0) return;
+		var fromEncoding = Encoding.GetEncoding(parseResult.GetValue(fromOption)!);
+		var toEncoding = Encoding.GetEncoding(parseResult.GetValue(toOption)!);
+		foreach (var file in files) ConvertFileEncoding(file, fromEncoding, toEncoding);
+		return 0;
+	}
 
-			logger.LogInformation("Converting: {File}", file);
-			File.WriteAllBytes(file.FullName, Encoding.Convert(from, to, bytes));
-		}
+	/// <summary>
+	/// Invokes this command.
+	/// </summary>
+	/// <param name="parseResult">The results of parsing the command line input.</param>
+	/// <param name="cancellationToken">The token to cancel the operation.</param>
+	/// <returns>The exit code.</returns>
+	public Task<int> InvokeAsync(ParseResult parseResult, CancellationToken cancellationToken) => Task.FromResult(Invoke(parseResult));
+
+	/// <summary>
+	/// Converts the encoding of the specified file.
+	/// </summary>
+	/// <param name="file">The path to the file to be converted.</param>
+	/// <param name="from">The input encoding.</param>
+	/// <param name="to">The output encoding.</param>
+	private void ConvertFileEncoding(FileInfo file, Encoding from, Encoding to) {
+		var extension = file.Extension.ToLowerInvariant();
+		var isBinary = extension.Length > 0 && binaryExtensions.Contains(extension[1..]);
+		if (isBinary) return;
+
+		var bytes = File.ReadAllBytes(file.FullName);
+		var isText = extension.Length > 0 && textExtensions.Contains(extension[1..]);
+		if (!isText && Array.IndexOf(bytes, '\0', 0, Math.Min(bytes.Length, 8_000)) > 0) return;
+
+		Console.WriteLine($"Converting: {file}");
+		File.WriteAllBytes(file.FullName, Encoding.Convert(from, to, bytes));
 	}
 }
 
@@ -124,11 +125,9 @@ internal class EncodingOption: Option<string> {
 	/// <param name="name">The option name.</param>
 	/// <param name="aliases">The option aliases.</param>
 	/// <param name="defaultValue">The default value for the option when it is not specified on the command line.</param>
-	/// <param name="description">The option description.</param>
-	public EncodingOption(string name, string[] aliases, string defaultValue, string description) : base(name, aliases) {
+	public EncodingOption(string name, string[] aliases, string defaultValue): base(name, aliases) {
 		AcceptOnlyFromAmong([Encoding.Latin1.WebName, Encoding.UTF8.WebName]);
 		DefaultValueFactory = _ => defaultValue;
-		Description = description;
 		HelpName = "encoding";
 	}
 }
