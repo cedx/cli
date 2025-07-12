@@ -51,10 +51,10 @@ public class IconvCommand: Command {
 	/// </summary>
 	/// <param name="logger">The logging service.</aparam>
 	public IconvCommand(): base("iconv", "Convert the encoding of input files.") {
-		Add(fileOrDirectoryArgument);
-		Add(fromOption);
-		Add(toOption);
-		Add(recursiveOption);
+		Arguments.Add(fileOrDirectoryArgument);
+		Options.Add(fromOption);
+		Options.Add(toOption);
+		Options.Add(recursiveOption);
 		SetAction(InvokeAsync);
 	}
 
@@ -71,8 +71,8 @@ public class IconvCommand: Command {
 		}
 
 		var resources = Path.GetFullPath(Path.Join(AppContext.BaseDirectory, "../res"));
-		binaryExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "BinaryExtensions.json"))) ?? []);
-		textExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "TextExtensions.json"))) ?? []);
+		if (binaryExtensions.Count == 0) binaryExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "BinaryExtensions.json"))) ?? []);
+		if (textExtensions.Count == 0) textExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "TextExtensions.json"))) ?? []);
 
 		var files = fileOrDirectory switch {
 			DirectoryInfo directory => directory.EnumerateFiles("*.*", parseResult.GetValue(recursiveOption) ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly),
@@ -109,7 +109,7 @@ public class IconvCommand: Command {
 		var isText = extension.Length > 0 && textExtensions.Contains(extension[1..]);
 		if (!isText && Array.IndexOf(bytes, '\0', 0, Math.Min(bytes.Length, 8_000)) > 0) return;
 
-		Console.WriteLine($"Converting: {file}");
+		Console.WriteLine($"Converting: {0}", file);
 		File.WriteAllBytes(file.FullName, Encoding.Convert(from, to, bytes));
 	}
 }
