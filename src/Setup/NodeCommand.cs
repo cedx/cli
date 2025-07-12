@@ -61,7 +61,7 @@ public class NodeCommand: Command {
 			}
 		}
 
-		var output = parseResult.GetValue(outputOption)!;
+		var output = parseResult.GetRequiredValue(outputOption);
 		if (!this.CheckPrivilege(services.Count > 0 ? null : output)) {
 			Console.Error.WriteLine("You must run this command in an elevated prompt.");
 			return 2;

@@ -43,7 +43,7 @@ public class InstallCommand: Command {
 		}
 
 		try {
-			var application = WebApplication.ReadFromDirectory(parseResult.GetValue(directoryArgument)!.FullName)
+			var application = WebApplication.ReadFromDirectory(parseResult.GetRequiredValue(directoryArgument).FullName)
 				?? throw new EntryPointNotFoundException("Unable to locate the application configuration file.");
 
 			var isDotNet = Directory.EnumerateFiles(application.Path, "*.slnx").Any();

@@ -51,7 +51,7 @@ public class PhpCommand: Command {
 		using var serviceController = new ServiceController("W3SVC");
 		StopWebServer(serviceController);
 
-		var output = parseResult.GetValue(outputOption)!;
+		var output = parseResult.GetRequiredValue(outputOption);
 		Console.WriteLine(@"Extracting file ""{0}"" into directory ""{1}""...", path.Name, output.Name);
 		path.ExtractTo(output);
 
