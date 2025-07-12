@@ -19,6 +19,7 @@ public static class Container {
 		.AddTransient<RootCommand>()
 		.AddTransient<SetupCommand>()
 		.AddTransient<MySql.CharsetCommand>()
+		.AddTransient<MySql.EngineCommand>()
 		.AddTransient<Nssm.InstallCommand>()
 		.AddTransient<Nssm.RemoveCommand>()
 		.AddTransient<Setup.JdkCommand>()

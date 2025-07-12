@@ -17,10 +17,11 @@ public class MySqlCommand: Command {
 	/// Creates a new <c>mysql</c> command.
 	/// </summary>
 	/// <param name="charset">The <c>charset</c> subcommand.</param>
-	public MySqlCommand(CharsetCommand charset): base("mysql", "Manage MariaDB/MySQL databases.") {
+	/// <param name="engine">The <c>engine</c> subcommand.</param>
+	public MySqlCommand(CharsetCommand charset, EngineCommand engine): base("mysql", "Manage MariaDB/MySQL databases.") {
 		// Subcommands.Add(backup);
 		Subcommands.Add(charset);
-		// Subcommands.Add(engine);
+		Subcommands.Add(engine);
 		// Subcommands.Add(optimize);
 		// Subcommands.Add(restore);
 		Options.Add(dsnOption);
