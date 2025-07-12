@@ -9,15 +9,15 @@ using System.Diagnostics;
 public class SetupCommand: Command {
 
 	/// <summary>
-	/// Creates a new command.
+	/// Creates a new <c>setup</c> command.
 	/// </summary>
-	/// <param name="jdkCommand">The `jdk` subcommand.</param>
-	/// <param name="nodeCommand">The `node` subcommand.</param>
-	/// <param name="phpCommand">The `php` subcommand.</param>
-	public SetupCommand(JdkCommand jdkCommand, NodeCommand nodeCommand, PhpCommand phpCommand): base("setup", "Download and install a runtime environment.") {
-		Subcommands.Add(jdkCommand);
-		Subcommands.Add(nodeCommand);
-		Subcommands.Add(phpCommand);
+	/// <param name="jdk">The <c>jdk</c> subcommand.</param>
+	/// <param name="node">The <c>node</c> subcommand.</param>
+	/// <param name="php">The <c>php</c> subcommand.</param>
+	public SetupCommand(JdkCommand jdk, NodeCommand node, PhpCommand php): base("setup", "Download and install a runtime environment.") {
+		Subcommands.Add(jdk);
+		Subcommands.Add(node);
+		Subcommands.Add(php);
 	}
 }
 

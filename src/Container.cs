@@ -15,8 +15,11 @@ public static class Container {
 	/// <param name="services">The collection of service descriptors.</param>
 	public static void AddCommands(this IServiceCollection services) => services
 		.AddTransient<IconvCommand>()
+		.AddTransient<NssmCommand>()
 		.AddTransient<RootCommand>()
 		.AddTransient<SetupCommand>()
+		.AddTransient<Nssm.InstallCommand>()
+		.AddTransient<Nssm.RemoveCommand>()
 		.AddTransient<Setup.JdkCommand>()
 		.AddTransient<Setup.NodeCommand>()
 		.AddTransient<Setup.PhpCommand>();

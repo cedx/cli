@@ -20,7 +20,7 @@ public class PhpCommand: Command {
 	private readonly HttpClient httpClient;
 
 	/// <summary>
-	/// Creates a new command.
+	/// Creates a new <c>php</c> command.
 	/// </summary>
 	/// <param name="httpClient">The HTTP client.</param>
 	public PhpCommand(HttpClient httpClient): base("php", "Set up the latest PHP release.") {
