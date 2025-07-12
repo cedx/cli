@@ -1,5 +1,9 @@
 # Changelog
 
+## Version [2.4.0](https://github.com/cedx/cli/compare/v2.3.0...v2.4.0)
+- Removed the generic host.
+- Updated the package dependencies.
+
 ## Version [2.3.0](https://github.com/cedx/cli/compare/v2.2.0...v2.3.0)
 - Use a generic host and dependency injection to handle commands and services.
 
