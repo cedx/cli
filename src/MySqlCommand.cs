@@ -16,15 +16,18 @@ public class MySqlCommand: Command {
 	/// <summary>
 	/// Creates a new <c>mysql</c> command.
 	/// </summary>
+	/// <param name="backup">The <c>backup</c> subcommand.</param>
 	/// <param name="charset">The <c>charset</c> subcommand.</param>
 	/// <param name="engine">The <c>engine</c> subcommand.</param>
 	/// <param name="optimize">The <c>optimize</c> subcommand.</param>
-	public MySqlCommand(CharsetCommand charset, EngineCommand engine, OptimizeCommand optimize): base("mysql", "Manage MariaDB/MySQL databases.") {
-		// Subcommands.Add(backup);
+	/// <param name="restore">The <c>restore</c> subcommand.</param>
+	public MySqlCommand(BackupCommand backup, CharsetCommand charset, EngineCommand engine, OptimizeCommand optimize, RestoreCommand restore):
+	base("mysql", "Manage MariaDB/MySQL databases.") {
+		Subcommands.Add(backup);
 		Subcommands.Add(charset);
 		Subcommands.Add(engine);
 		Subcommands.Add(optimize);
-		// Subcommands.Add(restore);
+		Subcommands.Add(restore);
 		Options.Add(dsnOption);
 	}
 }
