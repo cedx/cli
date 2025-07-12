@@ -40,7 +40,7 @@ public class OptimizeCommand: Command {
 	/// <returns>The exit code.</returns>
 	public int Invoke(ParseResult parseResult) {
 		var schemaName = parseResult.GetValue(schemaOption);
-		var tableNames = parseResult.GetRequiredValue(tableOption);
+		var tableNames = parseResult.GetValue(tableOption)!;
 
 		var noSchema = string.IsNullOrWhiteSpace(schemaName);
 		if (tableNames.Length > 0 && noSchema) {
@@ -48,7 +48,7 @@ public class OptimizeCommand: Command {
 			return 1;
 		}
 
-		using var connection = informationSchema.CreateConnection(parseResult.GetRequiredValue(MySqlCommand.dsnOption));
+		using var connection = informationSchema.CreateConnection(new Uri(parseResult.GetRequiredValue(MySqlCommand.dsnOption)));
 		var schemas = noSchema ? connection.GetSchemas() : [new Schema { Name = schemaName! }];
 		var tables = schemas.SelectMany(schema => tableNames.Length > 0
 			? tableNames.Select(table => new Table { Name = table, Schema = schema.Name })

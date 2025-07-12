@@ -59,7 +59,7 @@ public class BackupCommand: Command {
 	/// <returns>The exit code.</returns>
 	public int Invoke(ParseResult parseResult) {
 		var schemaName = parseResult.GetValue(schemaOption);
-		var tableNames = parseResult.GetRequiredValue(tableOption);
+		var tableNames = parseResult.GetValue(tableOption)!;
 
 		var noSchema = string.IsNullOrWhiteSpace(schemaName);
 		if (tableNames.Length > 0 && noSchema) {
@@ -74,7 +74,7 @@ public class BackupCommand: Command {
 			var directory = parseResult.GetRequiredValue(directoryArgument);
 			directory.Create();
 
-			var dsn = parseResult.GetRequiredValue(MySqlCommand.dsnOption);
+			var dsn = new Uri(parseResult.GetRequiredValue(MySqlCommand.dsnOption));
 			using var connection = informationSchema.CreateConnection(dsn);
 			foreach (var schema in noSchema ? connection.GetSchemas() : [new Schema { Name = schemaName! }]) {
 				var entity = tableNames.Length == 1 ? $"{schema.Name}.{tableNames[0]}" : schema.Name;

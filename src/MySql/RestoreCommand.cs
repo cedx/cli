@@ -49,7 +49,7 @@ public class RestoreCommand: Command {
 			_ => []
 		};
 
-		var dsn = parseResult.GetRequiredValue(MySqlCommand.dsnOption);
+		var dsn = new Uri(parseResult.GetRequiredValue(MySqlCommand.dsnOption));
 		foreach (var file in files) ImportFile(file, dsn);
 		return 0;
 	}
