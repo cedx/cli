@@ -29,12 +29,12 @@ internal static class SetupCommandExtensions {
 	/// <summary>
 	/// Runs the specified executable with the <c>--version</c> argument.
 	/// </summary>
-	/// <param name="_">The current command.</param>
+	/// <param name="command">The current command.</param>
 	/// <param name="output">The path to the output directory.</param>
 	/// <param name="executable">The executable path, relative to the output directory.</param>
 	/// <returns>The standard output of the underlying process.</returns>
 	/// <exception cref="ProcessException">An error occurred when starting the underlying process.</exception>
-	public static string GetExecutableVersion(this Command _, DirectoryInfo output, string executable) {
+	public static string GetExecutableVersion(this Command command, DirectoryInfo output, string executable) {
 		var startInfo = new ProcessStartInfo(Path.Join(output.FullName, executable), "--version") {
 			CreateNoWindow = true,
 			RedirectStandardOutput = true
