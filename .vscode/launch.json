@@ -1,12 +1,25 @@
 {
-	"$schema": "vscode://schemas/launch",
 	"version": "0.2.0",
 	"configurations": [
 		{
 			"name": "Program",
+			"preLaunchTask": "build",
 			"request": "launch",
-			"type": "dotnet",
-			"projectPath": "${workspaceFolder}/src/Cli.csproj"
+			"type": "coreclr",
+			"program": "${workspaceFolder}/bin/Belin.Cli.dll",
+			"args": ["${input:command}", "${input:subcommand}"]
 		}
-	]
+	],
+	"inputs": [
+    {
+			"description": "The command to invoke.",
+      "id": "command",
+      "type": "promptString"
+    },
+		{
+			"description": "The subcommand to invoke.",
+      "id": "subcommand",
+      "type": "promptString"
+    }
+  ]
 }

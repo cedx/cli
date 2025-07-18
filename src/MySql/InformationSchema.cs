@@ -17,6 +17,7 @@ public sealed class InformationSchema {
 	/// </summary>
 	static InformationSchema() {
 		SqlMapper.SetTypeMap(typeof(Column), new ColumnAttributeTypeMap<Column>());
+		SqlMapper.SetTypeMap(typeof(Schema), new ColumnAttributeTypeMap<Schema>());
 		SqlMapper.SetTypeMap(typeof(Table), new ColumnAttributeTypeMap<Table>());
 	}
 
