@@ -21,7 +21,8 @@ public class MySqlCommand: Command {
 	/// <param name="engine">The <c>engine</c> subcommand.</param>
 	/// <param name="optimize">The <c>optimize</c> subcommand.</param>
 	/// <param name="restore">The <c>restore</c> subcommand.</param>
-	public MySqlCommand(BackupCommand backup, CharsetCommand charset, EngineCommand engine, OptimizeCommand optimize, RestoreCommand restore):
+	public MySqlCommand(
+		BackupCommand backup, CharsetCommand charset, EngineCommand engine, OptimizeCommand optimize, RestoreCommand restore):
 	base("mysql", "Manage MariaDB/MySQL databases.") {
 		Subcommands.Add(backup);
 		Subcommands.Add(charset);
