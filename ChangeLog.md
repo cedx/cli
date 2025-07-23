@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [2.5.0](https://github.com/cedx/cli/compare/v2.4.0...v2.5.0)
+- Updated the `iconv` command to exclude specific folders (`.git`, `node_modules` and `vendor`).
+
 ## Version [2.4.0](https://github.com/cedx/cli/compare/v2.3.0...v2.4.0)
 - Removed the generic host.
 - Updated the package dependencies.
