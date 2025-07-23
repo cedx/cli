@@ -70,7 +70,7 @@ public class IconvCommand: Command {
 			return 1;
 		}
 
-		var resources = Path.GetFullPath(Path.Join(AppContext.BaseDirectory, "../res"));
+		var resources = Path.Join(AppContext.BaseDirectory, "../res");
 		if (binaryExtensions.Count == 0) binaryExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "BinaryExtensions.json"))) ?? []);
 		if (textExtensions.Count == 0) textExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "TextExtensions.json"))) ?? []);
 
@@ -80,8 +80,8 @@ public class IconvCommand: Command {
 			_ => []
 		};
 
-		var fromEncoding = Encoding.GetEncoding(parseResult.GetValue(fromOption)!);
-		var toEncoding = Encoding.GetEncoding(parseResult.GetValue(toOption)!);
+		var fromEncoding = Encoding.GetEncoding(parseResult.GetRequiredValue(fromOption));
+		var toEncoding = Encoding.GetEncoding(parseResult.GetRequiredValue(toOption));
 		foreach (var file in files) ConvertFileEncoding(file, fromEncoding, toEncoding);
 		return 0;
 	}
@@ -109,7 +109,7 @@ public class IconvCommand: Command {
 		var isText = extension.Length > 0 && textExtensions.Contains(extension[1..]);
 		if (!isText && Array.IndexOf(bytes, '\0', 0, Math.Min(bytes.Length, 8_000)) > 0) return;
 
-		Console.WriteLine($"Converting: {0}", file);
+		Console.WriteLine("Converting: {0}", file);
 		File.WriteAllBytes(file.FullName, Encoding.Convert(from, to, bytes));
 	}
 }
