@@ -13,21 +13,11 @@ public static class Container {
 	/// </summary>
 	/// <param name="services">The collection of service descriptors.</param>
 	public static void AddCommands(this IServiceCollection services) => services
+		.AddMySqlCommands()
+		.AddNssmCommands()
+		.AddSetupCommands()
 		.AddTransient<IconvCommand>()
-		.AddTransient<MySqlCommand>()
-		.AddTransient<NssmCommand>()
-		.AddTransient<RootCommand>()
-		.AddTransient<SetupCommand>()
-		.AddTransient<MySql.BackupCommand>()
-		.AddTransient<MySql.CharsetCommand>()
-		.AddTransient<MySql.EngineCommand>()
-		.AddTransient<MySql.OptimizeCommand>()
-		.AddTransient<MySql.RestoreCommand>()
-		.AddTransient<Nssm.InstallCommand>()
-		.AddTransient<Nssm.RemoveCommand>()
-		.AddTransient<Setup.JdkCommand>()
-		.AddTransient<Setup.NodeCommand>()
-		.AddTransient<Setup.PhpCommand>();
+		.AddTransient<RootCommand>();
 
 	/// <summary>
 	/// Registers the application services.
@@ -40,4 +30,38 @@ public static class Container {
 			httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(".NET", Environment.Version.ToString(3)));
 			return httpClient;
 		});
+
+	/// <summary>
+	/// Registers the MySQL commands.
+	/// </summary>
+	/// <param name="services">The collection of service descriptors.</param>
+	/// <returns>A reference to the specified service collection.</returns>
+	private static IServiceCollection AddMySqlCommands(this IServiceCollection services) => services
+		.AddTransient<MySqlCommand>()
+		.AddTransient<MySql.BackupCommand>()
+		.AddTransient<MySql.CharsetCommand>()
+		.AddTransient<MySql.EngineCommand>()
+		.AddTransient<MySql.OptimizeCommand>()
+		.AddTransient<MySql.RestoreCommand>();
+
+	/// <summary>
+	/// Registers the NSSM commands.
+	/// </summary>
+	/// <param name="services">The collection of service descriptors.</param>
+	/// <returns>A reference to the specified service collection.</returns>
+	private static IServiceCollection AddNssmCommands(this IServiceCollection services) => services
+		.AddTransient<NssmCommand>()
+		.AddTransient<Nssm.InstallCommand>()
+		.AddTransient<Nssm.RemoveCommand>();
+
+	/// <summary>
+	/// Registers the setup commands.
+	/// </summary>
+	/// <param name="services">The collection of service descriptors.</param>
+	/// <returns>A reference to the specified service collection.</returns>
+	private static IServiceCollection AddSetupCommands(this IServiceCollection services) => services
+		.AddTransient<SetupCommand>()
+		.AddTransient<Setup.JdkCommand>()
+		.AddTransient<Setup.NodeCommand>()
+		.AddTransient<Setup.PhpCommand>();
 }
