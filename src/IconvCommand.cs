@@ -42,6 +42,11 @@ public class IconvCommand: Command {
 	private readonly List<string> binaryExtensions = [];
 
 	/// <summary>
+	/// The list of folders to exclude from the processing.
+	/// </summary>
+	private readonly string[] exludedFolders = [".git", "node_modules", "vendor"];
+
+	/// <summary>
 	/// The list of text file extensions.
 	/// </summary>
 	private readonly List<string> textExtensions = [];
@@ -101,6 +106,8 @@ public class IconvCommand: Command {
 	/// <param name="from">The input encoding.</param>
 	/// <param name="to">The output encoding.</param>
 	private void ConvertFileEncoding(FileInfo file, Encoding from, Encoding to) {
+		if (IsExcluded(file)) return;
+
 		var extension = file.Extension.ToLowerInvariant();
 		var isBinary = extension.Length > 0 && binaryExtensions.Contains(extension[1..]);
 		if (isBinary) return;
@@ -111,6 +118,21 @@ public class IconvCommand: Command {
 
 		Console.WriteLine("Converting: {0}", file);
 		File.WriteAllBytes(file.FullName, Encoding.Convert(from, to, bytes));
+	}
+
+	/// <summary>
+	/// Returns a value indicating whether the specified file should be excluded from the processing.
+	/// </summary>
+	/// <param name="file">The file to check.</param>
+	/// <returns><see langword="true"/> if the specified file should be excluded from the processing, otherwise <see langword="false"/>.</returns>
+	private bool IsExcluded(FileInfo file) {
+		var directory = file.Directory;
+		while (directory is not null) {
+			if (exludedFolders.Contains(directory.Name)) return true;
+			directory = directory.Parent;
+		}
+
+		return false;
 	}
 }
 
