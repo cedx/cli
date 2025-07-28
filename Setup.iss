@@ -13,7 +13,7 @@ AppVersion = {#version}
 ArchitecturesAllowed = x64compatible
 ArchitecturesInstallIn64BitMode = x64compatible
 ChangesEnvironment = yes
-DefaultDirName = {autopf}\{#publisher}\CLI
+DefaultDirName = {autopf}\{#publisher}\Cli
 DisableProgramGroupPage = yes
 LicenseFile = License.md
 OutputBaseFilename = {#name} {#version}
@@ -57,16 +57,16 @@ end;
 procedure AddPathToEnvironment(Path: string);
 var
 	EnvironmentKey, Paths: string;
-	RootKey: integer; 
+	RootKey: integer;
 begin
 	GetRegistryKeys(RootKey, EnvironmentKey);
 	if not RegQueryStringValue(RootKey, EnvironmentKey, 'Path', Paths) then Paths := '';
 	if Pos(';' + Lowercase(Path) + ';', ';' + Lowercase(Paths) + ';') > 0 then Exit;
-	
+
 	if Length(Paths) = 0 then Paths := Path
 	else if EndsWith(Paths, ';') then Paths := Paths + Path
 	else Paths := Paths + ';' + Path;
-	
+
 	RegWriteStringValue(RootKey, EnvironmentKey, 'Path', Paths)
 end;
 
