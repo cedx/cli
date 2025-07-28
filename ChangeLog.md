@@ -1,5 +1,9 @@
 # Changelog
 
+## Version [2.6.0](https://github.com/cedx/cli/compare/v2.5.0...v2.6.0)
+- Updated the installer to allow the program to be installed in non administrative mode.
+- Updated the installer to add the program to the `PATH` environment variable.
+
 ## Version [2.5.0](https://github.com/cedx/cli/compare/v2.4.0...v2.5.0)
 - Updated the `iconv` command to exclude specific folders (`.git`, `node_modules` and `vendor`).
 
