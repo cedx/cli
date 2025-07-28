@@ -13,5 +13,6 @@ public class OutputOption: Option<DirectoryInfo> {
 		DefaultValueFactory = _ => defaultValue;
 		Description = "The path to the output directory.";
 		HelpName = "directory";
+		AcceptLegalFilePathsOnly();
 	}
 }

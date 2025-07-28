@@ -11,10 +11,10 @@ public class InstallCommand: Command {
 	/// <summary>
 	/// The path to the root directory of the .NET or Node.js application.
 	/// </summary>
-	private readonly Argument<DirectoryInfo> directoryArgument = new("directory") {
+	private readonly Argument<DirectoryInfo> directoryArgument = new Argument<DirectoryInfo>("directory") {
 		DefaultValueFactory = _ => new DirectoryInfo(Environment.CurrentDirectory),
 		Description = "The path to the root directory of the .NET or Node.js application."
-	};
+	}.AcceptExistingOnly();
 
 	/// <summary>
 	/// Value indicating whether to start the service after its registration.

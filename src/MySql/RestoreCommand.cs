@@ -11,9 +11,9 @@ public class RestoreCommand: Command {
 	/// <summary>
 	/// The path to the file or directory to process.
 	/// </summary>
-	private readonly Argument<FileSystemInfo> fileOrDirectoryArgument = new("fileOrDirectory") {
+	private readonly Argument<FileSystemInfo> fileOrDirectoryArgument = new Argument<FileSystemInfo>("fileOrDirectory") {
 		Description = "The path to the file or directory to process."
-	};
+	}.AcceptExistingOnly();
 
 	/// <summary>
 	/// Value indicating whether to process the directory recursively.
@@ -37,13 +37,7 @@ public class RestoreCommand: Command {
 	/// <param name="parseResult">The results of parsing the command line input.</param>
 	/// <returns>The exit code.</returns>
 	public int Invoke(ParseResult parseResult) {
-		var fileOrDirectory = parseResult.GetRequiredValue(fileOrDirectoryArgument);
-		if (!fileOrDirectory.Exists) {
-			Console.Error.WriteLine("Unable to locate the specified file or directory.");
-			return 1;
-		}
-
-		var files = fileOrDirectory switch {
+		var files = parseResult.GetRequiredValue(fileOrDirectoryArgument) switch {
 			DirectoryInfo directory => directory.EnumerateFiles("*.sql", parseResult.GetValue(recursiveOption) ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly),
 			FileInfo file => [file],
 			_ => []

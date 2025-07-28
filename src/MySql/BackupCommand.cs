@@ -12,9 +12,9 @@ public class BackupCommand: Command {
 	/// <summary>
 	/// The path to the output directory.
 	/// </summary>
-	private readonly Argument<DirectoryInfo> directoryArgument = new("directory") {
+	private readonly Argument<DirectoryInfo> directoryArgument = new Argument<DirectoryInfo>("directory") {
 		Description = "The path to the output directory."
-	};
+	}.AcceptLegalFilePathsOnly();
 
 	/// <summary>
 	/// The format of the output files.

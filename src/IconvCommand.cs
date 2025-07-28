@@ -11,9 +11,9 @@ public class IconvCommand: Command {
 	/// <summary>
 	/// The path to the file or directory to process.
 	/// </summary>
-	private readonly Argument<FileSystemInfo> fileOrDirectoryArgument = new("fileOrDirectory") {
+	private readonly Argument<FileSystemInfo> fileOrDirectoryArgument = new Argument<FileSystemInfo>("fileOrDirectory") {
 		Description = "The path to the file or directory to process."
-	};
+	}.AcceptExistingOnly();
 
 	/// <summary>
 	/// The input encoding.
@@ -69,17 +69,11 @@ public class IconvCommand: Command {
 	/// <param name="parseResult">The results of parsing the command line input.</param>
 	/// <returns>The exit code.</returns>
 	public int Invoke(ParseResult parseResult) {
-		var fileOrDirectory = parseResult.GetRequiredValue(fileOrDirectoryArgument);
-		if (!fileOrDirectory.Exists) {
-			Console.Error.WriteLine("Unable to locate the specified file or directory.");
-			return 1;
-		}
-
 		var resources = Path.Join(AppContext.BaseDirectory, "../res");
 		if (binaryExtensions.Count == 0) binaryExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "BinaryExtensions.json"))) ?? []);
 		if (textExtensions.Count == 0) textExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "TextExtensions.json"))) ?? []);
 
-		var files = fileOrDirectory switch {
+		var files = parseResult.GetRequiredValue(fileOrDirectoryArgument) switch {
 			DirectoryInfo directory => directory.EnumerateFiles("*.*", parseResult.GetValue(recursiveOption) ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly),
 			FileInfo file => [file],
 			_ => []

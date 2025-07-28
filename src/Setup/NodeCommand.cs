@@ -12,9 +12,9 @@ public class NodeCommand: Command {
 	/// <summary>
 	/// The path to the NSSM configuration file.
 	/// </summary>
-	private readonly Option<FileInfo> configOption = new("--config", ["-c"]) {
+	private readonly Option<FileInfo> configOption = new Option<FileInfo>("--config", ["-c"]) {
 		Description = "The path to the NSSM configuration file."
-	};
+	}.AcceptExistingOnly();
 
 	/// <summary>
 	/// The path to the output directory.
