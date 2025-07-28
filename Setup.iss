@@ -18,6 +18,7 @@ LicenseFile = License.md
 OutputBaseFilename = {#name} {#version}
 OutputDir = var
 PrivilegesRequired = admin
+PrivilegesRequiredOverridesAllowed = dialog
 SetupIconFile = src\Program.ico
 SolidCompression = yes
 UninstallDisplayIcon = {app}\bin\{#executable}
