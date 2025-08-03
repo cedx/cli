@@ -30,7 +30,7 @@ Task("format")
 
 Task("outdated")
 	.Description("Checks for outdated dependencies.")
-	.Does(() => StartProcess("dotnet", new ProcessSettings { Arguments = "list package --outdated" }));
+	.Does(() => StartProcess("dotnet", "list package --outdated"));
 
 Task("publish")
 	.Description("Publishes the package.")
