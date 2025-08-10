@@ -3,6 +3,7 @@ namespace Belin.Cli.MySql;
 using System.Data;
 using System.Diagnostics;
 using System.Text.Json;
+using System.Web;
 
 /// <summary>
 /// Backups a set of MariaDB/MySQL tables.
@@ -133,7 +134,7 @@ public class BackupCommand: Command {
 
 		var userInfo = dsn.UserInfo.Split(':').Select(Uri.UnescapeDataString);
 		var args = new List<string> {
-			$"--default-character-set={dsn.ParseQueryString()["charset"] ?? "utf8mb4"}",
+			$"--default-character-set={HttpUtility.ParseQueryString(dsn.Query)["charset"] ?? "utf8mb4"}",
 			$"--host={dsn.Host}",
 			$"--password={userInfo.Last()}",
 			$"--port={(dsn.IsDefaultPort ? 3306 : dsn.Port)}",

@@ -2,6 +2,7 @@ namespace Belin.Cli.MySql;
 
 using System.Diagnostics;
 using System.IO;
+using System.Web;
 
 /// <summary>
 /// Restores a set of MariaDB/MySQL tables.
@@ -68,7 +69,7 @@ public class RestoreCommand: Command {
 
 		var userInfo = dsn.UserInfo.Split(':').Select(Uri.UnescapeDataString);
 		var args = new List<string> {
-			$"--default-character-set={dsn.ParseQueryString()["charset"] ?? "utf8mb4"}",
+			$"--default-character-set={HttpUtility.ParseQueryString(dsn.Query)["charset"] ?? "utf8mb4"}",
 			$"--execute=USE {entity.Split('.').First()}; SOURCE {file.FullName.Replace('\\', '/')};",
 			$"--host={dsn.Host}",
 			$"--password={userInfo.Last()}",
