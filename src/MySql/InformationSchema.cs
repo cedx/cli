@@ -1,5 +1,6 @@
 namespace Belin.Cli.MySql;
 
+using Belin.Base.Data.Mapping;
 using MySqlConnector;
 
 /// <summary>

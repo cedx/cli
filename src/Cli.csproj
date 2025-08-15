@@ -20,7 +20,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Dapper" Version="2.*" />
+		<PackageReference Include="Belin.Base.Data" Version="0.*" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.*" />
 		<PackageReference Include="MySqlConnector" Version="2.*" />
 		<PackageReference Include="System.CommandLine" Version="2.*-*" />
