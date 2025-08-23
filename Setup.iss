@@ -1,5 +1,5 @@
 #define executable "Belin.Cli.exe"
-#define publisher "Belin.io"
+#define publisher "Cedric-Belin.fr"
 #define name publisher + " CLI"
 #define version "2.6.0"
 

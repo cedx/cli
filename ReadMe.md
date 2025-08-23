@@ -1,4 +1,4 @@
-# Belin.io CLI
+# Cédric Belin's CLI
 ![.NET](https://badgen.net/badge/.net/%3E%3D9.0/green) ![Version](https://badgen.net/badge/project/v2.6.0/blue) ![License](https://badgen.net/badge/license/MIT/blue)
 
 Command line interface of [Cédric Belin](https://cedric-belin.fr), full stack developer,
@@ -13,4 +13,4 @@ implemented in [C#](https://learn.microsoft.com/en-us/dotnet/csharp).
 - [Submit an issue](https://github.com/cedx/cli/issues)
 
 ## License
-[Belin.io CLI](https://github.com/cedx/cli) is distributed under the MIT License.
+[Cédric Belin's CLI](https://github.com/cedx/cli) is distributed under the MIT License.
