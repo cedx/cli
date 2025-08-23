@@ -1,7 +1,7 @@
 # Belin.io CLI
 ![.NET](https://badgen.net/badge/.net/%3E%3D9.0/green) ![Version](https://badgen.net/badge/project/v2.6.0/blue) ![License](https://badgen.net/badge/license/MIT/blue)
 
-Command line interface of [Cédric Belin](https://belin.io), full stack developer,
+Command line interface of [Cédric Belin](https://cedric-belin.fr), full stack developer,
 implemented in [C#](https://learn.microsoft.com/en-us/dotnet/csharp).
 
 ## Documentation
