@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [2.7.0](https://github.com/cedx/cli/compare/v2.6.0...v2.7.0)
+- Added support for XML configuration files to the `nssm install` command.
+
 ## Version [2.6.0](https://github.com/cedx/cli/compare/v2.5.0...v2.6.0)
 - Updated the installer to allow the program to be installed in non administrative mode.
 - Updated the installer to add the program to the `PATH` environment variable.
