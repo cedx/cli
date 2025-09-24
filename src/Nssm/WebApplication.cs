@@ -2,31 +2,38 @@ namespace Belin.Cli.Nssm;
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml;
+using System.Xml.Serialization;
 using static System.IO.Path;
 
 /// <summary>
 /// Provides information about a Web application.
 /// </summary>
+[XmlRoot("configuration")]
 public class WebApplication {
 
 	/// <summary>
 	/// The application description.
 	/// </summary>
+	[XmlElement("description")]
 	public string Description { get; set; } = string.Empty;
 
 	/// <summary>
 	/// The environment name.
 	/// </summary>
+	[XmlElement("environment")]
 	public string Environment { get; set; } = string.Empty;
 
 	/// <summary>
 	/// The application identifier.
 	/// </summary>
+	[XmlElement("id")]
 	public required string Id { get; init; }
 
 	/// <summary>
 	/// The application name.
 	/// </summary>
+	[XmlElement("name")]
 	public string Name { get; set; } = string.Empty;
 
 	/// <summary>
@@ -42,14 +49,35 @@ public class WebApplication {
 	/// <returns>The configuration of the specified application, or <see langword="null"/> if not found.</returns>
 	public static WebApplication? ReadFromDirectory(string input) {
 		foreach (var folder in new[] { "src/Server", "src" }) {
-			var path = Join(input, folder, "appsettings.json");
-			if (File.Exists(path)) {
-				var application = JsonSerializer.Deserialize<WebApplication>(File.ReadAllText(path), JsonSerializerOptions.Web);
-				if (application is not null) application.Path = input;
-				return application;
+			foreach (var format in new[] { "json", "xml" }) {
+				var path = Join(input, folder, $"appsettings.{format}");
+				if (File.Exists(path)) {
+					Console.WriteLine(path);
+					var application = GetExtension(path) == ".xml" ? DeserializeXml(path) : DeserializeJson(path);
+					if (application is not null) application.Path = input;
+					return application;
+				}
 			}
 		}
 
 		return null;
+	}
+
+	/// <summary>
+	/// Deserializes the JSON document located at the specified path.
+	/// </summary>
+	/// <param name="path">The path to the JSON document.</param>
+	/// <returns>The deserialized application configuration.</returns>
+	private static WebApplication? DeserializeJson(string path) =>
+		JsonSerializer.Deserialize<WebApplication>(File.ReadAllText(path), JsonSerializerOptions.Web);
+
+	/// <summary>
+	/// Deserializes the XML document located at the specified path.
+	/// </summary>
+	/// <param name="path">The path to the XML document.</param>
+	/// <returns>The deserialized application configuration.</returns>
+	private static WebApplication? DeserializeXml(string path) {
+		using var xmlReader = XmlReader.Create(path);
+		return (WebApplication?) new XmlSerializer(typeof(WebApplication)).Deserialize(xmlReader);
 	}
 }
