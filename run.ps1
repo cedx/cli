@@ -1,5 +1,6 @@
 #!/usr/bin/env pwsh
+param ([switch] $release)
 Set-StrictMode -Version Latest
-$commandPath = Get-Item $PSCommandPath
-$scriptRoot = $commandPath.LinkType ? (Split-Path $commandPath.LinkTarget) : $PSScriptRoot
-& dotnet "$scriptRoot/bin/Belin.Cli.dll" @args
+$ErrorActionPreference = "Stop"
+$PSNativeCommandUseErrorActionPreference = $true
+. tool/$($args.Count -eq 0 ? "Default" : $args[0]).ps1
