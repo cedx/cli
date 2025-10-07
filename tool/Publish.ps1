@@ -1,4 +1,4 @@
-. tool/Default.ps1
+. $PSScriptRoot/Default.ps1
 
 Write-Host "Publishing the package..."
 $version = [xml] (Get-Content "Package.xml") | Select-Xml "//Version"

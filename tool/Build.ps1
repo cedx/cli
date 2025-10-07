@@ -1,4 +1,4 @@
-. tool/Assets.ps1
+. $PSScriptRoot/Assets.ps1
 
 Write-Host "Building the project..."
 $configuration = $release ? "Release" : "Debug"
