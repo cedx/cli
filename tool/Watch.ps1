@@ -1,4 +1,5 @@
 . $PSScriptRoot/Assets.ps1
 
 Write-Host "Watching for file changes..."
-Start-Process dotnet "watch build" -NoNewWindow -Wait -WorkingDirectory src
+$configuration = $release ? "Release" : "Debug"
+Start-Process dotnet "watch build --configuration=$configuration" -NoNewWindow -Wait -WorkingDirectory src
