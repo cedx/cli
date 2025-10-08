@@ -1,6 +1,6 @@
 . $PSScriptRoot/Default.ps1
 
 Write-Host "Publishing the package..."
-$version = [xml] (Get-Content "Package.xml") | Select-Xml "//Version"
+$version = Select-Xml "//Version" Package.xml
 git tag "v$version"
 git push origin "v$version"
