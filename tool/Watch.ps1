@@ -1,6 +1,4 @@
 . $PSScriptRoot/Assets.ps1
 
 Write-Host "Watching for file changes..."
-Push-Location src
-try { dotnet watch build }
-finally { Pop-Location }
+Start-Process dotnet "watch build" -NoNewWindow -Wait -WorkingDirectory src
