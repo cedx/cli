@@ -1,4 +1,4 @@
-Write-Host "Deploying the assets..."
+Write-Output "Deploying the assets..."
 foreach ($item in "Binary", "Text") {
 	$file = "$($item.ToLowerInvariant())-extensions";
 	$path = "sindresorhus/$file/refs/heads/main/$file.json";
