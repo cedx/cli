@@ -1,6 +1,6 @@
 if ($release) { . $PSScriptRoot/Default.ps1 }
 else {
-	Write-Output 'The "Release" configuration must be enabled!'
+	'The "Release" configuration must be enabled!'
 	exit 1
 }
 
