@@ -9,10 +9,10 @@ public class JdkCommand: Command {
 	/// The major version of the Java development kit.
 	/// </summary>
 	private readonly Option<int> javaOption = new Option<int>("--java", ["-j"]) {
-		DefaultValueFactory = _ => 21,
+		DefaultValueFactory = _ => 25,
 		Description = "The major version of the Java development kit.",
 		HelpName = "version"
-	}.AcceptOnlyFromAmong(["8", "11", "17", "21"]);
+	}.AcceptOnlyFromAmong(["8", "11", "17", "21", "25"]);
 
 	/// <summary>
 	/// The path to the output directory.
