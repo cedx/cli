@@ -12,13 +12,13 @@ public class Schema {
 	/// The default character set.
 	/// </summary>
 	[Column("DEFAULT_CHARACTER_SET_NAME")]
-	public string Charset { get; init; } = string.Empty;
+	public string Charset { get; init; } = "";
 
 	/// <summary>
 	/// The default collation.
 	/// </summary>
 	[Column("DEFAULT_COLLATION_NAME")]
-	public string Collation { get; init; } = string.Empty;
+	public string Collation { get; init; } = "";
 
 	/// <summary>
 	/// The schema name.

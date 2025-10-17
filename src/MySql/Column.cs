@@ -24,11 +24,11 @@ public class Column {
 	/// The schema containing this column.
 	/// </summary>
 	[Column("TABLE_SCHEMA")]
-	public string Schema { get; init; } = string.Empty;
+	public string Schema { get; init; } = "";
 
 	/// <summary>
 	/// The table containing this column.
 	/// </summary>
 	[Column("TABLE_NAME")]
-	public string Table { get; init; } = string.Empty;
+	public string Table { get; init; } = "";
 }

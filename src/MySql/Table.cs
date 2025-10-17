@@ -12,7 +12,7 @@ public class Table {
 	/// The default collation.
 	/// </summary>
 	[Column("TABLE_COLLATION")]
-	public string Collation { get; init; } = string.Empty;
+	public string Collation { get; init; } = "";
 
 	/// <summary>
 	/// The storage engine.
@@ -35,7 +35,7 @@ public class Table {
 	/// The schema containing this table.
 	/// </summary>
 	[Column("TABLE_SCHEMA")]
-	public string Schema { get; init; } = string.Empty;
+	public string Schema { get; init; } = "";
 
 	/// <summary>
 	/// The table type.

@@ -16,13 +16,13 @@ public class WebApplication {
 	/// The application description.
 	/// </summary>
 	[XmlElement("description")]
-	public string Description { get; set; } = string.Empty;
+	public string Description { get; set; } = "";
 
 	/// <summary>
 	/// The environment name.
 	/// </summary>
 	[XmlElement("environment")]
-	public string Environment { get; set; } = string.Empty;
+	public string Environment { get; set; } = "";
 
 	/// <summary>
 	/// The application identifier.
@@ -34,13 +34,13 @@ public class WebApplication {
 	/// The application name.
 	/// </summary>
 	[XmlElement("name")]
-	public string Name { get; set; } = string.Empty;
+	public string Name { get; set; } = "";
 
 	/// <summary>
 	/// The path to the application root directory.
 	/// </summary>
 	[JsonIgnore]
-	public string Path { get; set; } = string.Empty;
+	public string Path { get; set; } = "";
 
 	/// <summary>
 	/// Reads the configuration file of the application located in the specified directory.

@@ -14,7 +14,7 @@ public class CSharpProject {
 	/// The path to the project file.
 	/// </summary>
 	[XmlIgnore]
-	public string Path { get; set; } = string.Empty;
+	public string Path { get; set; } = "";
 
 	/// <summary>
 	/// The property groups.
@@ -46,20 +46,20 @@ public class CSharpPropertyGroup {
 	/// <summary>
 	/// The assembly name.
 	/// </summary>
-	public string AssemblyName { get; set; } = string.Empty;
+	public string AssemblyName { get; set; } = "";
 
 	/// <summary>
 	/// The project description.
 	/// </summary>
-	public string Description { get; set; } = string.Empty;
+	public string Description { get; set; } = "";
 
 	/// <summary>
 	/// The product name.
 	/// </summary>
-	public string Product { get; set; } = string.Empty;
+	public string Product { get; set; } = "";
 
 	/// <summary>
 	/// The relative path of the project assemblies.
 	/// </summary>
-	public string OutDir { get; set; } = string.Empty;
+	public string OutDir { get; set; } = "";
 }
