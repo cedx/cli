@@ -1,2 +1,2 @@
 "Formatting the source code..."
-dotnet format Cli.slnx
+dotnet format
