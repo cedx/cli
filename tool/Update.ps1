@@ -1,2 +1,5 @@
 "Updating the dependencies..."
-Update-PSResource PSScriptAnalyzer
+$modules = Import-PowerShellDataFile PSModules.psd1
+foreach ($module in $modules.Keys) {
+	Update-PSResource $module -TrustRepository
+}
