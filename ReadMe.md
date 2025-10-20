@@ -1,8 +1,8 @@
 # Cédric Belin's CLI
-![.NET](https://badgen.net/static/.net/%3E%3D9.0/green) ![Version](https://badgen.net/static/project/v2.7.0/blue) ![License](https://badgen.net/static/license/MIT/blue)
+![PowerShell](https://badgen.net/static/powershell/%3E%3D7.5/green) ![Version](https://badgen.net/static/module/v2.7.0/blue) ![License](https://badgen.net/static/license/MIT/blue)
 
 Command line interface of [Cédric Belin](https://cedric-belin.fr), full stack developer,
-implemented in [C#](https://learn.microsoft.com/en-us/dotnet/csharp).
+implemented in [PowerShell](https://learn.microsoft.com/en-us/powershell).
 
 ## Documentation
 - [User guide](https://github.com/cedx/cli/wiki)
