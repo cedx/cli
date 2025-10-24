@@ -4,5 +4,5 @@ else {
 	exit 1
 }
 
-Write-Output "Building the Windows installer..."
+"Building the Windows installer..."
 iscc Setup.iss
