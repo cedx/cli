@@ -5,7 +5,6 @@
 	Author = "Cédric Belin <cedx@outlook.com>"
 	CompanyName = "Cedric-Belin.fr"
 	Copyright = "© Cédric Belin"
-	# TODO ??? DefaultCommandPrefix = "Cli"
 	Description = "Command line interface of Cédric Belin, full stack developer."
 	GUID = "b489d27c-f48e-49b1-b1d4-c99752f2c828"
 
@@ -14,11 +13,11 @@
 	VariablesToExport = @()
 
 	FunctionsToExport = @(
-
+		"Install-Jdk"
 	)
 
 	NestedModules = @(
-
+		"src/Install-Jdk.psm1"
 	)
 
 	PrivateData = @{

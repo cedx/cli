@@ -11,7 +11,4 @@ $PSNativeCommandUseErrorActionPreference = $true
 
 $commandPath = Get-Item $PSCommandPath
 $scriptRoot = $commandPath.LinkType ? (Split-Path $commandPath.LinkTarget) : $PSScriptRoot
-
-$script = "$scriptRoot/src/$Command.ps1"
-if (Test-Path $script) { . $script @args }
-else { Write-Error "TODO" }
+. $scriptRoot/src/$Command.ps1 @rgs
