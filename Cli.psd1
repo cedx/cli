@@ -15,11 +15,13 @@
 	FunctionsToExport = @(
 		"Install-Jdk"
 		"Install-Node"
+		"Install-Php"
 	)
 
 	NestedModules = @(
 		"src/Install-Jdk.psm1"
 		"src/Install-Node.psm1"
+		"src/Install-Php.psm1"
 	)
 
 	PrivateData = @{

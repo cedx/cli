@@ -13,10 +13,7 @@ function Install-Node {
 	param (
 		[Parameter(Position = 0)]
 		[ValidateScript({ Test-Path $_ -IsValid })]
-		[string] $Path = $IsWindows ? "C:\Program Files\Node.js" : "/usr/local",
-
-		[Parameter()]
-		[string] $Config = "TODO NSSM configuration file"
+		[string] $Path = $IsWindows ? "C:\Program Files\Node.js" : "/usr/local"
 	)
 
 	end {
@@ -28,7 +25,7 @@ function Install-Node {
 
 		"Fetching the list of Node.js releases..."
 		$response = Invoke-RestMethod "https://nodejs.org/dist/index.json"
-		$version = $response[0].version.Substring(1)
+		$version = [version] $response[0].version.Substring(1)
 
 		$fileName = "node-v$version-$operatingSystem-x64.$fileExtension"
 		"Downloading file ""$fileName""..."
