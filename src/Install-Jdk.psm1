@@ -22,19 +22,19 @@ function Install-Jdk {
 	)
 
 	end {
-		$operatingSystem, $fileExtension = switch ($true) {
+		$platform, $extension = switch ($true) {
 			($IsMacOS) { "macOS", "tar.gz"; break }
 			($IsWindows) { "windows", "zip"; break }
 			default { "linux", "tar.gz" }
 		}
 
-		$fileName = "microsoft-jdk-$Version-$operatingSystem-x64.$fileExtension"
-		"Downloading file ""$fileName""..."
+		$file = "microsoft-jdk-$Version-$platform-x64.$extension"
+		"Downloading file ""$file""..."
 		$outputFile = New-TemporaryFile
-		Invoke-WebRequest "https://aka.ms/download-jdk/$fileName" -OutFile $outputFile
+		Invoke-WebRequest "https://aka.ms/download-jdk/$file" -OutFile $outputFile
 
-		"Extracting file ""$fileName"" into directory ""$Path""..."
-		if ($fileExtension -eq "zip") { Expand-ZipArchive $outputFile $Path -Skip 1 }
+		"Extracting file ""$file"" into directory ""$Path""..."
+		if ($extension -eq "zip") { Expand-ZipArchive $outputFile $Path -Skip 1 }
 		else { Expand-TarArchive $outputFile $Path -Skip 1 }
 
 		$executable = $IsWindows ? "java.exe" : "java"
