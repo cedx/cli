@@ -8,7 +8,7 @@ using module ./Compression/Expand-Archive.psm1
 	Downloads and installs the latest PHP release.
 .PARAMETER Path
 	The path to the output directory.
-.PARAMETER RegisterEventLog
+.PARAMETER RegisterEventSource
 	Value indicating whether to register the PHP interpreter with the event log.
 #>
 function Install-Php {
@@ -20,7 +20,7 @@ function Install-Php {
 		[string] $Path = "C:\Program Files\PHP",
 
 		[Parameter()]
-		[switch] $RegisterEventLog
+		[switch] $RegisterEventSource
 	)
 
 	end {
@@ -36,21 +36,16 @@ function Install-Php {
 		$outputFile = New-TemporaryFile
 		Invoke-WebRequest "https://windows.php.net/downloads/releases/$fileName" -OutFile $outputFile
 
-		$iisService = Get-Service "W3SVC"
-		if ($iisService.Status -eq [ServiceControllerStatus]::Running) {
-			"Stopping the IIS web server..."
-			Stop-Service $iisService
-		}
+		"Stopping the IIS web server..."
+		Stop-Service W3SVC
 
 		"Extracting file ""$fileName"" into directory ""$Path""..."
 		Expand-Archive $outputFile $Path -Force
 
-		if ($iisService.Status -eq [ServiceControllerStatus]::Stopped) {
-			"Starting the IIS web server..."
-			Start-Service $iisService
-		}
+		"Starting the IIS web server..."
+		Start-Service W3SVC
 
-		if ($RegisterEventLog) {
+		if ($RegisterEventSource) {
 			"Registering the PHP interpreter with the event log..."
 			$key = "HKLM:\SYSTEM\CurrentControlSet\Services\EventLog\Application\PHP-$version"
 			New-Item $key -Force | Out-Null
