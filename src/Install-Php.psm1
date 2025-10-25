@@ -31,15 +31,15 @@ function Install-Php {
 		$property = ($response | Get-Member -MemberType NoteProperty | Sort-Object Name -Bottom 1).Name
 		$version = [version] $response.$property.version
 
-		$fileName = "php-$version-nts-Win32-$($version -ge [version] "8.4.0" ? "vs17" : "vs16")-x64.zip"
-		"Downloading file ""$fileName""..."
+		$file = "php-$version-nts-Win32-$($version -ge [version] "8.4.0" ? "vs17" : "vs16")-x64.zip"
+		"Downloading file ""$file""..."
 		$outputFile = New-TemporaryFile
-		Invoke-WebRequest "https://windows.php.net/downloads/releases/$fileName" -OutFile $outputFile
+		Invoke-WebRequest "https://windows.php.net/downloads/releases/$file" -OutFile $outputFile
 
 		"Stopping the IIS web server..."
 		Stop-Service W3SVC
 
-		"Extracting file ""$fileName"" into directory ""$Path""..."
+		"Extracting file ""$file"" into directory ""$Path""..."
 		Expand-Archive $outputFile $Path -Force
 
 		"Starting the IIS web server..."
