@@ -1,7 +1,7 @@
 namespace Belin.Cli.Nssm;
 
-using System.Xml;
-using System.Xml.Serialization;
+using namespace System.Xml;
+using namespace System.Xml.Serialization;
 
 /// <summary>
 /// Represents the contents of a NSSM configuration file.
@@ -36,7 +36,7 @@ public sealed class NssmMachine {
 	/// The machine name.
 	/// </summary>
 	[XmlAttribute("name")]
-	public required string Name { get; set; }
+	[ValidateNotNullOrWhiteSpace()] [string] Name { get; set; }
 
 	/// <summary>
 	/// The list of hosted services.
@@ -54,5 +54,5 @@ public sealed class NssmService {
 	/// The service identifier.
 	/// </summary>
 	[XmlAttribute("id")]
-	public required string Id { get; set; }
+	[ValidateNotNullOrWhiteSpace()] [string] Id { get; set; }
 }

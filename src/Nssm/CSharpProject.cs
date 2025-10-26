@@ -1,20 +1,20 @@
 namespace Belin.Cli.Nssm;
 
-using System.Xml;
-using System.Xml.Serialization;
+using namespace System.Xml;
+using namespace System.Xml.Serialization;
 using static System.IO.Path;
 
 /// <summary>
 /// Represents the contents of a C# project file.
 /// </summary>
 [XmlRoot("Project")]
-public class CSharpProject {
+class CSharpProject {
 
 	/// <summary>
 	/// The path to the project file.
 	/// </summary>
 	[XmlIgnore]
-	public string Path { get; set; } = "";
+	[string] Path { get; set; } = "";
 
 	/// <summary>
 	/// The property groups.
@@ -41,25 +41,25 @@ public class CSharpProject {
 /// <summary>
 /// Represents a group of project properties.
 /// </summary>
-public class CSharpPropertyGroup {
+class CSharpPropertyGroup {
 
 	/// <summary>
 	/// The assembly name.
 	/// </summary>
-	public string AssemblyName { get; set; } = "";
+	[string] AssemblyName { get; set; } = "";
 
 	/// <summary>
 	/// The project description.
 	/// </summary>
-	public string Description { get; set; } = "";
+	[string] Description { get; set; } = "";
 
 	/// <summary>
 	/// The product name.
 	/// </summary>
-	public string Product { get; set; } = "";
+	[string] Product { get; set; } = "";
 
 	/// <summary>
 	/// The relative path of the project assemblies.
 	/// </summary>
-	public string OutDir { get; set; } = "";
+	[string] OutDir { get; set; } = "";
 }

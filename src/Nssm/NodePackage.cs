@@ -1,6 +1,6 @@
 namespace Belin.Cli.Nssm;
 
-using System.Text.Json;
+using namespace System.Text.Json;
 
 /// <summary>
 /// Represents the contents of a <c>package.json</c> file.

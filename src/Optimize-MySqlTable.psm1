@@ -2,7 +2,7 @@ using module ./Data/New-MySqlConnection.psm1
 
 <#
 .SYNOPSIS
-	Alters the storage engine of MariaDB/MySQL tables.
+	Optimizes a set of MariaDB/MySQL tables.
 .PARAMETER Uri
 	The connection URI.
 .PARAMETER Schema
@@ -10,12 +10,11 @@ using module ./Data/New-MySqlConnection.psm1
 .PARAMETER Table
 	The table names (requires a schema).
 #>
-function Set-MySqlEngine {
+function Optimize-MySqlTable {
 	[CmdletBinding()]
 	[OutputType([void])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
-		[ValidateScript({ $_.IsAbsoluteUri -and ($_.Scheme -in "mariadb", "mysql") -and $_.UserInfo.Contains(":") })]
 		[uri] $Uri,
 
 		[Parameter()]
@@ -32,6 +31,10 @@ function Set-MySqlEngine {
 	try {
 		$connection = New-MySqlConnection $Uri -Open
 
+
+
+
+		$connection.Close()
 	}
 	finally {
 		${connection}?.Dispose()
