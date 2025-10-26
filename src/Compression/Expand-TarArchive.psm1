@@ -11,9 +11,16 @@
 function Expand-TarArchive {
 	[OutputType([void])]
 	param (
-		[Parameter(Mandatory, Position = 0)] [ValidateScript({ Test-Path $_ -IsValid })] [string] $Path,
-		[Parameter(Mandatory, Position = 1)] [ValidateScript({ Test-Path $_ -IsValid })] [string] $DestinationPath,
-		[ValidateRange("NonNegative")] [int] $Skip = 0
+		[Parameter(Mandatory, Position = 0)]
+		[ValidateScript({ Test-Path $_ }, ErrorMessage = "The input file does not exist.")]
+		[string] $Path,
+
+		[Parameter(Mandatory, Position = 1)]
+		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The output path is invalid.")]
+		[string] $DestinationPath,
+
+		[ValidateRange("NonNegative")]
+		[int] $Skip = 0
 	)
 
 	New-Item $DestinationPath -Force -ItemType Directory | Out-Null
