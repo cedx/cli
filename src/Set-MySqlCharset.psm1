@@ -1,17 +1,20 @@
-using assembly ../bin/MySqlConnector.dll
+using module ./Data/New-MySqlConnection.psm1
 
 <#
 .SYNOPSIS
 	Alters the character set of MariaDB/MySQL tables.
 .PARAMETER Uri
 	The connection URI.
+.PARAMETER Schema
+	The schema name.
+.PARAMETER Table
+	The table names (requires a schema).
 #>
 function Set-MySqlCharset {
 	[CmdletBinding()]
 	[OutputType([void])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
-		[ValidateScript({ $_.IsAbsoluteUri -and ($_.Scheme -in "mariadb", "mysql") -and $_.UserInfo.Contains(":") })]
 		[uri] $Uri,
 
 		[Parameter()]
@@ -21,4 +24,15 @@ function Set-MySqlCharset {
 		[string[]] $Table = @()
 	)
 
+	$noSchema = [string]::IsNullOrWhiteSpace($Schema)
+	if ($noSchema -and ($Table.Count -gt 0)) { throw [InvalidOperationException] "The table ""$($Table[0])"" requires that a schema be specified." }
+
+	$connection = $null
+	try {
+		$connection = New-MySqlConnection $Uri -Open
+
+	}
+	finally {
+		${connection}?.Dispose()
+	}
 }

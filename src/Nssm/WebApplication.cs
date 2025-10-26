@@ -1,46 +1,46 @@
 namespace Belin.Cli.Nssm;
 
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Xml;
-using System.Xml.Serialization;
+using namespace System.Text.Json;
+using namespace System.Text.Json.Serialization;
+using namespace System.Xml;
+using namespace System.Xml.Serialization;
 using static System.IO.Path;
 
 /// <summary>
 /// Provides information about a Web application.
 /// </summary>
 [XmlRoot("configuration")]
-public class WebApplication {
+class WebApplication {
 
 	/// <summary>
 	/// The application description.
 	/// </summary>
 	[XmlElement("description")]
-	public string Description { get; set; } = "";
+	[string] Description { get; set; } = "";
 
 	/// <summary>
 	/// The environment name.
 	/// </summary>
 	[XmlElement("environment")]
-	public string Environment { get; set; } = "";
+	[string] Environment { get; set; } = "";
 
 	/// <summary>
 	/// The application identifier.
 	/// </summary>
 	[XmlElement("id")]
-	public required string Id { get; init; }
+	[ValidateNotNullOrWhiteSpace()] [string] Id { get; init; }
 
 	/// <summary>
 	/// The application name.
 	/// </summary>
 	[XmlElement("name")]
-	public string Name { get; set; } = "";
+	[string] Name { get; set; } = "";
 
 	/// <summary>
 	/// The path to the application root directory.
 	/// </summary>
 	[JsonIgnore]
-	public string Path { get; set; } = "";
+	[string] Path { get; set; } = "";
 
 	/// <summary>
 	/// Reads the configuration file of the application located in the specified directory.

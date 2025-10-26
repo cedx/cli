@@ -64,6 +64,8 @@ class Table {
 	[string] QualifiedName([bool] $Escape = $false) {
 		$scriptBlock = $Escape ? { "``$_``" } : { $_ }
 		return "$($scriptBlock.Invoke($this.Schema)).$($scriptBlock.Invoke($this.Name))"
+
+		# TODO use https://mysqlconnector.net/api/mysqlconnector/mysqlcommandbuilder/quoteidentifier/
 	}
 }
 

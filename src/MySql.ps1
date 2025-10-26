@@ -1,4 +1,0 @@
-[CmdletBinding()]
-param (
-	#TODO
-)

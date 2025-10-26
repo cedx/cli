@@ -1,12 +1,12 @@
 namespace Belin.Cli.Nssm;
 
-using System.Diagnostics;
-using System.ServiceProcess;
+using namespace System.Diagnostics;
+using namespace System.ServiceProcess;
 
 /// <summary>
 /// Registers the Windows service.
 /// </summary>
-public class InstallCommand: Command {
+class InstallCommand: Command {
 
 	/// <summary>
 	/// The path to the root directory of the .NET or Node.js application.
@@ -37,7 +37,7 @@ public class InstallCommand: Command {
 	/// </summary>
 	/// <param name="parseResult">The results of parsing the command line input.</param>
 	/// <returns>The exit code.</returns>
-	public int Invoke(ParseResult parseResult) {
+	[int] Invoke(ParseResult parseResult) {
 		if (!this.CheckPrivilege()) {
 			Console.Error.WriteLine("You must run this command in an elevated prompt.");
 			return 1;

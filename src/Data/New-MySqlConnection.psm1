@@ -1,10 +1,13 @@
 using assembly ../../bin/MySqlConnector.dll
+using namespace MySqlConnector
 
 <#
 .SYNOPSIS
 	Creates a new database connection.
 .PARAMETER Uri
-	The connection URI used to connect to the database.
+	The connection URI.
+.PARAMETER Open
+	Value indicating whether to open the connection.
 .OUTPUTS
 	The newly created connection.
 #>
@@ -12,8 +15,10 @@ function New-MySqlConnection {
 	[OutputType([void])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
-		[ValidateScript({ $_.IsAbsoluteUri -and ($_.Scheme -in "mariadb", "mysql") -and $_.UserInfo.Contains(":") })]
-		[uri] $Uri
+		[uri] $Uri,
+
+		[Parameter()]
+		[switch] $Open
 	)
 
 	$userInfo = ($Uri.UserInfo -split ":").ForEach{ [Uri]::UnescapeDataString($_) }
@@ -28,5 +33,7 @@ function New-MySqlConnection {
 		UseCompression = $Uri.Host -notin "::1", "127.0.0.1", "localhost"
 	}
 
-	[MySqlConnection] $builder.ConnectionString
+	$connection = [MySqlConnection] $builder.ConnectionString
+	if ($Open) { $connection.Open() }
+	$connection
 }
