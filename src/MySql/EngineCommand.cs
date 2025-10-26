@@ -1,11 +1,11 @@
 namespace Belin.Cli.MySql;
 
-using System.Data;
+using namespace System.Data;
 
 /// <summary>
 /// Alters the storage engine of MariaDB/MySQL tableNames.
 /// </summary>
-public class EngineCommand: Command {
+class EngineCommand: Command {
 
 	/// <summary>
 	/// The name of the new storage engine.
@@ -46,7 +46,7 @@ public class EngineCommand: Command {
 	/// </summary>
 	/// <param name="parseResult">The results of parsing the command line input.</param>
 	/// <returns>The exit code.</returns>
-	public int Invoke(ParseResult parseResult) {
+	[int] Invoke(ParseResult parseResult) {
 		var schemaName = parseResult.GetValue(schemaOption);
 		var tableNames = parseResult.GetValue(tableOption)!;
 

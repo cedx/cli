@@ -1,14 +1,14 @@
 namespace Belin.Cli.MySql;
 
-using System.Data;
-using System.Diagnostics;
-using System.Text.Json;
-using System.Web;
+using namespace System.Data;
+using namespace System.Diagnostics;
+using namespace System.Text.Json;
+using namespace System.Web;
 
 /// <summary>
 /// Backups a set of MariaDB/MySQL tables.
 /// </summary>
-public class BackupCommand: Command {
+class BackupCommand: Command {
 
 	/// <summary>
 	/// The path to the output directory.
@@ -58,7 +58,7 @@ public class BackupCommand: Command {
 	/// </summary>
 	/// <param name="parseResult">The results of parsing the command line input.</param>
 	/// <returns>The exit code.</returns>
-	public int Invoke(ParseResult parseResult) {
+	[int] Invoke(ParseResult parseResult) {
 		var schemaName = parseResult.GetValue(schemaOption);
 		var tableNames = parseResult.GetValue(tableOption)!;
 
@@ -164,10 +164,10 @@ internal static class BackupFormat {
 	/// <summary>
 	/// The JSON Lines format.
 	/// </summary>
-	public const string JsonLines = "jsonl";
+	static [string] $JsonLines = "jsonl";
 
 	/// <summary>
 	/// The SQL format.
 	/// </summary>
-	public const string SqlDump = "sql";
+	static [string] $SqlDump = "sql";
 }

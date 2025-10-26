@@ -1,11 +1,11 @@
 namespace Belin.Cli.MySql;
 
-using System.Data;
+using namespace System.Data;
 
 /// <summary>
 /// Provides extension methods for database connections.
 /// </summary>
-public static class ConnectionExtensions {
+class ConnectionExtensions {
 
 	/// <summary>
 	/// Gets the list of columns contained in the specified table.
