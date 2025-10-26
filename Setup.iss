@@ -20,15 +20,16 @@ OutputBaseFilename = {#name} {#version}
 OutputDir = var
 PrivilegesRequired = admin
 PrivilegesRequiredOverridesAllowed = dialog
-SetupIconFile = src\Program.ico
+SetupIconFile = Program.ico
 SolidCompression = yes
 UninstallDisplayIcon = {app}\bin\{#executable}
 WizardStyle = modern
 
 [Files]
 Source: "*.md"; DestDir: "{app}"; Flags: ignoreversion
-Source: "bin\*"; DestDir: "{app}\bin"; Excludes: "*.pdb"; Flags: ignoreversion recursesubdirs
+Source: "bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion recursesubdirs
 Source: "res\*"; DestDir: "{app}\res"; Flags: ignoreversion recursesubdirs
+Source: "src\*"; DestDir: "{app}\src"; Flags: ignoreversion recursesubdirs
 
 [Tasks]
 Name: addProgramToPath; Description: "Add the program to the PATH environment variable"
