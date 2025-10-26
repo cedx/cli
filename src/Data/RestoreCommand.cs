@@ -1,13 +1,13 @@
 namespace Belin.Cli.MySql;
 
-using System.Diagnostics;
-using System.IO;
-using System.Web;
+using namespace System.Diagnostics;
+using namespace System.IO;
+using namespace System.Web;
 
 /// <summary>
 /// Restores a set of MariaDB/MySQL tables.
 /// </summary>
-public class RestoreCommand: Command {
+class RestoreCommand: Command {
 
 	/// <summary>
 	/// The path to the file or directory to process.
@@ -37,7 +37,7 @@ public class RestoreCommand: Command {
 	/// </summary>
 	/// <param name="parseResult">The results of parsing the command line input.</param>
 	/// <returns>The exit code.</returns>
-	public int Invoke(ParseResult parseResult) {
+	[int] Invoke(ParseResult parseResult) {
 		var files = parseResult.GetRequiredValue(fileOrDirectoryArgument) switch {
 			DirectoryInfo directory => directory.EnumerateFiles("*.sql", parseResult.GetValue(recursiveOption) ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly),
 			FileInfo file => [file],
