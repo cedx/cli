@@ -11,7 +11,7 @@ function Install-Php {
 	[OutputType([void])]
 	param (
 		[Parameter(Position = 0)]
-		[ValidateScript({ Test-Path $_ -IsValid })]
+		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The output path is invalid.")]
 		[string] $Path = "C:\Program Files\PHP",
 
 		[Parameter()]
