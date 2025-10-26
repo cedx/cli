@@ -1,5 +1,5 @@
-using namespace System.IO
-using module ./Compression/Expand-Archive.psm1
+using module ./Compression/Expand-TarArchive.psm1
+using module ./Compression/Expand-ZipArchive.psm1
 
 <#
 .SYNOPSIS
@@ -21,23 +21,21 @@ function Install-Jdk {
 		[int] $Version = 25
 	)
 
-	end {
-		$platform, $extension = switch ($true) {
-			($IsMacOS) { "macOS", "tar.gz"; break }
-			($IsWindows) { "windows", "zip"; break }
-			default { "linux", "tar.gz" }
-		}
-
-		$file = "microsoft-jdk-$Version-$platform-x64.$extension"
-		"Downloading file ""$file""..."
-		$outputFile = New-TemporaryFile
-		Invoke-WebRequest "https://aka.ms/download-jdk/$file" -OutFile $outputFile
-
-		"Extracting file ""$file"" into directory ""$Path""..."
-		if ($extension -eq "zip") { Expand-ZipArchive $outputFile $Path -Skip 1 }
-		else { Expand-TarArchive $outputFile $Path -Skip 1 }
-
-		$executable = $IsWindows ? "java.exe" : "java"
-		& $Path/bin/$executable --version
+	$platform, $extension = switch ($true) {
+		($IsMacOS) { "macOS", "tar.gz"; break }
+		($IsWindows) { "windows", "zip"; break }
+		default { "linux", "tar.gz" }
 	}
+
+	$file = "microsoft-jdk-$Version-$platform-x64.$extension"
+	"Downloading file ""$file""..."
+	$outputFile = New-TemporaryFile
+	Invoke-WebRequest "https://aka.ms/download-jdk/$file" -OutFile $outputFile
+
+	"Extracting file ""$file"" into directory ""$Path""..."
+	if ($extension -eq "zip") { Expand-ZipArchive $outputFile $Path -Skip 1 }
+	else { Expand-TarArchive $outputFile $Path -Skip 1 }
+
+	$executable = $IsWindows ? "java.exe" : "java"
+	& $Path/bin/$executable --version
 }
