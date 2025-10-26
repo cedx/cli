@@ -1,0 +1,32 @@
+using assembly ../../bin/MySqlConnector.dll
+
+<#
+.SYNOPSIS
+	Creates a new database connection.
+.PARAMETER Uri
+	The connection URI used to connect to the database.
+.OUTPUTS
+	The newly created connection.
+#>
+function New-MySqlConnection {
+	[OutputType([void])]
+	param (
+		[Parameter(Mandatory, Position = 0)]
+		[ValidateScript({ $_.IsAbsoluteUri -and ($_.Scheme -in "mariadb", "mysql") -and $_.UserInfo.Contains(":") })]
+		[uri] $Uri
+	)
+
+	$userInfo = ($Uri.UserInfo -split ":").ForEach{ [Uri]::UnescapeDataString($_) }
+	$builder = [MySqlConnectionStringBuilder]@{
+		Server = $Uri.Host
+		Port = $Uri.IsDefaultPort ? 3306 : $Uri.Port
+		Database = "information_schema"
+		UserID = $userInfo[0]
+		Password = $userInfo[1]
+		ConvertZeroDateTime = $true
+		Pooling = $false
+		UseCompression = $Uri.Host -notin "::1", "127.0.0.1", "localhost"
+	}
+
+	[MySqlConnection] $builder.ConnectionString
+}

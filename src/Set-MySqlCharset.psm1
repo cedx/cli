@@ -3,19 +3,22 @@ using assembly ../bin/MySqlConnector.dll
 <#
 .SYNOPSIS
 	Alters the character set of MariaDB/MySQL tables.
+.PARAMETER Uri
+	The connection URI.
 #>
 function Set-MySqlCharset {
 	[CmdletBinding()]
 	[OutputType([void])]
 	param (
-		[Parameter(Position = 0)]
-		[ValidateScript({ Test-Path $_ -IsValid })]
-		[string] $Path = "C:\Program Files\PHP",
+		[Parameter(Mandatory, Position = 0)]
+		[ValidateScript({ $_.IsAbsoluteUri -and ($_.Scheme -in "mariadb", "mysql") -and $_.UserInfo.Contains(":") })]
+		[uri] $Uri,
 
 		[Parameter()]
-		[switch] $RegisterEventSource
+		[string] $Schema = "",
+
+		[Parameter()]
+		[string[]] $Table = @()
 	)
 
-	end {
-	}
 }

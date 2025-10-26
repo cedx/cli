@@ -1,11 +1,11 @@
 namespace Belin.Cli.MySql;
 
-using System.Data;
+using namespace System.Data;
 
 /// <summary>
 /// Alters the character set of MariaDB/MySQL tables.
 /// </summary>
-public class CharsetCommand: Command {
+class CharsetCommand: Command {
 
 	/// <summary>
 	/// The name of the new character set.
@@ -46,7 +46,7 @@ public class CharsetCommand: Command {
 	/// </summary>
 	/// <param name="parseResult">The results of parsing the command line input.</param>
 	/// <returns>The exit code.</returns>
-	public int Invoke(ParseResult parseResult) {
+	[int] Invoke(ParseResult parseResult) {
 		var schemaName = parseResult.GetValue(schemaOption);
 		var tableNames = parseResult.GetValue(tableOption)!;
 

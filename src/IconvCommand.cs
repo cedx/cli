@@ -1,12 +1,12 @@
 namespace Belin.Cli;
 
-using System.Text;
-using System.Text.Json;
+using namespace System.Text;
+using namespace System.Text.Json;
 
 /// <summary>
 /// Converts the encoding of input files.
 /// </summary>
-public class IconvCommand: Command {
+class IconvCommand: Command {
 
 	/// <summary>
 	/// The path to the file or directory to process.
@@ -68,7 +68,7 @@ public class IconvCommand: Command {
 	/// </summary>
 	/// <param name="parseResult">The results of parsing the command line input.</param>
 	/// <returns>The exit code.</returns>
-	public int Invoke(ParseResult parseResult) {
+	[int] Invoke(ParseResult parseResult) {
 		var resources = Path.Join(AppContext.BaseDirectory, "../res");
 		if (binaryExtensions.Count == 0) binaryExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "BinaryExtensions.json"))) ?? []);
 		if (textExtensions.Count == 0) textExtensions.AddRange(JsonSerializer.Deserialize<string[]>(File.ReadAllText(Path.Join(resources, "TextExtensions.json"))) ?? []);

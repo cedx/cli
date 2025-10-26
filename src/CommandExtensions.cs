@@ -3,7 +3,7 @@ namespace Belin.Cli;
 /// <summary>
 /// Provides extension methods for commands.
 /// </summary>
-public static class CommandExtensions {
+class CommandExtensions {
 
 	/// <summary>
 	/// Checks whether this command should be executed in an elevated prompt.

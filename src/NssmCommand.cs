@@ -5,7 +5,7 @@ using Belin.Cli.Nssm;
 /// <summary>
 /// Registers a .NET or Node.js application as a Windows service.
 /// </summary>
-public class NssmCommand: Command {
+class NssmCommand: Command {
 
 	/// <summary>
 	/// Creates a new <c>nssm</c> command.

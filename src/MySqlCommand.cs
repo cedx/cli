@@ -1,12 +1,12 @@
 namespace Belin.Cli;
 
 using Belin.Cli.MySql;
-using System.CommandLine.Parsing;
+using namespace System.CommandLine.Parsing;
 
 /// <summary>
 /// Manages MariaDB/MySQL databases.
 /// </summary>
-public class MySqlCommand: Command {
+class MySqlCommand: Command {
 
 	/// <summary>
 	/// The connection string.
