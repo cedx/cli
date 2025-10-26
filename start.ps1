@@ -1,8 +1,7 @@
 #!/usr/bin/env pwsh
 param (
-	[Parameter(Mandatory, Position = 0)]
-	[ValidateSet("Iconv", "MySql", "Nssm", "Setup")]
-	[string] $Command
+	[Parameter(Mandatory, Position = 0)] [string] $Command,
+	[Parameter(Position = 1, ValueFromRemainingArguments)] [string[]] $Arguments
 )
 
 Set-StrictMode -Version Latest
@@ -11,4 +10,5 @@ $PSNativeCommandUseErrorActionPreference = $true
 
 $commandPath = Get-Item $PSCommandPath
 $scriptRoot = $commandPath.LinkType ? (Split-Path $commandPath.LinkTarget) : $PSScriptRoot
-. $scriptRoot/src/$Command.ps1 @rgs
+Import-Module $scriptRoot/Cli.psd1
+Invoke-Expression "$Command $Arguments"
