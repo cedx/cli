@@ -1,6 +1,6 @@
-using assembly ../../bin/MySqlConnector.dll
 using namespace MySqlConnector
 using namespace System.Collections.Generic
+using module ./Schema.psm1
 
 <#
 .SYNOPSIS
@@ -12,7 +12,7 @@ using namespace System.Collections.Generic
 #>
 function Get-MySqlSchemas {
 	[OutputType([Schema[]])]
-	param ([ValidateNotNull()] [MySqlConnection] $Connection)
+	param ([Parameter(Mandatory, Position = 0)] [ValidateNotNull()] [MySqlConnection] $Connection)
 
 	$sql = "
 		SELECT *

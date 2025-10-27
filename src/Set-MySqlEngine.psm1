@@ -15,7 +15,6 @@ function Set-MySqlEngine {
 	[OutputType([void])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
-		[ValidateScript({ $_.IsAbsoluteUri -and ($_.Scheme -in "mariadb", "mysql") -and $_.UserInfo.Contains(":") })]
 		[uri] $Uri,
 
 		[Parameter()]
