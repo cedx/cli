@@ -1,4 +1,5 @@
 using namespace System.ComponentModel.DataAnnotations.Schema
+using namespace System.Data
 
 <#
 .SYNOPSIS
@@ -19,15 +20,14 @@ class Table {
 		The storage engine.
 	#>
 	[Column("ENGINE")]
-	[string] $Engine = [TableEngine]::None
+	[string] $Engine = "TODO" # [TableEngine]::None
 
 	<#
 	.SYNOPSIS
 		The table name.
 	#>
 	[Column("TABLE_NAME")]
-	[ValidateNotNullOrWhiteSpace()]
-	[string] $Name
+	[string] $Name = ""
 
 	<#
 	.SYNOPSIS
@@ -41,17 +41,7 @@ class Table {
 		The table type.
 	#>
 	[Column("TABLE_TYPE")]
-	[string] $Type = [TableType]::BaseTable
-
-	<#
-	.SYNOPSIS
-		Creates a new table.
-	.PARAMETER Name
-		The table name.
-	#>
-	Table([string] $Name) {
-		$this.Name = $Name
-	}
+	[string] $Type = "TODO" # [TableType]::BaseTable
 
 	<#
 	.SYNOPSIS
@@ -61,11 +51,29 @@ class Table {
 	.OUTPUTS
 		The fully qualified name.
 	#>
-	[string] QualifiedName([bool] $Escape = $false) {
-		$scriptBlock = $Escape ? { "``$_``" } : { $_ }
-		return "$($scriptBlock.Invoke($this.Schema)).$($scriptBlock.Invoke($this.Name))"
+	# [string] QualifiedName([bool] $Escape = $false) {
+	# 	$scriptBlock = $Escape ? { "``$_``" } : { $_ }
+	# 	return "$($scriptBlock.Invoke($this.Schema)).$($scriptBlock.Invoke($this.Name))"
 
-		# TODO use https://mysqlconnector.net/api/mysqlconnector/mysqlcommandbuilder/quoteidentifier/
+	# 	# TODO use https://mysqlconnector.net/api/mysqlconnector/mysqlcommandbuilder/quoteidentifier/
+	# }
+
+	<#
+	.SYNOPSIS
+		Creates a new table from the specified data record.
+	.PARAMETER DataRecord
+		A data record providing values to initialize the instance.
+	.OUTPUTS
+		The newly created table.
+	#>
+	static [Table] OfRecord([IDataRecord] $DataRecord) {
+		return [Table]@{
+			Collation = $DataRecord["TABLE_COLLATION"]
+			Engine = $DataRecord["ENGINE"]
+			Name = $DataRecord["TABLE_NAME"]
+			Schema = $DataRecord["TABLE_SCHEMA"]
+			Type = $DataRecord["TABLE_TYPE"]
+		}
 	}
 }
 

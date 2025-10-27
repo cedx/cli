@@ -27,18 +27,7 @@ class Schema {
 		The schema name.
 	#>
 	[Column("SCHEMA_NAME")]
-	[ValidateNotNullOrWhiteSpace()]
-	[string] $Name
-
-	<#
-	.SYNOPSIS
-		Creates a new schema.
-	.PARAMETER Name
-		The schema name.
-	#>
-	Schema([string] $Name) {
-		$this.Name = $Name
-	}
+	[string] $Name = ""
 
 	<#
 	.SYNOPSIS
@@ -49,9 +38,10 @@ class Schema {
 		The newly created schema.
 	#>
 	static [Schema] OfRecord([IDataRecord] $DataRecord) {
-		$schema = [Schema]::new($DataRecord["SCHEMA_NAME"])
-		$schema.Charset = $DataRecord["DEFAULT_CHARACTER_SET_NAME"]
-		$schema.Collation = $DataRecord["DEFAULT_COLLATION_NAME"]
-		return $schema
+		return [Schema]@{
+			Charset = $DataRecord["DEFAULT_CHARACTER_SET_NAME"]
+			Collation = $DataRecord["DEFAULT_COLLATION_NAME"]
+			Name = $DataRecord["SCHEMA_NAME"]
+		}
 	}
 }
