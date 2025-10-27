@@ -17,8 +17,8 @@
 		"Install-Node"
 		"Install-Php"
 		"Optimize-MySqlTable"
-		"Set-MySqlCharset"
-		"Set-MySqlEngine"
+		# "Set-MySqlCharset"
+		# "Set-MySqlEngine"
 	)
 
 	NestedModules = @(
@@ -26,8 +26,12 @@
 		"src/Install-Node.psm1"
 		"src/Install-Php.psm1"
 		"src/Optimize-MySqlTable.psm1"
-		"src/Set-MySqlCharset.psm1"
-		"src/Set-MySqlEngine.psm1"
+		# "src/Set-MySqlCharset.psm1"
+		# "src/Set-MySqlEngine.psm1"
+	)
+
+	RequiredAssemblies = @(
+		"bin/MySqlConnector.dll"
 	)
 
 	PrivateData = @{

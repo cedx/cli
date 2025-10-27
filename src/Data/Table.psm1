@@ -5,7 +5,7 @@ using namespace System.Data
 .SYNOPSIS
 	Provides the metadata of a database table.
 #>
-[Table("TABLES")]
+[TableAttribute("TABLES")]
 class Table {
 
 	<#
@@ -20,7 +20,7 @@ class Table {
 		The storage engine.
 	#>
 	[Column("ENGINE")]
-	[string] $Engine = "TODO" # [TableEngine]::None
+	[string] $Engine = [TableEngine]::None
 
 	<#
 	.SYNOPSIS
@@ -41,7 +41,7 @@ class Table {
 		The table type.
 	#>
 	[Column("TABLE_TYPE")]
-	[string] $Type = "TODO" # [TableType]::BaseTable
+	[string] $Type = [TableType]::BaseTable
 
 	<#
 	.SYNOPSIS
@@ -51,12 +51,12 @@ class Table {
 	.OUTPUTS
 		The fully qualified name.
 	#>
-	# [string] QualifiedName([bool] $Escape = $false) {
-	# 	$scriptBlock = $Escape ? { "``$_``" } : { $_ }
-	# 	return "$($scriptBlock.Invoke($this.Schema)).$($scriptBlock.Invoke($this.Name))"
+	[string] QualifiedName([bool] $Escape = $false) {
+		$scriptBlock = $Escape ? { "``$_``" } : { $_ }
+		return "$($scriptBlock.Invoke($this.Schema)).$($scriptBlock.Invoke($this.Name))"
 
-	# 	# TODO use https://mysqlconnector.net/api/mysqlconnector/mysqlcommandbuilder/quoteidentifier/
-	# }
+		# TODO use https://mysqlconnector.net/api/mysqlconnector/mysqlcommandbuilder/quoteidentifier/
+	}
 
 	<#
 	.SYNOPSIS

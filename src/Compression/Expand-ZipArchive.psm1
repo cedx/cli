@@ -33,7 +33,7 @@ function Expand-ZipArchive {
 			foreach ($entry in $archive.Entries) {
 				$components = $entry.FullName -split "/"
 				$newPath = $components[$Skip..($components.Count - 1)] -join "/"
-				if ($newPath.Length -eq 0) { $newPath = "/" }
+				if (-not $newPath) { $newPath = "/" }
 
 				$fullPath = Join-Path $DestinationPath $newPath
 				if ($newPath[-1] -eq "/") { New-Item $fullPath -Force -ItemType Directory | Out-Null }
