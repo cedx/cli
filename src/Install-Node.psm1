@@ -13,11 +13,7 @@ function Install-Node {
 	param (
 		[Parameter(Position = 0)]
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The output path is invalid.")]
-		[string] $Path = $IsWindows ? "C:\Program Files\Node.js" : "/usr/local",
-
-		# TODO ?
-		[ValidateScript({ Test-Path $_ }, ErrorMessage = "TODO")]
-		[string] $ConfigFile
+		[string] $Path = $IsWindows ? "C:\Program Files\Node.js" : "/usr/local"
 	)
 
 	$platform, $extension = switch ($true) {

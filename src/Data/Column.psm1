@@ -12,28 +12,28 @@ class Column {
 	.SYNOPSIS
 		The column name.
 	#>
-	[Column("COLUMN_NAME")]
+	[ColumnAttribute("COLUMN_NAME")]
 	[string] $Name = ""
 
 	<#
 	.SYNOPSIS
 		The column position.
 	#>
-	[Column("ORDINAL_POSITION")]
+	[ColumnAttribute("ORDINAL_POSITION")]
 	[int] $Position = 0
 
 	<#
 	.SYNOPSIS
 		The schema containing this column.
 	#>
-	[Column("TABLE_SCHEMA")]
+	[ColumnAttribute("TABLE_SCHEMA")]
 	[string] $Schema = ""
 
 	<#
 	.SYNOPSIS
 		The table containing this column.
 	#>
-	[Column("TABLE_NAME")]
+	[ColumnAttribute("TABLE_NAME")]
 	[string] $Table = ""
 
 	<#

@@ -25,7 +25,7 @@ function Set-MySqlCharset {
 	)
 
 	$noSchema = [string]::IsNullOrWhiteSpace($Schema)
-	if ($noSchema -and ($Table.Count -gt 0)) { throw [InvalidOperationException] "The table ""$($Table[0])"" requires that a schema be specified." }
+	if ($noSchema -and $Table) { throw [InvalidOperationException] "The table ""$($Table[0])"" requires that a schema be specified." }
 
 	$connection = $null
 	try {
