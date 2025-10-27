@@ -1,4 +1,3 @@
-using assembly ../../bin/MySqlConnector.dll
 using namespace MySqlConnector
 
 <#
@@ -15,6 +14,10 @@ function New-MySqlConnection {
 	[OutputType([void])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
+		[ValidateScript(
+			{ $_.IsAbsoluteUri -and ($_.Scheme -in "mariadb", "mysql") -and $_.UserInfo.Contains(":") },
+			ErrorMessage = "The connection URI is invalid."
+		)]
 		[uri] $Uri,
 
 		[Parameter()]
