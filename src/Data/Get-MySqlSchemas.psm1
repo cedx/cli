@@ -22,7 +22,6 @@ function Get-MySqlSchemas {
 
 	$command = [MySqlCommand]::new($sql, $Connection)
 	$reader = $command.ExecuteReader()
-	$command.Dispose()
 
 	$list = [List[Schema]]::new()
 	while ($reader.Read()) { $list.Add([Schema]::OfRecord($reader)) }

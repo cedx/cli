@@ -30,7 +30,6 @@ function Get-MySqlTables {
 	$command.Parameters.AddWithValue("@Name", $Schema.Name) | Out-Null
 	$command.Parameters.AddWithValue("@Type", [TableType]::BaseTable) | Out-Null
 	$reader = $command.ExecuteReader()
-	$command.Dispose()
 
 	$list = [List[Table]]::new()
 	while ($reader.Read()) { $list.Add([Table]::OfRecord($reader)) }

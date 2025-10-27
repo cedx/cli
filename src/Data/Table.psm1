@@ -1,3 +1,4 @@
+using namespace MySqlConnector
 using namespace System.ComponentModel.DataAnnotations.Schema
 using namespace System.Data
 
@@ -46,16 +47,24 @@ class Table {
 	<#
 	.SYNOPSIS
 		Gets the fully qualified name.
+	.OUTPUTS
+		The fully qualified name.
+	#>
+	[string] QualifiedName() {
+		return $this.QualifiedName($false)
+	}
+
+	<#
+	.SYNOPSIS
+		Gets the fully qualified name.
 	.PARAMETER Escape
 		Value indicating whether to escape the SQL identifiers.
 	.OUTPUTS
 		The fully qualified name.
 	#>
-	[string] QualifiedName([bool] $Escape = $false) {
-		$scriptBlock = $Escape ? { "``$_``" } : { $_ }
+	[string] QualifiedName([bool] $Escape) {
+		$scriptBlock = $Escape ? { [MySqlCommandBuilder]::new().QuoteIdentifier($args[0]) } : { $args[0] }
 		return "$($scriptBlock.Invoke($this.Schema)).$($scriptBlock.Invoke($this.Name))"
-
-		# TODO use https://mysqlconnector.net/api/mysqlconnector/mysqlcommandbuilder/quoteidentifier/
 	}
 
 	<#
