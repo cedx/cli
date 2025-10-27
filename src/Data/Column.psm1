@@ -1,4 +1,5 @@
 using namespace System.ComponentModel.DataAnnotations.Schema
+using namespace System.Data
 
 <#
 .SYNOPSIS
@@ -12,8 +13,7 @@ class Column {
 		The column name.
 	#>
 	[Column("COLUMN_NAME")]
-	[ValidateNotNullOrWhiteSpace()]
-	[string] $Name
+	[string] $Name = ""
 
 	<#
 	.SYNOPSIS
@@ -38,11 +38,18 @@ class Column {
 
 	<#
 	.SYNOPSIS
-		Creates a new column.
-	.PARAMETER Name
-		The column name.
+		Creates a new table from the specified data record.
+	.PARAMETER DataRecord
+		A data record providing values to initialize the instance.
+	.OUTPUTS
+		The newly created table.
 	#>
-	Column([string] $Name) {
-		$this.Name = $Name
+	static [Column] OfRecord([IDataRecord] $DataRecord) {
+		return [Column]@{
+			Name = $DataRecord["COLUMN_NAME"]
+			Position = $DataRecord["ORDINAL_POSITION"]
+			Schema = $DataRecord["TABLE_SCHEMA"]
+			Table = $DataRecord["TABLE_NAME"]
+		}
 	}
 }
