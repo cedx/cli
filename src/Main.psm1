@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-	Returns the application version number.
+	Returns the version number of the application.
 .OUTPUTS
-	The application version number.
+	The version number of the application.
 #>
 function Get-CliVersion {
 	[OutputType([string])] param ()
