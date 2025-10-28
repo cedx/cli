@@ -1,4 +1,3 @@
-using namespace MySqlConnector
 using namespace System.ComponentModel.DataAnnotations.Schema
 using namespace System.Data
 
@@ -63,7 +62,7 @@ class Table {
 		The fully qualified name.
 	#>
 	[string] QualifiedName([bool] $Escape) {
-		$scriptBlock = $Escape ? { [MySqlCommandBuilder]::new().QuoteIdentifier($args[0]) } : { $args[0] }
+		$scriptBlock = $Escape ? { "``$($args[0])``" } : { $args[0] }
 		return "$(& $scriptBlock $this.Schema).$(& $scriptBlock $this.Name)"
 	}
 

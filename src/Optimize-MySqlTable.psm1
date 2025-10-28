@@ -1,4 +1,5 @@
 using namespace MySqlConnector
+using namespace System.Diagnostics.CodeAnalysis
 using module ./MySql/Get-Schema.psm1
 using module ./MySql/Get-Table.psm1
 using module ./MySql/Invoke-NonQuery.psm1
@@ -19,6 +20,7 @@ using module ./MySql/Table.psm1
 function Optimize-MySqlTable {
 	[CmdletBinding()]
 	[OutputType([void])]
+	[SuppressMessage("PSUseOutputTypeCorrectly", "")]
 	param (
 		[Parameter(Mandatory, Position = 0)]
 		[ValidateNotNull()]
