@@ -1,5 +1,5 @@
 "Performing the static analysis of source code..."
 Import-Module PSScriptAnalyzer
 Invoke-ScriptAnalyzer $PSScriptRoot -Recurse
-Invoke-ScriptAnalyzer Cli.psd1
+Invoke-ScriptAnalyzer *.psd1
 Invoke-ScriptAnalyzer src -Recurse
