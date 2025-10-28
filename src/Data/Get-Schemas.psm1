@@ -10,7 +10,7 @@ using module ./Schema.psm1
 .OUTPUTS
 	The schemas hosted by the database server.
 #>
-function Get-MySqlSchemas {
+function Get-Schemas {
 	[OutputType([Schema[]])]
 	param ([Parameter(Mandatory, Position = 0)] [ValidateNotNull()] [MySqlConnection] $Connection)
 

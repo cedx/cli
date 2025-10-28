@@ -10,7 +10,7 @@ using namespace MySqlConnector
 .OUTPUTS
 	The newly created connection.
 #>
-function New-MySqlConnection {
+function New-Connection {
 	[OutputType([void])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
