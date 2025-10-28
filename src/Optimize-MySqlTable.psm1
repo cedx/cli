@@ -1,10 +1,10 @@
 using namespace MySqlConnector
-using module ./Data/Get-Schemas.psm1
-using module ./Data/Get-Tables.psm1
-using module ./Data/Invoke-NonQuery.psm1
-using module ./Data/New-Connection.psm1
-using module ./Data/Schema.psm1
-using module ./Data/Table.psm1
+using module ./MySql/Get-Schemas.psm1
+using module ./MySql/Get-Tables.psm1
+using module ./MySql/Invoke-NonQuery.psm1
+using module ./MySql/New-Connection.psm1
+using module ./MySql/Schema.psm1
+using module ./MySql/Table.psm1
 
 <#
 .SYNOPSIS

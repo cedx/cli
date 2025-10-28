@@ -1,6 +1,6 @@
 @{
 	ModuleVersion = "3.0.0"
-	RootModule = "src/Program.psm1"
+	RootModule = "src/Main.psm1"
 
 	Author = "Cédric Belin <cedx@outlook.com>"
 	CompanyName = "Cedric-Belin.fr"
@@ -13,12 +13,13 @@
 	VariablesToExport = @()
 
 	FunctionsToExport = @(
+		"Get-CliVersion"
 		"Install-Jdk"
 		"Install-Node"
 		"Install-Php"
 		"Optimize-MySqlTable"
-		# "Set-MySqlCharset"
-		# "Set-MySqlEngine"
+		"Set-MySqlCharset"
+		"Set-MySqlEngine"
 	)
 
 	NestedModules = @(
@@ -26,8 +27,8 @@
 		"src/Install-Node.psm1"
 		"src/Install-Php.psm1"
 		"src/Optimize-MySqlTable.psm1"
-		# "src/Set-MySqlCharset.psm1"
-		# "src/Set-MySqlEngine.psm1"
+		"src/Set-MySqlCharset.psm1"
+		"src/Set-MySqlEngine.psm1"
 	)
 
 	RequiredAssemblies = @(
