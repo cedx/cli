@@ -11,7 +11,7 @@ using namespace MySqlConnector
 	The newly created connection.
 #>
 function New-Connection {
-	[OutputType([void])]
+	[OutputType([MySqlConnection])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
 		[ValidateScript(

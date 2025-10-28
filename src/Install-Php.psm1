@@ -5,10 +5,12 @@
 	The path to the output directory.
 .PARAMETER RegisterEventSource
 	Value indicating whether to register the PHP interpreter with the event log.
+.OUTPUTS
+	The output from the `php --version` command.
 #>
 function Install-Php {
 	[CmdletBinding()]
-	[OutputType([void])]
+	[OutputType([string])]
 	param (
 		[Parameter(Position = 0)]
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The output path is invalid.")]
