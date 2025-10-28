@@ -1,6 +1,6 @@
 using namespace MySqlConnector
-using module ./MySql/Get-Schemas.psm1
-using module ./MySql/Get-Tables.psm1
+using module ./MySql/Get-Schema.psm1
+using module ./MySql/Get-Table.psm1
 using module ./MySql/Invoke-NonQuery.psm1
 using module ./MySql/New-Connection.psm1
 using module ./MySql/Schema.psm1
@@ -34,9 +34,9 @@ function Optimize-MySqlTable {
 	$connection = $null
 	try {
 		$connection = New-Connection $Uri -Open
-		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-Schemas $connection)
+		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-Schema $connection)
 		$tables = foreach ($schemaObject in $schemas) {
-			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-Tables $connection $schemaObject)
+			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-Table $connection $schemaObject)
 		}
 
 		foreach ($tableObject in $tables) {

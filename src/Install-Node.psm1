@@ -6,10 +6,12 @@ using module ./Compression/Expand-ZipArchive.psm1
 	Downloads and installs the latest Node.js release.
 .PARAMETER Path
 	The path to the output directory.
+.OUTPUTS
+	The output from the `node --version` command.
 #>
 function Install-Node {
 	[CmdletBinding()]
-	[OutputType([void])]
+	[OutputType([string])]
 	param (
 		[Parameter(Position = 0)]
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The output path is invalid.")]

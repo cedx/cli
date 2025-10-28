@@ -8,10 +8,12 @@ using module ./Compression/Expand-ZipArchive.psm1
 	The path to the output directory.
 .PARAMETER Version
 	The major version of the Java development kit.
+.OUTPUTS
+	The output from the `java --version` command.
 #>
 function Install-Jdk {
 	[CmdletBinding()]
-	[OutputType([void])]
+	[OutputType([string])]
 	param (
 		[Parameter(Position = 0)]
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The output path is invalid.")]
