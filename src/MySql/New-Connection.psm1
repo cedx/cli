@@ -1,4 +1,5 @@
 using namespace MySqlConnector
+using namespace System.Diagnostics.CodeAnalysis
 
 <#
 .SYNOPSIS
@@ -12,6 +13,7 @@ using namespace MySqlConnector
 #>
 function New-Connection {
 	[OutputType([MySqlConnection])]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		[Parameter(Mandatory, Position = 0)]
 		[ValidateScript(

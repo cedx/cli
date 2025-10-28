@@ -1,4 +1,5 @@
 using namespace MySqlConnector
+using namespace System.Diagnostics.CodeAnalysis
 using module ./MySql/Get-Engine.psm1
 using module ./MySql/Get-Schema.psm1
 using module ./MySql/Get-Table.psm1
@@ -22,6 +23,8 @@ using module ./MySql/Table.psm1
 function Set-MySqlEngine {
 	[CmdletBinding()]
 	[OutputType([void])]
+	[SuppressMessage("PSUseOutputTypeCorrectly", "")]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		[Parameter(Mandatory, Position = 0)]
 		[ValidateNotNull()]
