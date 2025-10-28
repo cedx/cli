@@ -64,7 +64,7 @@ class Table {
 	#>
 	[string] QualifiedName([bool] $Escape) {
 		$scriptBlock = $Escape ? { [MySqlCommandBuilder]::new().QuoteIdentifier($args[0]) } : { $args[0] }
-		return "$($scriptBlock.Invoke($this.Schema)).$($scriptBlock.Invoke($this.Name))"
+		return "$(& $scriptBlock $this.Schema).$(& $scriptBlock $this.Name)"
 	}
 
 	<#
