@@ -13,7 +13,7 @@ using module ./Table.psm1
 .OUTPUTS
 	The stables contained in the specified schema.
 #>
-function Get-MySqlTables {
+function Get-Tables {
 	[OutputType([Table[]])]
 	param (
 		[Parameter(Mandatory, Position = 0)] [ValidateNotNull()] [MySqlConnection] $Connection,

@@ -1,4 +1,4 @@
-using module ./Data/New-MySqlConnection.psm1
+using module ./Data/New-Connection.psm1
 
 <#
 .SYNOPSIS
@@ -29,7 +29,7 @@ function Set-MySqlCharset {
 
 	$connection = $null
 	try {
-		$connection = New-MySqlConnection $Uri -Open
+		$connection = New-Connection $Uri -Open
 
 	}
 	finally {
