@@ -18,4 +18,4 @@ Set-StrictMode -Version Latest
 $commandPath = Get-Item $PSCommandPath
 $scriptRoot = $commandPath.LinkType ? (Split-Path $commandPath.LinkTarget) : $PSScriptRoot
 Import-Module $scriptRoot/Cli.psd1
-Invoke-Expression "$Command $Arguments"
+& $Command @Arguments

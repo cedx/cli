@@ -1,4 +1,10 @@
+using namespace MySqlConnector
+using module ./Data/Get-MySqlSchemas.psm1
+using module ./Data/Get-MySqlTables.psm1
+using module ./Data/Invoke-NonQuery.psm1
 using module ./Data/New-MySqlConnection.psm1
+using module ./Data/Schema.psm1
+using module ./Data/Table.psm1
 
 <#
 .SYNOPSIS
@@ -8,31 +14,37 @@ using module ./Data/New-MySqlConnection.psm1
 .PARAMETER Schema
 	The schema name.
 .PARAMETER Table
-	The table names (requires a schema).
+	The table name.
 #>
 function Optimize-MySqlTable {
 	[CmdletBinding()]
 	[OutputType([void])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
+		[ValidateNotNull()]
 		[uri] $Uri,
 
 		[Parameter()]
-		[string] $Schema = "",
+		[string[]] $Schema = @(),
 
 		[Parameter()]
 		[string[]] $Table = @()
 	)
 
-	$noSchema = [string]::IsNullOrWhiteSpace($Schema)
-	if ($noSchema -and ($Table.Count -gt 0)) { throw [InvalidOperationException] "The table ""$($Table[0])"" requires that a schema be specified." }
-
 	$connection = $null
 	try {
 		$connection = New-MySqlConnection $Uri -Open
+		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchemas $connection)
+		$tables = foreach ($schemaObject in $schemas) {
+			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-MySqlTables $connection $schemaObject)
+		}
 
-
-
+		foreach ($tableObject in $tables) {
+			"Optimizing: $($tableObject.QualifiedName($false))"
+			$command = [MySqlCommand]::new("OPTIMIZE TABLE $($tableObject.QualifiedName($true))", $Connection)
+			$result = Invoke-NonQuery $command
+			if ($result.IsFailure) { Write-Error ($result.Message ? $result.Message : "An error occurred.") }
+		}
 
 		$connection.Close()
 	}
