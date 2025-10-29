@@ -1,7 +1,12 @@
 using module ./Result.psm1
 
 <#
-TODO
+.SYNOPSIS
+	Executes an SQL command.
+.PARAMETER Command
+	The SQL command to execute.
+.OUTPUTS
+	A value indicating whether the command succeeded or failed.
 #>
 function Invoke-NonQuery {
 	[OutputType([Result])]

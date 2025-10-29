@@ -8,7 +8,7 @@ using module ./Table.psm1
 	Gets the list of columns contained in the specified table.
 .PARAMETER Connection
 	The database connection.
-.PARAMETER Schema
+.PARAMETER Table
 	The database table.
 .OUTPUTS
 	The columns contained in the specified table.
