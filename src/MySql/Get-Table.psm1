@@ -11,7 +11,7 @@ using module ./Table.psm1
 .PARAMETER Schema
 	The database schema.
 .OUTPUTS
-	The stables contained in the specified schema.
+	The tables contained in the specified schema.
 #>
 function Get-Table {
 	[OutputType([Table[]])]
