@@ -1,5 +1,6 @@
 using module ./Compression/Expand-TarArchive.psm1
 using module ./Compression/Expand-ZipArchive.psm1
+using module ./Test-Privilege.psm1
 
 <#
 .SYNOPSIS
@@ -17,6 +18,10 @@ function Install-Node {
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The output path is invalid.")]
 		[string] $Path = $IsWindows ? "C:\Program Files\Node.js" : "/usr/local"
 	)
+
+	if (-not (Test-Privilege $Path)) {
+		throw [InvalidOperationException] "You must run this command in an elevated prompt."
+	}
 
 	$platform, $extension = switch ($true) {
 		($IsMacOS) { "darwin", "tar.gz"; break }
