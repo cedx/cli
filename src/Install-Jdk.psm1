@@ -1,5 +1,6 @@
 using module ./Compression/Expand-TarArchive.psm1
 using module ./Compression/Expand-ZipArchive.psm1
+using module ./Test-Privilege.psm1
 
 <#
 .SYNOPSIS
@@ -22,6 +23,10 @@ function Install-Jdk {
 		[ValidateSet(11, 17, 21, 25)]
 		[int] $Version = 25
 	)
+
+	if (-not (Test-Privilege $Path)) {
+		throw [InvalidOperationException] "You must run this command in an elevated prompt."
+	}
 
 	$platform, $extension = switch ($true) {
 		($IsMacOS) { "macOS", "tar.gz"; break }

@@ -4,25 +4,23 @@ using namespace System.IO
 .SYNOPSIS
 	Checks whether the current process is privileged.
 .PARAMETER Path
-	TODO The path to the output directory.
+	The path to a directory used to verify if the process has sufficient permissions.
 .OUTPUTS
 	Value indicating whether the current process is privileged.
 #>
 function Test-Privilege {
 	[OutputType([bool])] param (
 		[Parameter(Position = 0)]
-		[DirectoryInfo] $Path # TODO or String ????
+		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified output path is invalid.")]
+		[string] $Path
 	)
 
 	$isPrivileged = [Environment]::IsPrivilegedProcess
 	if (-not [string]::IsNullOrWhiteSpace($Path)) {
-		$homePath = [DirectoryInfo] [Environment]::GetFolderPath([Environment]::SpecialFolder.Personal)
-		if (<# TODO ($Path.Root.Name -ne $homePath.Root.Name) -or #> $Path.FullName.StartsWith($homePath.FullName)) { $isPrivileged = $true }
+		$homePath = [DirectoryInfo] $HOME
+		$outputPath = [DirectoryInfo] $Path
+		if (($outputPath.Root.Name -ne $homePath.Root.Name) -or $outputPath.FullName.StartsWith($homePath.FullName)) { $isPrivileged = $true }
 	}
-
-	# if ($null -ne $Path) {
-	# 	# TODO ???
-	# }
 
 	$isPrivileged
 }
