@@ -54,13 +54,13 @@ function Set-MySqlEngine {
 
 		foreach ($tableObject in $tables) {
 			"Processing: $($tableObject.QualifiedName($false))"
-			[MySqlCommand]::new("SET foreign_key_checks = 0", $Connection).ExecuteNonQuery() | Out-Null
+			[MySqlCommand]::new("SET foreign_key_checks = 0", $connection).ExecuteNonQuery() | Out-Null
 
-			$command = [MySqlCommand]::new("ALTER TABLE $($tableObject.QualifiedName($true)) ENGINE = $Engine", $Connection)
+			$command = [MySqlCommand]::new("ALTER TABLE $($tableObject.QualifiedName($true)) ENGINE = $Engine", $connection)
 			$result = Invoke-NonQuery $command
 			if ($result.IsFailure) { Write-Error ($result.Message ? $result.Message : "An error occurred.") }
 
-			[MySqlCommand]::new("SET foreign_key_checks = 1", $Connection).ExecuteNonQuery() | Out-Null
+			[MySqlCommand]::new("SET foreign_key_checks = 1", $connection).ExecuteNonQuery() | Out-Null
 		}
 
 		$connection.Close()

@@ -12,10 +12,8 @@ function Get-Collation {
 	[OutputType([string[]])]
 	param ([Parameter(Mandatory, Position = 0)] [ValidateNotNull()] [MySqlConnection] $Connection)
 
-	$command = [MySqlCommand]::new("SHOW COLLATION", $Connection)
-	$reader = $command.ExecuteReader()
-
 	$list = [List[string]]::new()
+	$reader = [MySqlCommand]::new("SHOW COLLATION", $Connection).ExecuteReader()
 	while ($reader.Read()) { $list.Add($reader["Collation"]) }
 	$reader.Close()
 	$list.ToArray()

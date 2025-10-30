@@ -20,10 +20,8 @@ function Get-Schema {
 		WHERE SCHEMA_NAME NOT IN ('information_schema', 'mysql', 'performance_schema', 'sys')
 		ORDER BY SCHEMA_NAME"
 
-	$command = [MySqlCommand]::new($sql, $Connection)
-	$reader = $command.ExecuteReader()
-
 	$list = [List[Schema]]::new()
+	$reader = [MySqlCommand]::new($sql, $Connection).ExecuteReader()
 	while ($reader.Read()) { $list.Add([Schema]::OfRecord($reader)) }
 	$reader.Close()
 	$list.ToArray()
