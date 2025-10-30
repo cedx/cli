@@ -19,6 +19,7 @@
 		"Install-Node"
 		"Install-Php"
 		"Optimize-MySqlTable"
+		"Restore-MySqlTable"
 		"Set-MySqlCharset"
 		"Set-MySqlEngine"
 	)
@@ -29,6 +30,7 @@
 		"src/Install-Node.psm1"
 		"src/Install-Php.psm1"
 		"src/Optimize-MySqlTable.psm1"
+		"src/Restore-MySqlTable.psm1"
 		"src/Set-MySqlCharset.psm1"
 		"src/Set-MySqlEngine.psm1"
 	)

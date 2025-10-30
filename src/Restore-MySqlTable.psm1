@@ -1,7 +1,51 @@
+using namespace System.Collections.Generic
+using namespace System.IO
+using namespace System.Web
+
 <#
 .SYNOPSIS
-	TODO
+	Restores a set of MariaDB/MySQL tables.
+.PARAMETER Path
+	Specifies the path to an SQL dump.
+.PARAMETER LiteralPath
+	Specifies the literal path to an SQL dump.
+.INPUTS
+	A string that contains a path, but not a literal path.
 #>
 function Restore-MySqlTable {
+	[CmdletBinding(DefaultParameterSetName = "Path")]
+	[OutputType([void])]
+	param (
+		[Parameter(Mandatory, Position = 0)]
+		[ValidateNotNull()]
+		[uri] $Uri,
 
+		[Parameter(Mandatory, ParameterSetName = "Path", Position = 1, ValueFromPipeline)]
+		[ValidateNotNullOrWhiteSpace()]
+		[string[]] $Path,
+
+		[Parameter(Mandatory, ParameterSetName = "LiteralPath")]
+		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified literal path is invalid.")]
+		[string[]] $LiteralPath
+	)
+
+	process {
+		$files = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Get-Item -LiteralPath $LiteralPath) : (Get-Item $Path)
+		foreach ($file in $files) {
+			"Importing: $($file.BaseName)"
+			$userInfo = ($Uri.UserInfo -split ":").ForEach{ [Uri]::UnescapeDataString($_) }
+
+			$arguments = [List[string]] @(
+				"--default-character-set=$([HttpUtility]::ParseQueryString($Uri.Query)["charset"] ?? "utf8mb4")"
+				"--execute=USE $($file.BaseName); SOURCE $($file.FullName -replace "\\", "/");"
+				"--host=$($Uri.Host)"
+				"--password=$($userInfo[1])"
+				"--port=$($Uri.IsDefaultPort ? 3306 : $Uri.Port)"
+				"--user=$($userInfo[0])"
+			)
+
+			if ($Uri.Host -notin "::1", "127.0.0.1", "localhost") { $arguments.Add("--compress") }
+			& mysql @arguments
+		}
+	}
 }
