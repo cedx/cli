@@ -1,6 +1,6 @@
 "Installing the dependencies..."
 $modules = Import-PowerShellDataFile PSModules.psd1
-Install-PSResource -RequiredResource $modules.PSGallery -TrustRepository -WarningAction SilentlyContinue
+Install-PSResource -RequiredResource $modules.PSGallery -TrustRepository -WarningAction Ignore
 
 New-Item bin -Force -ItemType Directory | Out-Null
 $modules.NuGet.Keys | ForEach-Object {
