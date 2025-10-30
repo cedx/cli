@@ -147,7 +147,6 @@ function Export-SqlDump {
 
 	$file = "$($Table.Count -eq 1 ? "$($Schema.Name).$($Table[0])" : $Schema.Name).$([BackupFormat]::SqlDump)"
 	$userInfo = ($Uri.UserInfo -split ":").ForEach{ [Uri]::UnescapeDataString($_) }
-
 	$arguments = [List[string]] @(
 		"--default-character-set=$([HttpUtility]::ParseQueryString($Uri.Query)["charset"] ?? "utf8mb4")"
 		"--host=$($Uri.Host)"
@@ -160,6 +159,5 @@ function Export-SqlDump {
 	if ($Uri.Host -notin "::1", "127.0.0.1", "localhost") { $arguments.Add("--compress") }
 	$arguments.Add($Schema.Name)
 	$arguments.AddRange($Table)
-
-	& mysqldump @arguments
+	mysqldump @arguments
 }

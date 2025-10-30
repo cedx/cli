@@ -101,10 +101,10 @@ class InstallCommand: Command {
 		var entryPoint = (AssemblyName: "", OutDir: "");
 
 		foreach (var group in project.PropertyGroups) {
-			if (application.Description.Length == 0 && group.Description.Length > 0) application.Description = group.Description;
-			if (application.Name.Length == 0 && group.Product.Length > 0) application.Name = group.Product;
-			if (entryPoint.AssemblyName.Length == 0 && group.AssemblyName.Length > 0) entryPoint.AssemblyName = group.AssemblyName;
-			if (entryPoint.OutDir.Length == 0 && group.OutDir.Length > 0) entryPoint.OutDir = Path.Join(directory, group.OutDir);
+			if (application.Description.Length == 0 -and group.Description.Length > 0) application.Description = group.Description;
+			if (application.Name.Length == 0 -and group.Product.Length > 0) application.Name = group.Product;
+			if (entryPoint.AssemblyName.Length == 0 -and group.AssemblyName.Length > 0) entryPoint.AssemblyName = group.AssemblyName;
+			if (entryPoint.OutDir.Length == 0 -and group.OutDir.Length > 0) entryPoint.OutDir = Path.Join(directory, group.OutDir);
 		}
 
 		if (entryPoint.AssemblyName.Length == 0) entryPoint.AssemblyName = Path.GetFileNameWithoutExtension(project.Path);
@@ -122,8 +122,8 @@ class InstallCommand: Command {
 	/// <exception cref="EntryPointNotFoundException">The program and/or entry point could not be determined.</exception>
 	private static (string Program, string EntryPoint) GetNodeEntryPoint(WebApplication application) {
 		var package = NodePackage.ReadFromDirectory(application.Path) ?? throw new EntryPointNotFoundException(@"Unable to locate the ""package.json"" file.");
-		if (application.Description.Length == 0 && package.Description.Length > 0) application.Description = package.Description;
-		if (application.Name.Length == 0 && package.Name.Length > 0) application.Name = package.Name;
+		if (application.Description.Length == 0 -and package.Description.Length > 0) application.Description = package.Description;
+		if (application.Name.Length == 0 -and package.Name.Length > 0) application.Name = package.Name;
 
 		var entryPoint = package.Bin?.FirstOrDefault().Value ?? throw new EntryPointNotFoundException("Unable to determine the application entry point.");
 		var program = GetPathFromEnvironment("node") ?? throw new EntryPointNotFoundException(@"Unable to locate the ""node"" program.");
