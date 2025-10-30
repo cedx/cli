@@ -16,8 +16,7 @@ class WebApplication {
 	.SYNOPSIS
 		The environment name.
 	#>
-	[ValidateSet("dev", "development", "prod", "production", "staging", "stg")]
-	[string] $Environment = "Production"
+	[string] $Environment = ""
 
 	<#
 	.SYNOPSIS
@@ -48,8 +47,7 @@ class WebApplication {
 	static [WebApplication] ReadFromDirectory([string] $Path) {
 		foreach ($folder in "src/Server", "src") {
 			foreach ($format in "json", "psd1", "xml") {
-				$file = Join-Path $Path $folder "appsettings.$format"
-				if (Get-Item $file -ErrorAction Ignore) {
+				if ($file = Get-Item (Join-Path $Path $folder "appsettings.$format") -ErrorAction Ignore) {
 					$application = switch ($format) {
 						"json" { [WebApplication]::DeserializeJson($file) }
 						"psd1" { [WebApplication]::DeserializePSData($file) }
@@ -73,9 +71,9 @@ class WebApplication {
 	.OUTPUTS
 		The deserialized application configuration.
 	#>
-	static [WebApplication] DeserializeJson([FileInfo] $File) {
+	hidden static [WebApplication] DeserializeJson([FileInfo] $File) {
 		$data = Get-Content $File.FullName | ConvertFrom-Json
-		return @{
+		return [WebApplication]@{
 			Description = $data.Description
 			Environment = $data.Environment
 			Id = $data.Id
@@ -91,9 +89,9 @@ class WebApplication {
 	.OUTPUTS
 		The deserialized application configuration.
 	#>
-	static [WebApplication] DeserializePSData([FileInfo] $File) {
+	hidden static [WebApplication] DeserializePSData([FileInfo] $File) {
 		$data = Import-PowerShellDataFile $File.FullName
-		return @{
+		return [WebApplication]@{
 			Description = $data.Description
 			Environment = $data.Environment
 			Id = $data.Id
@@ -109,9 +107,9 @@ class WebApplication {
 	.OUTPUTS
 		The deserialized application configuration.
 	#>
-	static [WebApplication] DeserializeXml([FileInfo] $File) {
-		$data = [xml] (Get-Content $File.FullName)
-		return @{
+	hidden static [WebApplication] DeserializeXml([FileInfo] $File) {
+		$data = ([xml] (Get-Content $File.FullName)).Configuration
+		return [WebApplication]@{
 			Description = $data.Description
 			Environment = $data.Environment
 			Id = $data.Id

@@ -1,4 +1,5 @@
 using module ./Nssm/WebApplication.psm1
+using module ./Test-Privilege.psm1
 
 <#
 .SYNOPSIS
@@ -20,7 +21,7 @@ function Remove-NssmService {
 	}
 
 	$application = [WebApplication]::ReadFromDirectory($Path)
-	if ($null -eq $application) { throw [EntryPointNotFoundException] "Unable to locate the application configuration file." }
+	if (-not $application) { throw [EntryPointNotFoundException] "Unable to locate the application configuration file." }
 
 	Stop-Service $application.Id
 	nssm remove $application.Id confirm
