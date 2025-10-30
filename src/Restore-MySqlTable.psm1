@@ -1,4 +1,5 @@
 using namespace System.Collections.Generic
+using namespace System.Diagnostics.CodeAnalysis
 using namespace System.IO
 using namespace System.Web
 
@@ -15,6 +16,7 @@ using namespace System.Web
 function Restore-MySqlTable {
 	[CmdletBinding(DefaultParameterSetName = "Path")]
 	[OutputType([void])]
+	[SuppressMessage("PSUseOutputTypeCorrectly", "")]
 	param (
 		[Parameter(Mandatory, Position = 0)]
 		[ValidateNotNull()]
