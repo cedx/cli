@@ -36,7 +36,6 @@ function Restore-MySqlTable {
 		foreach ($file in $files) {
 			"Importing: $($file.BaseName)"
 			$userInfo = ($Uri.UserInfo -split ":").ForEach{ [Uri]::UnescapeDataString($_) }
-
 			$arguments = [List[string]] @(
 				"--default-character-set=$([HttpUtility]::ParseQueryString($Uri.Query)["charset"] ?? "utf8mb4")"
 				"--execute=USE $($file.BaseName); SOURCE $($file.FullName -replace "\\", "/");"
@@ -47,7 +46,7 @@ function Restore-MySqlTable {
 			)
 
 			if ($Uri.Host -notin "::1", "127.0.0.1", "localhost") { $arguments.Add("--compress") }
-			& mysql @arguments
+			mysql @arguments
 		}
 	}
 }

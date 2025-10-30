@@ -20,7 +20,7 @@ function Install-Node {
 	)
 
 	if (-not (Test-Privilege $Path)) {
-		throw [InvalidOperationException] "You must run this command in an elevated prompt."
+		throw [UnauthorizedAccessException] "You must run this command in an elevated prompt."
 	}
 
 	$platform, $extension = switch ($true) {

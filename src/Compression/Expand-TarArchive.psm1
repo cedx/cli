@@ -12,7 +12,7 @@ function Expand-TarArchive {
 	[OutputType([void])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
-		[ValidateScript({ Test-Path $_ }, ErrorMessage = "The specified input file does not exist.")]
+		[ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The specified input file does not exist.")]
 		[string] $Path,
 
 		[Parameter(Mandatory, Position = 1)]
