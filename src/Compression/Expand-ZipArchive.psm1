@@ -14,11 +14,11 @@ function Expand-ZipArchive {
 	[OutputType([void])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
-		[ValidateScript({ Test-Path $_ }, ErrorMessage = "The input file does not exist.")]
+		[ValidateScript({ Test-Path $_ }, ErrorMessage = "The specified input file does not exist.")]
 		[string] $Path,
 
 		[Parameter(Mandatory, Position = 1)]
-		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The output path is invalid.")]
+		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified output path is invalid.")]
 		[string] $DestinationPath,
 
 		[ValidateRange("NonNegative")]

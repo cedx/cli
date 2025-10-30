@@ -11,7 +11,7 @@ using namespace System.IO
 function Test-Privilege {
 	[OutputType([bool])] param (
 		[Parameter(Position = 0)]
-		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified output path is invalid.")]
+		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified path is invalid.")]
 		[string] $Path
 	)
 
