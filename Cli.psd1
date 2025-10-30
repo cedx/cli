@@ -13,6 +13,7 @@
 	VariablesToExport = @()
 
 	FunctionsToExport = @(
+		"Backup-MySqlTable"
 		"Get-CliVersion"
 		"Install-Jdk"
 		"Install-Node"
@@ -23,6 +24,7 @@
 	)
 
 	NestedModules = @(
+		"src/Backup-MySqlTable.psm1"
 		"src/Install-Jdk.psm1"
 		"src/Install-Node.psm1"
 		"src/Install-Php.psm1"
