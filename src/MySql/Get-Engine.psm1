@@ -12,10 +12,8 @@ function Get-Engine {
 	[OutputType([string[]])]
 	param ([Parameter(Mandatory, Position = 0)] [ValidateNotNull()] [MySqlConnection] $Connection)
 
-	$command = [MySqlCommand]::new("SHOW ENGINES", $Connection)
-	$reader = $command.ExecuteReader()
-
 	$list = [List[string]]::new()
+	$reader = [MySqlCommand]::new("SHOW ENGINES", $Connection).ExecuteReader()
 	while ($reader.Read()) { $list.Add($reader["Engine"]) }
 	$reader.Close()
 	$list.ToArray()

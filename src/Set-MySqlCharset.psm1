@@ -54,14 +54,14 @@ function Set-MySqlCharset {
 
 		foreach ($tableObject in $tables) {
 			"Processing: $($tableObject.QualifiedName($false))"
-			[MySqlCommand]::new("SET foreign_key_checks = 0", $Connection).ExecuteNonQuery() | Out-Null
+			[MySqlCommand]::new("SET foreign_key_checks = 0", $connection).ExecuteNonQuery() | Out-Null
 
 			$charset = ($Collation -split "_")[0]
-			$command = [MySqlCommand]::new("ALTER TABLE $($tableObject.QualifiedName($true)) CONVERT TO CHARACTER SET $charset COLLATE $Collation", $Connection)
+			$command = [MySqlCommand]::new("ALTER TABLE $($tableObject.QualifiedName($true)) CONVERT TO CHARACTER SET $charset COLLATE $Collation", $connection)
 			$result = Invoke-NonQuery $command
 			if ($result.IsFailure) { Write-Error ($result.Message ? $result.Message : "An error occurred.") }
 
-			[MySqlCommand]::new("SET foreign_key_checks = 1", $Connection).ExecuteNonQuery() | Out-Null
+			[MySqlCommand]::new("SET foreign_key_checks = 1", $connection).ExecuteNonQuery() | Out-Null
 		}
 
 		$connection.Close()
