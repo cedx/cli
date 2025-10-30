@@ -18,7 +18,7 @@ function New-Connection {
 		[Parameter(Mandatory, Position = 0)]
 		[ValidateScript(
 			{ $_.IsAbsoluteUri -and ($_.Scheme -in "mariadb", "mysql") -and $_.UserInfo.Contains(":") },
-			ErrorMessage = "The connection URI is invalid."
+			ErrorMessage = "The specified connection URI is invalid."
 		)]
 		[uri] $Uri,
 

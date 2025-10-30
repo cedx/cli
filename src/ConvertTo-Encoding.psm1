@@ -33,7 +33,7 @@ $TextExtensions = @()
 .PARAMETER Recurse
 	Value indicating whether to process the input directory recursively.
 .INPUTS
-	A string that contains a path.
+	A string that contains a path, but not a literal path.
 .OUTPUTS
 	Returns a string representing the content.
 #>
@@ -46,7 +46,7 @@ function ConvertTo-Encoding {
 		[string[]] $Path,
 
 		[Parameter(Mandatory, ParameterSetName = "LiteralPath")]
-		[ValidateNotNullOrWhiteSpace()]
+		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified literal path is invalid.")]
 		[string[]] $LiteralPath,
 
 		[Parameter(Mandatory, ParameterSetName = "InputObject", ValueFromPipeline)]

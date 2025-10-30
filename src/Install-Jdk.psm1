@@ -17,7 +17,7 @@ function Install-Jdk {
 	[OutputType([string])]
 	param (
 		[Parameter(Position = 0)]
-		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The output path is invalid.")]
+		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified output path is invalid.")]
 		[string] $Path = $IsWindows ? "C:\Program Files\OpenJDK" : "/opt/openjdk",
 
 		[ValidateSet(11, 17, 21, 25)]
