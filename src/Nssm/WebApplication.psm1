@@ -1,4 +1,7 @@
+using namespace System.Diagnostics.CodeAnalysis
 using namespace System.IO
+using namespace System.Management.Automation
+using namespace System.Runtime.CompilerServices
 
 <#
 .SYNOPSIS
@@ -38,6 +41,46 @@ class WebApplication {
 
 	<#
 	.SYNOPSIS
+		The application type.
+	#>
+	[WebApplicationType] $Type = [WebApplicationType]::Unknown
+
+	<#
+	.SYNOPSIS
+		Gets the environment variable storing the environment name.
+	.OUTPUTS
+		The environment variable storing the environment name.
+	#>
+	[SuppressMessage("PSUseDeclaredVarsMoreThanAssignments", "")]
+	[string] EnvironmentVariable() {
+		return $discard = switch ($this.Type) {
+			([WebApplicationType]::DotNet) { "DOTNET_ENVIRONMENT"; break }
+			([WebApplicationType]::Node) { "NODE_ENV"; break }
+			([WebApplicationType]::PowerShell) { "PODE_ENVIRONMENT"; break }
+			default { throw [SwitchExpressionException] $_ }
+		}
+	}
+
+	<#
+	.SYNOPSIS
+		Gets the program used to run this application.
+	.OUTPUTS
+		The program used to run this application.
+	#>
+	[SuppressMessage("PSUseDeclaredVarsMoreThanAssignments", "")]
+	[ApplicationInfo] Program() {
+		$program = switch ($this.Type) {
+			([WebApplicationType]::DotNet) { "dotnet"; break }
+			([WebApplicationType]::Node) { "node"; break }
+			([WebApplicationType]::PowerShell) { "pwsh"; break }
+			default { throw [SwitchExpressionException] $_ }
+		}
+
+		return Get-Command $program
+	}
+
+	<#
+	.SYNOPSIS
 		Reads the configuration file of the application located in the specified directory.
 	.PARAMETER Path
 		The path to the root directory of the application.
@@ -49,12 +92,13 @@ class WebApplication {
 			foreach ($format in "json", "psd1", "xml") {
 				if ($file = Get-Item (Join-Path $Path $folder "appsettings.$format") -ErrorAction Ignore) {
 					$application = switch ($format) {
-						"json" { [WebApplication]::DeserializeJson($file) }
-						"psd1" { [WebApplication]::DeserializePSData($file) }
-						"xml" { [WebApplication]::DeserializeXml($file) }
+						"json" { [WebApplication]::DeserializeJson($file); break }
+						"psd1" { [WebApplication]::DeserializePSData($file); break }
+						"xml" { [WebApplication]::DeserializeXml($file); break }
 					}
 
 					$application.Path = $Path
+					$application.Type = [WebApplication]::FindType($Path)
 					return $application
 				}
 			}
@@ -116,4 +160,40 @@ class WebApplication {
 			Name = $data.Name
 		}
 	}
+
+	<#
+	.SYNOPSIS
+		Determines the type of the web application located at the specified path.
+	.PARAMETER Path
+		The path to the root directory of the application.
+	.OUTPUTS
+		The determined application type.
+	#>
+	hidden static [WebApplicationType] FindType([string] $Path) {
+		$types = @{
+			cs = [WebApplicationType]::DotNet
+			fs = [WebApplicationType]::DotNet
+			js = [WebApplicationType]::Node
+			ps1 = [WebApplicationType]::PowerShell
+			psm1 = [WebApplicationType]::PowerShell
+			ts = [WebApplicationType]::Node
+		}
+
+		foreach ($extension in $types.Keys) {
+			if (Test-Path "$Path/Server/*.$extension" -or Test-Path "$Path/*.$extension") { return $types.$extension }
+		}
+
+		return [WebApplicationType]::Unknown
+	}
+}
+
+<#
+.SYNOPSIS
+	Defines the type of a web project.
+#>
+enum WebApplicationType {
+	DotNet
+	Node
+	PowerShell
+	Unknown
 }
