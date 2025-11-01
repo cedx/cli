@@ -1,3 +1,4 @@
+using namespace System.Diagnostics.CodeAnalysis
 using module ./Nssm/DotNetApplication.psm1
 using module ./Nssm/NodeApplication.psm1
 using module ./Nssm/PowerShellApplication.psm1
@@ -12,6 +13,7 @@ using module ./Test-Privilege.psm1
 function Remove-NssmService {
 	[CmdletBinding()]
 	[OutputType([void])]
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		[Parameter(Position = 0, ValueFromPipeline)]
 		[ValidateScript({ Test-Path $_ -PathType Container }, ErrorMessage = "The specified directory does not exist.")]
@@ -37,7 +39,7 @@ function Remove-NssmService {
 		else {
 			Stop-Service $application.Id
 			Remove-Service $application.Id
-			"The service ""$($application.Id)"" has been successfully removed."
+			Write-Output "The service ""$($application.Id)"" has been successfully removed."
 		}
 	}
 }

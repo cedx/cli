@@ -59,6 +59,6 @@ function New-NssmService {
 		if ($Start) { Start-Service $application.Id }
 
 		$created = $Start ? "started" : "created"
-		"The service ""$($application.Id)"" has been successfully $created."
+		Write-Output "The service ""$($application.Id)"" has been successfully $created."
 	}
 }

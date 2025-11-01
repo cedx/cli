@@ -1,5 +1,6 @@
 using namespace MySqlConnector
 using namespace System.Collections.Generic
+using namespace System.Diagnostics.CodeAnalysis
 using namespace System.IO
 using namespace System.Web
 using module ./MySql/BackupFormat.psm1
@@ -25,6 +26,7 @@ using module ./MySql/Schema.psm1
 function Backup-MySqlTable {
 	[CmdletBinding()]
 	[OutputType([void])]
+	[SuppressMessage("PSUseOutputTypeCorrectly", "")]
 	param (
 		[Parameter(Mandatory, Position = 0)]
 		[ValidateNotNull()]
@@ -56,7 +58,7 @@ function Backup-MySqlTable {
 		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-Schema $connection)
 		foreach ($schemaObject in $schemas) {
 			"Exporting: $($Table.Count -eq 1 ? "$($schemaObject.Name).$($Table[0])" : $schemaObject.Name)"
-			if ($Format -eq [BackupFormat]::JsonLines) { Export-JsonLines $schemaObject $Path -Connection $connection -Table $Table }
+			if ($Format -eq [BackupFormat]::JsonLines) { Export-JsonLine $schemaObject $Path -Connection $connection -Table $Table }
 			else { Export-SqlDump $schemaObject $Path -Table $Table -Uri $Uri }
 		}
 
@@ -79,7 +81,7 @@ function Backup-MySqlTable {
 .PARAMETER Table
 	The table name.
 #>
-function Export-JsonLines {
+function Export-JsonLine {
 	[OutputType([void])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
