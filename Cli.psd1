@@ -1,5 +1,6 @@
 ﻿@{
 	ModuleVersion = "3.0.0"
+	PowerShellVersion = "7.5"
 	RootModule = "src/Main.psm1"
 
 	Author = "Cédric Belin <cedx@outlook.com>"
@@ -47,6 +48,7 @@
 
 	PrivateData = @{
 		PSData = @{
+			IconUri = "https://raw.githubusercontent.com/cedx/cli/main/Program.ico"
 			LicenseUri = "https://raw.githubusercontent.com/cedx/cli/main/License.md"
 			ProjectUri = "https://github.com/cedx/cli"
 			ReleaseNotes = "https://github.com/cedx/cli/releases"
