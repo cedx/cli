@@ -11,11 +11,18 @@ param (
 	[string[]] $Arguments
 )
 
-$ErrorActionPreference = "Stop"
-$PSNativeCommandUseErrorActionPreference = $true
-Set-StrictMode -Version Latest
+$scriptBlock = {
+	param (
+		[Parameter(Mandatory, Position = 0)] [string] $Command,
+		[Parameter(Position = 1, ValueFromRemainingArguments)] [string[]] $Arguments
+	)
 
-$commandPath = Get-Item $PSCommandPath
-$scriptRoot = $commandPath.LinkType ? (Split-Path $commandPath.LinkTarget) : $PSScriptRoot
-Import-Module $scriptRoot/Cli.psd1
-& $Command @Arguments
+	$ErrorActionPreference = "Stop"
+	$PSNativeCommandUseErrorActionPreference = $true
+	Set-StrictMode -Version Latest
+	Import-Module ./Cli.psd1
+	& $Command @Arguments
+}
+
+$scriptArgs = (@($Command) + $Arguments)
+pwsh -Command $scriptBlock -args $scriptArgs
