@@ -19,5 +19,5 @@ pwsh -Command @"
 `$PSNativeCommandUseErrorActionPreference = `$true
 Set-StrictMode -Version Latest
 Import-Module "$scriptRoot/Cli.psd1"
-$Command $($Arguments.ForEach{ $_.StartsWith("-") ? $_ : """$_""" })
+$Command $($Arguments.ForEach{ $_.Contains(" ") ? """$_""" : $_ })
 "@
