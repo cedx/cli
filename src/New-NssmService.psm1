@@ -43,7 +43,7 @@ function New-NssmService {
 			throw [InvalidOperationException] "The service ""$($application.Id)"" already exists."
 		}
 
-		$properties = @{
+		$properties = [ordered]@{
 			AppDirectory = $application.Path
 			AppEnvironmentExtra = "$($application.GetEnvironmentVariable())=$($application.Environment)"
 			AppNoConsole = "1"

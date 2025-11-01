@@ -24,8 +24,9 @@ class NodeApplication: Application {
 			$package = Get-Content $file.FullName | ConvertFrom-Json -AsHashtable
 			if (-not $this.Description) { $this.Description = $package.description }
 			if (-not $this.Name) { $this.Name = $package.name }
+
 			$keys = $package.bin?.Keys
-			if ($keys) { $this.EntryPoint = Join-Path $this.Path $package.bin[$keys[0]] }
+			if ($keys) { $this.EntryPoint = Join-Path $this.Path $package.bin[$keys[0]] -Resolve -ErrorAction Ignore }
 		}
 	}
 
@@ -37,7 +38,7 @@ class NodeApplication: Application {
 	#>
 	[string] GetEntryPoint() {
 		if ($this.EntryPoint) { return $this.EntryPoint }
-		throw [EntryPointNotFoundException] "Unable to determine the application entry point."
+		throw [EntryPointNotFoundException] "Unable to resolve the application entry point."
 	}
 
 	<#
