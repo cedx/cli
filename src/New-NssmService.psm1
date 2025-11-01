@@ -57,6 +57,8 @@ function New-NssmService {
 		nssm install $application.Id $application.GetProgram().Path $application.GetEntryPoint() | Out-Null
 		foreach ($key in $properties.Keys) { nssm set $application.Id $key $properties.$key | Out-Null }
 		if ($Start) { Start-Service $application.Id }
-		"The service ""$($application.Id)"" has been successfully created."
+
+		$created = $Start ? "started" : "created"
+		"The service ""$($application.Id)"" has been successfully $created."
 	}
 }

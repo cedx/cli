@@ -9,9 +9,15 @@ class NodeApplication: Application {
 
 	<#
 	.SYNOPSIS
+		The entry point of this application.
+	#>
+	hidden [string] $EntryPoint = ""
+
+	<#
+	.SYNOPSIS
 		The content of the associated "package.json" file.
 	#>
-	hidden [hashtable] $Package
+	hidden [hashtable] $Package = @{}
 
 	<#
 	.SYNOPSIS
@@ -24,6 +30,9 @@ class NodeApplication: Application {
 			$this.Package = Get-Content $file.FullName | ConvertFrom-Json -AsHashtable
 			if (-not $this.Description) { $this.Description = $this.Package.description }
 			if (-not $this.Name) { $this.Name = $this.Package.name }
+
+			$keys = $this.Package.bin?.Keys
+			if ($keys) { $this.EntryPoint = Join-Path $this.Path $this.Package.bin[$keys[0]] }
 		}
 	}
 
@@ -34,9 +43,8 @@ class NodeApplication: Application {
 		The entry point of this application.
 	#>
 	[string] GetEntryPoint() {
-		$keys = $this.Package.bin?.Keys
-		if (-not $keys) { throw [EntryPointNotFoundException] "Unable to determine the application entry point." }
-		return Join-Path $this.Path $this.Package.bin[$keys[0]]
+		if ($this.EntryPoint) { return $this.EntryPoint }
+		throw [EntryPointNotFoundException] "Unable to determine the application entry point."
 	}
 
 	<#
