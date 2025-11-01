@@ -42,6 +42,10 @@ function Install-Node {
 	if ($extension -eq "zip") { Expand-ZipArchive $outputFile $Path -Skip 1 }
 	else { Expand-TarArchive $outputFile $Path -Skip 1 }
 
+	if (-not $IsWindows) {
+		foreach ($item in "CHANGELOG.md", "LICENSE", "README.md") { Remove-Item "$Path/$item" -ErrorAction Ignore }
+	}
+
 	$executable = $IsWindows ? "node.exe" : "bin/node"
 	& $Path/$executable --version
 }
