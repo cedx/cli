@@ -25,9 +25,9 @@ class DotNetApplication: Application {
 			$project = @{ AssemblyName = ""; OutDir = "" }
 
 			foreach ($propertyGroup in ([xml] (Get-Content $file.FullName)).Project.PropertyGroup) {
-				if ((-not $this.Description) -and $propertyGroup.Description) { $this.Description = $propertyGroup.Description }
-				if ((-not $this.Name) -and $propertyGroup.Name) { $this.Name = $propertyGroup.Name }
-				if ((-not $project.AssemblyName) -and $propertyGroup.AssemblyName) { $project.AssemblyName = $propertyGroup.AssemblyName }
+				if (-not $this.Description) { $this.Description = $propertyGroup.Description }
+				if (-not $this.Name) { $this.Name = $propertyGroup.Product }
+				if (-not $project.AssemblyName) { $project.AssemblyName = $propertyGroup.AssemblyName }
 				if ((-not $project.OutDir) -and $propertyGroup.OutDir) { $project.OutDir = "$($file.DirectoryName)/$($propertyGroup.OutDir)" }
 			}
 
