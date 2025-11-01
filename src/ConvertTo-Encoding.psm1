@@ -64,20 +64,18 @@ function ConvertTo-Encoding {
 	)
 
 	begin {
-		$exludedFolders = ".git", "node_modules", "ps_modules", "vendor"
-		$binaryExtensions = Get-Content "$PSScriptRoot/../res/BinaryExtensions.json" | ConvertFrom-Json
-		$textExtensions = Get-Content "$PSScriptRoot/../res/TextExtensions.json" | ConvertFrom-Json
+		$BinaryExtensions = Get-Content "$PSScriptRoot/../res/BinaryExtensions.json" | ConvertFrom-Json
+		$TextExtensions = Get-Content "$PSScriptRoot/../res/TextExtensions.json" | ConvertFrom-Json
 	}
 
 	process {
 		$from = [Encoding]::GetEncoding($From)
 		$to = [Encoding]::GetEncoding($to)
-		$items =
 
-		$resolvedPaths = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Resolve-Path -LiteralPath $LiteralPath) : (Resolve-Path $Path)
-		foreach ($path in $resolvedPaths) {
-			$item = G
-		}
+		# $resolvedPaths = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Resolve-Path -LiteralPath $LiteralPath) : (Resolve-Path $Path)
+		# foreach ($path in $resolvedPaths) {
+		# 	$item = G
+		# }
 	}
 }
 
