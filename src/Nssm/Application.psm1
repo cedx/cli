@@ -1,3 +1,4 @@
+using namespace System.IO
 using namespace System.Management.Automation
 
 <#
@@ -34,14 +35,14 @@ class Application {
 	.SYNOPSIS
 		The path to the application root directory.
 	#>
-	[PathInfo] $Path
+	[string] $Path
 
 	<#
 	.SYNOPSIS
 		Creates a new application.
 	#>
 	Application([string] $Path) {
-		$this.Path = Resolve-Path $Path
+		$this.Path = [Path]::TrimEndingDirectorySeparator((Resolve-Path $Path))
 
 		foreach ($folder in "src/Server", "src") {
 			foreach ($format in "json", "psd1", "xml") {

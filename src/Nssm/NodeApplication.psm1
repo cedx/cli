@@ -15,24 +15,17 @@ class NodeApplication: Application {
 
 	<#
 	.SYNOPSIS
-		The content of the associated "package.json" file.
-	#>
-	hidden [hashtable] $Package = @{}
-
-	<#
-	.SYNOPSIS
 		Creates a new application.
 	.PARAMETER Path
 		The path to the application root directory.
 	#>
 	NodeApplication([string] $Path): base($Path) {
 		if ($file = Get-Item "$($this.Path)/package.json" -ErrorAction Ignore) {
-			$this.Package = Get-Content $file.FullName | ConvertFrom-Json -AsHashtable
-			if (-not $this.Description) { $this.Description = $this.Package.description }
-			if (-not $this.Name) { $this.Name = $this.Package.name }
-
-			$keys = $this.Package.bin?.Keys
-			if ($keys) { $this.EntryPoint = Join-Path $this.Path $this.Package.bin[$keys[0]] }
+			$package = Get-Content $file.FullName | ConvertFrom-Json -AsHashtable
+			if (-not $this.Description) { $this.Description = $package.description }
+			if (-not $this.Name) { $this.Name = $package.name }
+			$keys = $package.bin?.Keys
+			if ($keys) { $this.EntryPoint = Join-Path $this.Path $package.bin[$keys[0]] }
 		}
 	}
 
