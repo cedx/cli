@@ -1,4 +1,6 @@
-using module ./Nssm/WebApplication.psm1
+using module ./Nssm/DotNetApplication.psm1
+using module ./Nssm/NodeApplication.psm1
+using module ./Nssm/PowerShellApplication.psm1
 using module ./Test-Privilege.psm1
 
 <#
@@ -11,17 +13,31 @@ function Remove-NssmService {
 	[CmdletBinding()]
 	[OutputType([void])]
 	param (
-		[Parameter(Position = 0)]
+		[Parameter(Position = 0, ValueFromPipeline)]
 		[ValidateScript({ Test-Path $_ -PathType Container }, ErrorMessage = "The specified directory does not exist.")]
 		[string] $Path = $PWD
 	)
 
-	if (-not $IsWindows) { throw [PlatformNotSupportedException] "This command only supports the Windows platform." }
-	if (-not (Test-Privilege)) { throw [UnauthorizedAccessException] "You must run this command in an elevated prompt." }
+	begin {
+		if (-not $IsWindows) { throw [PlatformNotSupportedException] "This command only supports the Windows platform." }
+		if (-not (Test-Privilege)) { throw [UnauthorizedAccessException] "You must run this command in an elevated prompt." }
+	}
 
-	$application = [WebApplication]::ReadFromDirectory($Path)
-	if (-not $application) { throw [EntryPointNotFoundException] "Unable to locate the application configuration file." }
+	process {
+		$application = switch ($true) {
+			((Test-Path "$Path/src/Server/*.cs") -or (Test-Path "$Path/src/*.cs")) { [DotNetApplication]::new($Path); break }
+			((Test-Path "$Path/src/Server/*.psm1") -or (Test-Path "$Path/src/*.psm1")) { [PowerShellApplication]::new($Path); break }
+			((Test-Path "$Path/src/Server/*.ts") -or (Test-Path "$Path/src/*.ts")) { [NodeApplication]::new($Path); break }
+			default { throw [NotSupportedException] "The application type could not be determined." }
+		}
 
-	Stop-Service $application.Id
-	nssm remove $application.Id confirm
+		if (-not (Get-Service $application.Id -ErrorAction Ignore)) {
+			throw [InvalidOperationException] "The service ""$($application.Id)"" does not exist."
+		}
+		else {
+			Stop-Service $application.Id
+			Remove-Service $application.Id
+			"The service ""$($application.Id)"" has been successfully removed."
+		}
+	}
 }

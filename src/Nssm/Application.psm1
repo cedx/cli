@@ -45,7 +45,6 @@ class Application {
 
 		foreach ($folder in "src/Server", "src") {
 			foreach ($format in "json", "psd1", "xml") {
-				Get-Item (Join-Path $this.Path $folder "appsettings.$format")
 				if ($file = Get-Item (Join-Path $this.Path $folder "appsettings.$format") -ErrorAction Ignore) {
 					$data = switch ($format) {
 						"json" { Get-Content $file.FullName | ConvertFrom-Json; break }
@@ -62,7 +61,9 @@ class Application {
 			}
 		}
 
-		throw [EntryPointNotFoundException] "Unable to locate the application configuration file."
+		if (-not $this.Id) {
+			throw [EntryPointNotFoundException] "Unable to locate the application configuration file."
+		}
 	}
 
 	<#
