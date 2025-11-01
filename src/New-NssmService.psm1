@@ -1,5 +1,8 @@
 using namespace System.Diagnostics.CodeAnalysis
-using module ./Nssm/WebApplication.psm1
+using module ./Nssm/Application.psm1
+using module ./Nssm/DotNetApplication.psm1
+using module ./Nssm/NodeApplication.psm1
+using module ./Nssm/PowerShellApplication.psm1
 using module ./Test-Privilege.psm1
 
 <#
@@ -15,7 +18,7 @@ function New-NssmService {
 	[OutputType([void])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
-		[Parameter(Position = 0)]
+		[Parameter(Position = 0, ValueFromPipeline)]
 		[ValidateScript({ Test-Path $_ -PathType Container }, ErrorMessage = "The specified directory does not exist.")]
 		[string] $Path = $PWD,
 
@@ -23,30 +26,37 @@ function New-NssmService {
 		[switch] $Start
 	)
 
-	if (-not $IsWindows) { throw [PlatformNotSupportedException] "This command only supports the Windows platform." }
-	if (-not (Test-Privilege)) { throw [UnauthorizedAccessException] "You must run this command in an elevated prompt." }
-
-	$application = [WebApplication]::ReadFromDirectory($Path)
-	if (-not $application) { throw [EntryPointNotFoundException] "Unable to locate the application configuration file." }
-	if ($application.Type -eq [WebApplicationType]::Unknown) { throw [NotSupportedException] "The application type could not be determined." }
-
-	if (-not $application.Environment) { $application.Environment = "Production" }
-	nssm install $application.Id $application.Program().Path $application.EntryPoint()
-
-	$properties = @{
-		AppDirectory = $application.Path
-		AppEnvironmentExtra = "$($application.EnvironmentVariable())=$($application.Environment)"
-		AppNoConsole = "1"
-		AppStderr = Join-Path $application.Path "var/Error.log"
-		AppStdout = Join-Path $application.Path "var/Output.log"
-		Description = $application.Description
-		DisplayName = $application.Name
-		Start = "SERVICE_AUTO_START"
+	begin {
+		if (-not $IsWindows) { throw [PlatformNotSupportedException] "This command only supports the Windows platform." }
+		if (-not (Test-Privilege)) { throw [UnauthorizedAccessException] "You must run this command in an elevated prompt." }
 	}
 
-	foreach ($key in $properties.Keys) {
-		nssm set $application.Id $key $properties.$key
-	}
+	process {
+		$application = switch ($true) {
+			((Test-Path "$Path/src/Server/*.cs") -or (Test-Path "$Path/src/*.cs")) { [DotNetApplication]::new($Path); break }
+			((Test-Path "$Path/src/Server/*.psm1") -or (Test-Path "$Path/src/*.psm1")) { [PowerShellApplication]::new($Path); break }
+			((Test-Path "$Path/src/Server/*.ts") -or (Test-Path "$Path/src/*.ts")) { [NodeApplication]::new($Path); break }
+			default { throw [NotSupportedException] "The application type could not be determined." }
+		}
 
-	if ($Start) { Start-Service $application.Id }
+		if (Get-Service $application.Id -ErrorAction Ignore) {
+			throw [InvalidOperationException] "The service ""$($application.Id)"" already exists."
+		}
+
+		$properties = @{
+			AppDirectory = $application.Path
+			AppEnvironmentExtra = "$($application.GetEnvironmentVariable())=$($application.Environment)"
+			AppNoConsole = "1"
+			AppStderr = Join-Path $application.Path "var/Error.log"
+			AppStdout = Join-Path $application.Path "var/Output.log"
+			Description = $application.Description
+			DisplayName = $application.Name
+			Start = "SERVICE_AUTO_START"
+		}
+
+		nssm install $application.Id $application.GetProgram().Path $application.GetEntryPoint() | Out-Null
+		foreach ($key in $properties.Keys) { nssm set $application.Id $key $properties.$key | Out-Null }
+		if ($Start) { Start-Service $application.Id }
+		"The service ""$($application.Id)"" has been successfully created."
+	}
 }
