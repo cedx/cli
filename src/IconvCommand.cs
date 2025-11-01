@@ -108,7 +108,7 @@ class IconvCommand: Command {
 
 		var bytes = File.ReadAllBytes(file.FullName);
 		var isText = extension.Length > 0 -and textExtensions.Contains(extension[1..]);
-		if (!isText -and Array.IndexOf(bytes, '\0', 0, Math.Min(bytes.Length, 8_000)) > 0) return;
+		if (-not isText -and Array.IndexOf(bytes, '\0', 0, Math.Min(bytes.Length, 8_000)) > 0) return;
 
 		Console.WriteLine("Converting: {0}", file);
 		File.WriteAllBytes(file.FullName, Encoding.Convert(from, to, bytes));
