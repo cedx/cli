@@ -44,7 +44,7 @@ class Application {
 	Application([string] $Path) {
 		$this.Path = [Path]::TrimEndingDirectorySeparator((Resolve-Path $Path))
 
-		foreach ($folder in "src/Server", "src") {
+		:loop foreach ($folder in "src/Server", "src") {
 			foreach ($format in "json", "psd1", "xml") {
 				if ($file = Get-Item "$($this.Path)/$folder/appsettings.$format" -ErrorAction Ignore) {
 					$data = switch ($format) {
@@ -57,7 +57,7 @@ class Application {
 					$this.Environment = $data.Environment ?? "Production"
 					$this.Id = $data.Id
 					$this.Name = $data.Name
-					return
+					break loop
 				}
 			}
 		}
