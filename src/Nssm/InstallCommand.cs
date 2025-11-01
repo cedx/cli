@@ -38,11 +38,6 @@ class InstallCommand: Command {
 	/// <param name="parseResult">The results of parsing the command line input.</param>
 	/// <returns>The exit code.</returns>
 	[int] Invoke(ParseResult parseResult) {
-		if (!this.CheckPrivilege()) {
-			Console.Error.WriteLine("You must run this command in an elevated prompt.");
-			return 1;
-		}
-
 		try {
 			var application = WebApplication.ReadFromDirectory(parseResult.GetRequiredValue(directoryArgument).FullName)
 				?? throw new EntryPointNotFoundException("Unable to locate the application configuration file.");
