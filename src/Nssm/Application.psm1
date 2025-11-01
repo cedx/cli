@@ -45,7 +45,7 @@ class Application {
 
 		foreach ($folder in "src/Server", "src") {
 			foreach ($format in "json", "psd1", "xml") {
-				if ($file = Get-Item (Join-Path $this.Path $folder "appsettings.$format") -ErrorAction Ignore) {
+				if ($file = Get-Item "$($this.Path)/$folder/appsettings.$format" -ErrorAction Ignore) {
 					$data = switch ($format) {
 						"json" { Get-Content $file.FullName | ConvertFrom-Json; break }
 						"psd1" { Import-PowerShellDataFile $file.FullName; break }

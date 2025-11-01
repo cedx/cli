@@ -26,7 +26,7 @@ class NodeApplication: Application {
 		The path to the application root directory.
 	#>
 	NodeApplication([string] $Path): base($Path) {
-		if ($file = Get-Item (Join-Path $this.Path "package.json") -ErrorAction Ignore) {
+		if ($file = Get-Item "$($this.Path)/package.json" -ErrorAction Ignore) {
 			$this.Package = Get-Content $file.FullName | ConvertFrom-Json -AsHashtable
 			if (-not $this.Description) { $this.Description = $this.Package.description }
 			if (-not $this.Name) { $this.Name = $this.Package.name }
