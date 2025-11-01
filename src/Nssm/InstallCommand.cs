@@ -120,7 +120,7 @@ class InstallCommand: Command {
 		if (application.Description.Length == 0 -and package.Description.Length > 0) application.Description = package.Description;
 		if (application.Name.Length == 0 -and package.Name.Length > 0) application.Name = package.Name;
 
-		var entryPoint = package.Bin?.FirstOrDefault().Value ?? throw new EntryPointNotFoundException("Unable to determine the application entry point.");
+		var entryPoint = package.Bin?.FirstOrDefault().Value ?? throw new EntryPointNotFoundException("Unable to resolve the application entry point.");
 		var program = GetPathFromEnvironment("node") ?? throw new EntryPointNotFoundException(@"Unable to locate the ""node"" program.");
 		return (Program: program.FullName, EntryPoint: Path.GetFullPath(Path.Join(application.Path, entryPoint)));
 	}
