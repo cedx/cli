@@ -6,5 +6,5 @@
 #>
 function Get-CliVersion {
 	[OutputType([string])] param ()
-	(Import-PowerShellDataFile $PSScriptRoot/../Cli.psd1).ModuleVersion
+	(Import-PowerShellDataFile "$PSScriptRoot/../Cli.psd1").ModuleVersion
 }
