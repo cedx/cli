@@ -6,7 +6,7 @@ using namespace System.IO
 .PARAMETER Path
 	The path to a directory used to verify if the process has sufficient permissions.
 .OUTPUTS
-	Value indicating whether the current process is privileged.
+	`$true` if the current process is privileged, otherwise `$false`.
 #>
 function Test-Privilege {
 	[OutputType([bool])] param (

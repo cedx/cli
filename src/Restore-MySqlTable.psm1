@@ -10,6 +10,8 @@ using namespace System.Web
 	Specifies the path to an SQL dump.
 .PARAMETER LiteralPath
 	Specifies the literal path to an SQL dump.
+.PARAMETER Recurse
+	Value indicating whether to process the input path recursively.
 .INPUTS
 	A string that contains a path, but not a literal path.
 #>
@@ -28,11 +30,14 @@ function Restore-MySqlTable {
 
 		[Parameter(Mandatory, ParameterSetName = "LiteralPath")]
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified literal path is invalid.")]
-		[string[]] $LiteralPath
+		[string[]] $LiteralPath,
+
+		[Parameter()]
+		[switch] $Recurse
 	)
 
 	process {
-		$files = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Get-Item -LiteralPath $LiteralPath) : (Get-Item $Path)
+		$files = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Get-ChildItem -LiteralPath $LiteralPath -Recurse:$Recurse) : (Get-ChildItem $Path -Recurse:$Recurse)
 		foreach ($file in $files) {
 			"Importing: $($file.BaseName)"
 			$userInfo = ($Uri.UserInfo -split ":").ForEach{ [Uri]::UnescapeDataString($_) }

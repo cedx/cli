@@ -1,6 +1,6 @@
 . "$PSScriptRoot/Default.ps1"
 
-"Publishing the package..."
+"Publishing the module..."
 $module = Get-Item "Cli.psd1"
 $version = (Import-PowerShellDataFile $module).ModuleVersion
 git tag "v$version"
