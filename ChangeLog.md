@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [3.1.0](https://github.com/cedx/cli/compare/v3.0.0...v3.1.0)
+- Added the `-Recurse` parameter to the `Restore-MySqlTable` cmdlet.
+
 ## Version [3.0.0](https://github.com/cedx/cli/compare/v2.7.0...v3.0.0)
 - Breaking change: ported the source code to [PowerShell](https://learn.microsoft.com/en-us/powershell).
 - Breaking change: removed the installer.
