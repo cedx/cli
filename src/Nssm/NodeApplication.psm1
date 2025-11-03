@@ -26,7 +26,10 @@ class NodeApplication: Application {
 			if (-not $this.Name) { $this.Name = $package.name }
 
 			$keys = $package.bin?.Keys
-			if ($keys) { $this.EntryPoint = Join-Path $this.Path $package.bin[$keys[0]] -Resolve -ErrorAction Ignore }
+			if ($keys) {
+				$firstKey = $keys[0]
+				$this.EntryPoint = Join-Path $this.Path $package.bin.$firstKey -Resolve -ErrorAction Ignore
+			}
 		}
 	}
 

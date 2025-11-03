@@ -54,10 +54,10 @@ function ConvertTo-Encoding {
 		[FileInfo] $InputObject,
 
 		[ValidateSet("Latin1", "UTF8")]
-		[string] $From = "Latin1",
+		[string] $From = [Encoding]::Latin1.WebName,
 
 		[ValidateSet("Latin1", "UTF8")]
-		[string] $To = "UTF8",
+		[string] $To = [Encoding]::UTF8.WebName,
 
 		[Parameter()]
 		[switch] $Recurse

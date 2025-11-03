@@ -107,7 +107,11 @@ function Export-JsonLine {
 		$reader = $command.ExecuteReader()
 		while ($reader.Read()) {
 			$record = @{}
-			for ($i = 0; $i -lt $reader.FieldCount; $i++) { $record[$reader.GetName($i)] = $reader.IsDBNull($i) ? $null : $reader.GetValue($i) }
+			for ($i = 0; $i -lt $reader.FieldCount; $i++) {
+				$field = $reader.GetName($i)
+				$record.$field = $reader.IsDBNull($i) ? $null : $reader.GetValue($i)
+			}
+
 			$file.WriteLine((ConvertTo-Json $record -Compress))
 		}
 
