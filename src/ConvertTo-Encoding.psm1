@@ -42,6 +42,7 @@ function ConvertTo-Encoding {
 	[OutputType([void])]
 	param (
 		[Parameter(Mandatory, ParameterSetName = "Path", Position = 0, ValueFromPipeline)]
+		[SupportsWildcards()]
 		[string[]] $Path,
 
 		[Parameter(Mandatory, ParameterSetName = "LiteralPath")]

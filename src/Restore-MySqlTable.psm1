@@ -24,6 +24,7 @@ function Restore-MySqlTable {
 		[uri] $Uri,
 
 		[Parameter(Mandatory, ParameterSetName = "Path", Position = 1, ValueFromPipeline)]
+		[SupportsWildcards()]
 		[string[]] $Path,
 
 		[Parameter(Mandatory, ParameterSetName = "LiteralPath")]
