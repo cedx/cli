@@ -32,7 +32,7 @@ function Get-Table {
 	$reader = $command.ExecuteReader()
 
 	$list = [List[Table]]::new()
-	while ($reader.Read()) { $list.Add([Table]::OfRecord($reader)) }
+	while ($reader.Read()) { $list.Add([Table]::new($reader)) }
 	$reader.Close()
 	$list.ToArray()
 }

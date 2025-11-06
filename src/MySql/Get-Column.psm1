@@ -32,7 +32,7 @@ function Get-Column {
 	$reader = $command.ExecuteReader()
 
 	$list = [List[Column]]::new()
-	while ($reader.Read()) { $list.Add([Column]::OfRecord($reader)) }
+	while ($reader.Read()) { $list.Add([Column]::new($reader)) }
 	$reader.Close()
 	$list.ToArray()
 }

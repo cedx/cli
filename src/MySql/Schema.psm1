@@ -31,17 +31,19 @@ class Schema {
 
 	<#
 	.SYNOPSIS
+		Creates a new schema.
+	#>
+	Schema() {}
+
+	<#
+	.SYNOPSIS
 		Creates a new schema from the specified data record.
 	.PARAMETER DataRecord
-		A data record providing values to initialize the instance.
-	.OUTPUTS
-		The newly created schema.
+		The data record providing the object values.
 	#>
-	static [Schema] OfRecord([IDataRecord] $DataRecord) {
-		return [Schema]@{
-			Charset = $DataRecord["DEFAULT_CHARACTER_SET_NAME"]
-			Collation = $DataRecord["DEFAULT_COLLATION_NAME"]
-			Name = $DataRecord["SCHEMA_NAME"]
-		}
+	Schema([IDataRecord] $DataRecord) {
+		$this.Charset = $DataRecord["DEFAULT_CHARACTER_SET_NAME"]
+		$this.Collation = $DataRecord["DEFAULT_COLLATION_NAME"]
+		$this.Name = $DataRecord["SCHEMA_NAME"]
 	}
 }

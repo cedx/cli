@@ -22,7 +22,7 @@ function Get-Schema {
 
 	$list = [List[Schema]]::new()
 	$reader = [MySqlCommand]::new($sql, $Connection).ExecuteReader()
-	while ($reader.Read()) { $list.Add([Schema]::OfRecord($reader)) }
+	while ($reader.Read()) { $list.Add([Schema]::new($reader)) }
 	$reader.Close()
 	$list.ToArray()
 }

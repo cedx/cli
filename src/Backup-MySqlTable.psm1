@@ -8,6 +8,7 @@ using module ./MySql/Get-Schema.psm1
 using module ./MySql/Get-Table.psm1
 using module ./MySql/New-Connection.psm1
 using module ./MySql/Schema.psm1
+using module ./MySql/Table.psm1
 
 <#
 .SYNOPSIS

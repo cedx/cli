@@ -38,18 +38,20 @@ class Column {
 
 	<#
 	.SYNOPSIS
-		Creates a new table from the specified data record.
-	.PARAMETER DataRecord
-		A data record providing values to initialize the instance.
-	.OUTPUTS
-		The newly created table.
+		Creates a new column.
 	#>
-	static [Column] OfRecord([IDataRecord] $DataRecord) {
-		return [Column]@{
-			Name = $DataRecord["COLUMN_NAME"]
-			Position = $DataRecord["ORDINAL_POSITION"]
-			Schema = $DataRecord["TABLE_SCHEMA"]
-			Table = $DataRecord["TABLE_NAME"]
-		}
+	Column() {}
+
+	<#
+	.SYNOPSIS
+		Creates a new column from the specified data record.
+	.PARAMETER DataRecord
+		The data record providing the object values.
+	#>
+	Column([IDataRecord] $DataRecord) {
+		$this.Name = $DataRecord["COLUMN_NAME"]
+		$this.Position = $DataRecord["ORDINAL_POSITION"]
+		$this.Schema = $DataRecord["TABLE_SCHEMA"]
+		$this.Table = $DataRecord["TABLE_NAME"]
 	}
 }

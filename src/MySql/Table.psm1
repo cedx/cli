@@ -45,6 +45,26 @@ class Table {
 
 	<#
 	.SYNOPSIS
+		Creates a new table.
+	#>
+	Table() {}
+
+	<#
+	.SYNOPSIS
+		Creates a new table from the specified data record.
+	.PARAMETER DataRecord
+		The data record providing the object values.
+	#>
+	Table([IDataRecord] $DataRecord) {
+		$this.Collation = $DataRecord["TABLE_COLLATION"]
+		$this.Engine = $DataRecord["ENGINE"]
+		$this.Name = $DataRecord["TABLE_NAME"]
+		$this.Schema = $DataRecord["TABLE_SCHEMA"]
+		$this.Type = $DataRecord["TABLE_TYPE"]
+	}
+
+	<#
+	.SYNOPSIS
 		Gets the fully qualified name.
 	.OUTPUTS
 		The fully qualified name.
@@ -64,24 +84,6 @@ class Table {
 	[string] QualifiedName([bool] $Escape) {
 		$scriptBlock = $Escape ? { "``$($args[0])``" } : { $args[0] }
 		return "$(& $scriptBlock $this.Schema).$(& $scriptBlock $this.Name)"
-	}
-
-	<#
-	.SYNOPSIS
-		Creates a new table from the specified data record.
-	.PARAMETER DataRecord
-		A data record providing values to initialize the instance.
-	.OUTPUTS
-		The newly created table.
-	#>
-	static [Table] OfRecord([IDataRecord] $DataRecord) {
-		return [Table]@{
-			Collation = $DataRecord["TABLE_COLLATION"]
-			Engine = $DataRecord["ENGINE"]
-			Name = $DataRecord["TABLE_NAME"]
-			Schema = $DataRecord["TABLE_SCHEMA"]
-			Type = $DataRecord["TABLE_TYPE"]
-		}
 	}
 }
 
