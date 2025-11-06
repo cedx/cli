@@ -1,3 +1,4 @@
+using namespace MySqlConnector
 using module ./Result.psm1
 
 <#

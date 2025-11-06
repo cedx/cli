@@ -1,3 +1,4 @@
+using namespace MySqlConnector
 using namespace System.Collections.Generic
 
 <#
