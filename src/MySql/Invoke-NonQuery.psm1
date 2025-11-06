@@ -11,7 +11,10 @@ using module ./Result.psm1
 #>
 function Invoke-NonQuery {
 	[OutputType([Result])]
-	param ([Parameter(Mandatory, Position = 0)] [ValidateNotNull()] [MySqlCommand] $Command)
+	param (
+		[Parameter(Mandatory, Position = 0)]
+		[MySqlCommand] $Command
+	)
 
 	$reader = $null
 	try {

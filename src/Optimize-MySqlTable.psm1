@@ -23,7 +23,6 @@ function Optimize-MySqlTable {
 	[SuppressMessage("PSUseOutputTypeCorrectly", "")]
 	param (
 		[Parameter(Mandatory, Position = 0)]
-		[ValidateNotNull()]
 		[uri] $Uri,
 
 		[Parameter()]

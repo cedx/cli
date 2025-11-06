@@ -21,11 +21,9 @@ function Restore-MySqlTable {
 	[SuppressMessage("PSUseOutputTypeCorrectly", "")]
 	param (
 		[Parameter(Mandatory, Position = 0)]
-		[ValidateNotNull()]
 		[uri] $Uri,
 
 		[Parameter(Mandatory, ParameterSetName = "Path", Position = 1, ValueFromPipeline)]
-		[ValidateNotNullOrWhiteSpace()]
 		[string[]] $Path,
 
 		[Parameter(Mandatory, ParameterSetName = "LiteralPath")]

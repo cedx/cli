@@ -30,7 +30,6 @@ function Backup-MySqlTable {
 	[SuppressMessage("PSUseOutputTypeCorrectly", "")]
 	param (
 		[Parameter(Mandatory, Position = 0)]
-		[ValidateNotNull()]
 		[uri] $Uri,
 
 		[Parameter(Mandatory, Position = 1)]
@@ -86,7 +85,6 @@ function Export-JsonLine {
 	[OutputType([void])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
-		[ValidateNotNull()]
 		[Schema] $Schema,
 
 		[Parameter(Mandatory, Position = 1)]
@@ -94,7 +92,6 @@ function Export-JsonLine {
 		[string] $Path,
 
 		[Parameter(Mandatory)]
-		[ValidateNotNull()]
 		[MySqlConnection] $Connection,
 
 		[Parameter()]
@@ -137,7 +134,6 @@ function Export-SqlDump {
 	[OutputType([void])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
-		[ValidateNotNull()]
 		[Schema] $Schema,
 
 		[Parameter(Mandatory, Position = 1)]
@@ -145,7 +141,6 @@ function Export-SqlDump {
 		[string] $Path,
 
 		[Parameter(Mandatory)]
-		[ValidateNotNull()]
 		[uri] $Uri,
 
 		[Parameter()]

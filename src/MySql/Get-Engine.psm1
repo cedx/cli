@@ -11,7 +11,10 @@ using namespace System.Collections.Generic
 #>
 function Get-Engine {
 	[OutputType([string[]])]
-	param ([Parameter(Mandatory, Position = 0)] [ValidateNotNull()] [MySqlConnection] $Connection)
+	param (
+		[Parameter(Mandatory, Position = 0)]
+		[MySqlConnection] $Connection
+	)
 
 	$list = [List[string]]::new()
 	$reader = [MySqlCommand]::new("SHOW ENGINES", $Connection).ExecuteReader()

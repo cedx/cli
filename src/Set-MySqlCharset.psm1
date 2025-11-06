@@ -27,11 +27,9 @@ function Set-MySqlCharset {
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		[Parameter(Mandatory, Position = 0)]
-		[ValidateNotNull()]
 		[uri] $Uri,
 
 		[Parameter(Mandatory, Position = 1)]
-		[ValidateNotNullOrWhiteSpace()]
 		[string] $Collation,
 
 		[Parameter()]

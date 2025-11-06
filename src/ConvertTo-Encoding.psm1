@@ -42,7 +42,6 @@ function ConvertTo-Encoding {
 	[OutputType([void])]
 	param (
 		[Parameter(Mandatory, ParameterSetName = "Path", Position = 0, ValueFromPipeline)]
-		[ValidateNotNullOrWhiteSpace()]
 		[string[]] $Path,
 
 		[Parameter(Mandatory, ParameterSetName = "LiteralPath")]
@@ -50,7 +49,6 @@ function ConvertTo-Encoding {
 		[string[]] $LiteralPath,
 
 		[Parameter(Mandatory, ParameterSetName = "InputObject", ValueFromPipeline)]
-		[ValidateNotNull()]
 		[FileInfo] $InputObject,
 
 		[ValidateSet("Latin1", "UTF8")]

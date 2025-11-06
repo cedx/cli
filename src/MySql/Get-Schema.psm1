@@ -12,7 +12,10 @@ using module ./Schema.psm1
 #>
 function Get-Schema {
 	[OutputType([Schema[]])]
-	param ([Parameter(Mandatory, Position = 0)] [ValidateNotNull()] [MySqlConnection] $Connection)
+	param (
+		[Parameter(Mandatory, Position = 0)]
+		[MySqlConnection] $Connection
+	)
 
 	$sql = "
 		SELECT *

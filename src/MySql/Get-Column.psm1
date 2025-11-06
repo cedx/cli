@@ -16,8 +16,11 @@ using module ./Table.psm1
 function Get-Column {
 	[OutputType([Column[]])]
 	param (
-		[Parameter(Mandatory, Position = 0)] [ValidateNotNull()] [MySqlConnection] $Connection,
-		[Parameter(Mandatory, Position = 1)] [ValidateNotNull()] [Table] $Table
+		[Parameter(Mandatory, Position = 0)]
+		[MySqlConnection] $Connection,
+
+		[Parameter(Mandatory, Position = 1)]
+		[Table] $Table
 	)
 
 	$sql = "
