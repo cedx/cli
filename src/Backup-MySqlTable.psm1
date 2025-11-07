@@ -148,14 +148,14 @@ function Export-SqlDump {
 	)
 
 	$file = "$($Table.Count -eq 1 ? "$($Schema.Name).$($Table[0])" : $Schema.Name).$([BackupFormat]::SqlDump)"
-	$userInfo = ($Uri.UserInfo -split ":").ForEach{ [Uri]::UnescapeDataString($_) }
+	$userName, $password = ($Uri.UserInfo -split ":").ForEach{ [Uri]::UnescapeDataString($_) }
 	$arguments = [List[string]] @(
 		"--default-character-set=$([HttpUtility]::ParseQueryString($Uri.Query)["charset"] ?? "utf8mb4")"
 		"--host=$($Uri.Host)"
-		"--password=$($userInfo[1])"
+		"--password=$password"
 		"--port=$($Uri.IsDefaultPort ? 3306 : $Uri.Port)"
 		"--result-file=$(Join-Path $Path $file)"
-		"--user=$($userInfo[0])"
+		"--user=$userName"
 	)
 
 	if ($Uri.Host -notin "::1", "127.0.0.1", "localhost") { $arguments.Add("--compress") }

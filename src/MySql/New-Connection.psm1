@@ -26,13 +26,13 @@ function New-Connection {
 		[switch] $Open
 	)
 
-	$userInfo = ($Uri.UserInfo -split ":").ForEach{ [Uri]::UnescapeDataString($_) }
+	$userName, $password = ($Uri.UserInfo -split ":").ForEach{ [Uri]::UnescapeDataString($_) }
 	$builder = [MySqlConnectionStringBuilder]@{
 		Server = $Uri.Host
 		Port = $Uri.IsDefaultPort ? 3306 : $Uri.Port
 		Database = "information_schema"
-		UserID = $userInfo[0]
-		Password = $userInfo[1]
+		UserID = $userName
+		Password = $password
 		ConvertZeroDateTime = $true
 		Pooling = $false
 		UseCompression = $Uri.Host -notin "::1", "127.0.0.1", "localhost"
