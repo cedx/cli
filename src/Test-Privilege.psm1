@@ -16,7 +16,7 @@ function Test-Privilege {
 	)
 
 	$isPrivileged = [Environment]::IsPrivilegedProcess
-	if (-not [string]::IsNullOrWhiteSpace($Path)) {
+	if ($Path) {
 		$homePath = [DirectoryInfo] $HOME
 		$outputPath = [DirectoryInfo] $Path
 		if (($outputPath.Root.Name -ne $homePath.Root.Name) -or $outputPath.FullName.StartsWith($homePath.FullName)) { $isPrivileged = $true }

@@ -29,13 +29,17 @@ function Get-Column {
 		WHERE TABLE_SCHEMA = @Schema AND TABLE_NAME = @Name
 		ORDER BY ORDINAL_POSITION"
 
-	$command = [MySqlCommand]::new($sql, $Connection)
-	$command.Parameters.AddWithValue("@Name", $Table.Name) | Out-Null
-	$command.Parameters.AddWithValue("@Schema", $Table.Schema) | Out-Null
-	$reader = $command.ExecuteReader()
+	$records = Select-DapperCommand $Connection -Command $sql -Parameters @{
+		Name = $Table.Name
+		Schema = $Table.Schema
+	}
 
-	$list = [List[Column]]::new()
-	while ($reader.Read()) { $list.Add([Column]::new($reader)) }
-	$reader.Close()
-	$list.ToArray()
+	$records.ForEach{
+		[Column]@{
+			Name = $_.COLUMN_NAME
+			Position = $_.ORDINAL_POSITION
+			Schema = $_.TABLE_SCHEMA
+			Table = $_.TABLE_NAME
+		}
+	}
 }

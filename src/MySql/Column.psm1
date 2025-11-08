@@ -35,23 +35,4 @@ class Column {
 	#>
 	[ColumnAttribute("TABLE_NAME")]
 	[string] $Table = ""
-
-	<#
-	.SYNOPSIS
-		Creates a new column.
-	#>
-	Column() {}
-
-	<#
-	.SYNOPSIS
-		Creates a new column from the specified data record.
-	.PARAMETER DataRecord
-		The data record providing the object values.
-	#>
-	Column([IDataRecord] $DataRecord) {
-		$this.Name = $DataRecord["COLUMN_NAME"]
-		$this.Position = $DataRecord["ORDINAL_POSITION"]
-		$this.Schema = $DataRecord["TABLE_SCHEMA"]
-		$this.Table = $DataRecord["TABLE_NAME"]
-	}
 }

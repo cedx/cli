@@ -45,32 +45,12 @@ class Table {
 
 	<#
 	.SYNOPSIS
-		Creates a new table.
-	#>
-	Table() {}
-
-	<#
-	.SYNOPSIS
-		Creates a new table from the specified data record.
-	.PARAMETER DataRecord
-		The data record providing the object values.
-	#>
-	Table([IDataRecord] $DataRecord) {
-		$this.Collation = $DataRecord["TABLE_COLLATION"]
-		$this.Engine = $DataRecord["ENGINE"]
-		$this.Name = $DataRecord["TABLE_NAME"]
-		$this.Schema = $DataRecord["TABLE_SCHEMA"]
-		$this.Type = $DataRecord["TABLE_TYPE"]
-	}
-
-	<#
-	.SYNOPSIS
 		Gets the fully qualified name.
 	.OUTPUTS
 		The fully qualified name.
 	#>
-	[string] QualifiedName() {
-		return $this.QualifiedName($false)
+	[string] GetQualifiedName() {
+		return $this.GetQualifiedName($false)
 	}
 
 	<#
@@ -81,7 +61,7 @@ class Table {
 	.OUTPUTS
 		The fully qualified name.
 	#>
-	[string] QualifiedName([bool] $Escape) {
+	[string] GetQualifiedName([bool] $Escape) {
 		$scriptBlock = $Escape ? { "``$($args[0])``" } : { $args[0] }
 		return "$(& $scriptBlock $this.Schema).$(& $scriptBlock $this.Name)"
 	}

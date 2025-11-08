@@ -23,9 +23,12 @@ function Get-Schema {
 		WHERE SCHEMA_NAME NOT IN ('information_schema', 'mysql', 'performance_schema', 'sys')
 		ORDER BY SCHEMA_NAME"
 
-	$list = [List[Schema]]::new()
-	$reader = [MySqlCommand]::new($sql, $Connection).ExecuteReader()
-	while ($reader.Read()) { $list.Add([Schema]::new($reader)) }
-	$reader.Close()
-	$list.ToArray()
+	$records = Select-DapperCommand $Connection -Command $sql
+	$records.ForEach{
+		[Schema]@{
+			Charset = $_.DEFAULT_CHARACTER_SET_NAME
+			Collation = $_.DEFAULT_COLLATION_NAME
+			Name = $_.SCHEMA_NAME
+		}
+	}
 }

@@ -29,13 +29,18 @@ function Get-Table {
 		WHERE TABLE_SCHEMA = @Name AND TABLE_TYPE = @Type
 		ORDER BY TABLE_NAME"
 
-	$command = [MySqlCommand]::new($sql, $Connection)
-	$command.Parameters.AddWithValue("@Name", $Schema.Name) | Out-Null
-	$command.Parameters.AddWithValue("@Type", [TableType]::BaseTable) | Out-Null
-	$reader = $command.ExecuteReader()
+	$records = Select-DapperCommand $Connection -Command $sql -Parameters @{
+		Name = $Schema.Name
+		Type = [TableType]::BaseTable
+	}
 
-	$list = [List[Table]]::new()
-	while ($reader.Read()) { $list.Add([Table]::new($reader)) }
-	$reader.Close()
-	$list.ToArray()
+	$records.ForEach{
+		[Table]@{
+			Collation = $_.TABLE_COLLATION
+			Engine = $_.ENGINE
+			Name = $_.TABLE_NAME
+			Schema = $_.TABLE_SCHEMA
+			Type = $_.TABLE_TYPE
+		}
+	}
 }
