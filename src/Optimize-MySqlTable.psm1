@@ -41,8 +41,8 @@ function Optimize-MySqlTable {
 		}
 
 		foreach ($tableObject in $tables) {
-			"Optimizing: $($tableObject.QualifiedName($false))"
-			$command = [MySqlCommand]::new("OPTIMIZE TABLE $($tableObject.QualifiedName($true))", $connection)
+			"Optimizing: $($tableObject.GetQualifiedName($false))"
+			$command = [MySqlCommand]::new("OPTIMIZE TABLE $($tableObject.GetQualifiedName($true))", $connection)
 			$result = Invoke-NonQuery $command
 			if ($result.IsFailure) { Write-Error ($result.Message ? $result.Message : "An error occurred.") }
 		}

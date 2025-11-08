@@ -5,7 +5,7 @@ using namespace System.Diagnostics.CodeAnalysis
 .SYNOPSIS
 	Creates a new database connection.
 .PARAMETER Uri
-	The connection URI.
+	The connection URI used to open the database.
 .PARAMETER Open
 	Value indicating whether to open the connection.
 .OUTPUTS
@@ -38,7 +38,5 @@ function New-Connection {
 		UseCompression = $Uri.Host -notin "::1", "127.0.0.1", "localhost"
 	}
 
-	$connection = [MySqlConnection] $builder.ConnectionString
-	if ($Open) { $connection.Open() }
-	$connection
+	New-DapperConnection -Type ([MySqlConnection]) -ConnectionString $builder.ConnectionString -Open:$Open
 }

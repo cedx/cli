@@ -100,8 +100,8 @@ function Export-JsonLine {
 
 	$tables = $Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $Schema.Name } } : (Get-Table $Connection $Schema)
 	foreach ($tableObject in $tables) {
-		$command = [MySqlCommand]::new("SELECT * FROM $($tableObject.QualifiedName($true))", $Connection)
-		$file = [File]::CreateText("$Path/$($tableObject.QualifiedName()).$([BackupFormat]::JsonLines)")
+		$command = [MySqlCommand]::new("SELECT * FROM $($tableObject.GetQualifiedName($true))", $Connection)
+		$file = [File]::CreateText("$Path/$($tableObject.GetQualifiedName()).$([BackupFormat]::JsonLines)")
 		$reader = $command.ExecuteReader()
 		while ($reader.Read()) {
 			$record = @{}
