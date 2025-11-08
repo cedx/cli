@@ -1,5 +1,4 @@
 using namespace MySqlConnector
-using namespace System.Collections.Generic
 using module ./Column.psm1
 using module ./Table.psm1
 
@@ -29,7 +28,7 @@ function Get-Column {
 		WHERE TABLE_SCHEMA = @Schema AND TABLE_NAME = @Name
 		ORDER BY ORDINAL_POSITION"
 
-	$records = Select-DapperCommand $Connection -Command $sql -Parameters @{
+	$records = Select-DapperObject $Connection -Command $sql -Parameters @{
 		Name = $Table.Name
 		Schema = $Table.Schema
 	}

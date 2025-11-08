@@ -38,5 +38,5 @@ function New-Connection {
 		UseCompression = $Uri.Host -notin "::1", "127.0.0.1", "localhost"
 	}
 
-	New-DapperConnection -Type ([MySqlConnection]) -ConnectionString $builder.ConnectionString -Open:$Open
+	New-DapperConnection ([MySqlConnection]) $builder.ConnectionString -Open:$Open
 }

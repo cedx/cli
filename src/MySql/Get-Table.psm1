@@ -1,5 +1,4 @@
 using namespace MySqlConnector
-using namespace System.Collections.Generic
 using module ./Schema.psm1
 using module ./Table.psm1
 
@@ -29,7 +28,7 @@ function Get-Table {
 		WHERE TABLE_SCHEMA = @Name AND TABLE_TYPE = @Type
 		ORDER BY TABLE_NAME"
 
-	$records = Select-DapperCommand $Connection -Command $sql -Parameters @{
+	$records = Select-DapperObject $Connection -Command $sql -Parameters @{
 		Name = $Schema.Name
 		Type = [TableType]::BaseTable
 	}

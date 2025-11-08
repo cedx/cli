@@ -1,5 +1,4 @@
 using namespace MySqlConnector
-using namespace System.Collections.Generic
 
 <#
 .SYNOPSIS
@@ -16,9 +15,6 @@ function Get-Collation {
 		[MySqlConnection] $Connection
 	)
 
-	$list = [List[string]]::new()
-	$reader = [MySqlCommand]::new("SHOW COLLATION", $Connection).ExecuteReader()
-	while ($reader.Read()) { $list.Add($reader["Collation"]) }
-	$reader.Close()
-	$list.ToArray()
+	$records = Select-DapperObject $Connection -Command "SHOW COLLATION"
+	$records.ForEach{ $_.Collation }
 }

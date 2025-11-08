@@ -1,5 +1,4 @@
 using namespace MySqlConnector
-using namespace System.Collections.Generic
 
 <#
 .SYNOPSIS
@@ -16,9 +15,6 @@ function Get-Engine {
 		[MySqlConnection] $Connection
 	)
 
-	$list = [List[string]]::new()
-	$reader = [MySqlCommand]::new("SHOW ENGINES", $Connection).ExecuteReader()
-	while ($reader.Read()) { $list.Add($reader["Engine"]) }
-	$reader.Close()
-	$list.ToArray()
+	$records = Select-DapperObject $Connection -Command "SHOW ENGINES"
+	$records.ForEach{ $_.Engine }
 }
