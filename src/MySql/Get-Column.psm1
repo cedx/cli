@@ -7,7 +7,7 @@ using module ./Table.psm1
 .SYNOPSIS
 	Gets the list of columns contained in the specified table.
 .PARAMETER Connection
-	The database connection.
+	The connection to the data source.
 .PARAMETER Table
 	The database table.
 .OUTPUTS

@@ -7,7 +7,7 @@ using module ./Table.psm1
 .SYNOPSIS
 	Gets the list of tables contained in the specified schema.
 .PARAMETER Connection
-	The database connection.
+	The connection to the data source.
 .PARAMETER Schema
 	The database schema.
 .OUTPUTS

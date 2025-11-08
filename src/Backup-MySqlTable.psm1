@@ -77,7 +77,7 @@ function Backup-MySqlTable {
 .PARAMETER Path
 	The path to the output directory.
 .PARAMETER Connection
-	The database connection.
+	The connection to the data source.
 .PARAMETER Table
 	The table name.
 #>

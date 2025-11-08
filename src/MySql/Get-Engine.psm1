@@ -5,7 +5,7 @@ using namespace System.Collections.Generic
 .SYNOPSIS
 	Gets the list of all storage engines.
 .PARAMETER Connection
-	The database connection.
+	The connection to the data source.
 .OUTPUTS
 	The list of all storage engines.
 #>

@@ -6,7 +6,7 @@ using module ./Schema.psm1
 .SYNOPSIS
 	Gets the list of schemas hosted by a database server.
 .PARAMETER Connection
-	The database connection.
+	The connection to the data source.
 .OUTPUTS
 	The schemas hosted by the database server.
 #>
