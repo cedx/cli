@@ -1,5 +1,4 @@
 using namespace System.ComponentModel.DataAnnotations.Schema
-using namespace System.Data
 
 <#
 .SYNOPSIS
@@ -48,10 +47,10 @@ class Column {
 	.PARAMETER DataRecord
 		The data record providing the object values.
 	#>
-	Column([IDataRecord] $DataRecord) {
-		$this.Name = $DataRecord["COLUMN_NAME"]
-		$this.Position = $DataRecord["ORDINAL_POSITION"]
-		$this.Schema = $DataRecord["TABLE_SCHEMA"]
-		$this.Table = $DataRecord["TABLE_NAME"]
+	Column([hashtable] $DataRecord) {
+		$this.Name = $DataRecord.COLUMN_NAME
+		$this.Position = $DataRecord.ORDINAL_POSITION
+		$this.Schema = $DataRecord.TABLE_SCHEMA
+		$this.Table = $DataRecord.TABLE_NAME
 	}
 }

@@ -1,5 +1,4 @@
 using namespace System.ComponentModel.DataAnnotations.Schema
-using namespace System.Data
 
 <#
 .SYNOPSIS
@@ -55,12 +54,12 @@ class Table {
 	.PARAMETER DataRecord
 		The data record providing the object values.
 	#>
-	Table([IDataRecord] $DataRecord) {
-		$this.Collation = $DataRecord["TABLE_COLLATION"]
-		$this.Engine = $DataRecord["ENGINE"]
-		$this.Name = $DataRecord["TABLE_NAME"]
-		$this.Schema = $DataRecord["TABLE_SCHEMA"]
-		$this.Type = $DataRecord["TABLE_TYPE"]
+	Table([hashtable] $DataRecord) {
+		$this.Collation = $DataRecord.TABLE_COLLATION
+		$this.Engine = $DataRecord.ENGINE
+		$this.Name = $DataRecord.TABLE_NAME
+		$this.Schema = $DataRecord.TABLE_SCHEMA
+		$this.Type = $DataRecord.TABLE_TYPE
 	}
 
 	<#
