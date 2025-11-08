@@ -1,4 +1,5 @@
 using namespace System.ComponentModel.DataAnnotations.Schema
+using namespace System.Data
 
 <#
 .SYNOPSIS
@@ -40,9 +41,9 @@ class Schema {
 	.PARAMETER DataRecord
 		The data record providing the object values.
 	#>
-	Schema([hashtable] $DataRecord) {
-		$this.Charset = $DataRecord.DEFAULT_CHARACTER_SET_NAME
-		$this.Collation = $DataRecord.DEFAULT_COLLATION_NAME
-		$this.Name = $DataRecord.SCHEMA_NAME
+	Schema([IDataRecord] $DataRecord) {
+		$this.Charset = $DataRecord["DEFAULT_CHARACTER_SET_NAME"]
+		$this.Collation = $DataRecord["DEFAULT_COLLATION_NAME"]
+		$this.Name = $DataRecord["SCHEMA_NAME"]
 	}
 }

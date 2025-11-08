@@ -26,7 +26,6 @@ function Invoke-SqlQuery {
 		[Parameter(Mandatory, Position = 1)]
 		[string] $Query,
 
-		[Parameter(Position = 2)]
 		[ValidateNotNull()]
 		[hashtable] $Parameters = @{},
 
@@ -45,12 +44,12 @@ function Invoke-SqlQuery {
 			$parameter = $command.CreateParameter()
 			$parameter.ParameterName = "@$key"
 			$parameter.Value = $Parameters.$key
-			$command.Parameters.Add($parameter) | Out-Null
+			$command.Parameters.Add($parameter)
 		}
 
 		ConvertFrom-DataReader $command.ExecuteReader() -AsHashtable:$AsHashtable
 	}
-	finally {
+	catch {
 		${command}?.Dispose()
 	}
 }
