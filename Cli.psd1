@@ -46,6 +46,10 @@
 		"bin/MySqlConnector.dll"
 	)
 
+	RequiredModules = @(
+		"Dapper"
+	)
+
 	PrivateData = @{
 		PSData = @{
 			LicenseUri = "https://github.com/cedx/cli/blob/main/License.md"
