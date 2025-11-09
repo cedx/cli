@@ -94,20 +94,12 @@ function Export-JsonLine {
 
 	$tables = $Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $Schema.Name } } : (Get-MySqlTable $Connection $Schema)
 	foreach ($tableObject in $tables) {
-		$command = [MySqlCommand]::new("SELECT * FROM $($tableObject.GetQualifiedName($true))", $Connection)
+		# TODO $reader = Invoke-DapperReader $Connection -Command "SELECT * FROM $($tableObject.GetQualifiedName($true))"
+		# $reader.Close()
+
 		$file = [File]::CreateText("$Path/$($tableObject.GetQualifiedName()).$([BackupFormat]::JsonLines)")
-		$reader = $command.ExecuteReader()
-		while ($reader.Read()) {
-			$record = @{}
-			for ($i = 0; $i -lt $reader.FieldCount; $i++) {
-				$field = $reader.GetName($i)
-				$record.$field = $reader.IsDBNull($i) ? $null : $reader.GetValue($i)
-			}
-
-			$file.WriteLine((ConvertTo-Json $record -Compress))
-		}
-
-		$reader.Close()
+		$records = Invoke-DapperQuery $Connection -Command "SELECT * FROM $($tableObject.GetQualifiedName($true))"
+		foreach ($record in $records) { $file.WriteLine((ConvertTo-Json $record -Compress)) }
 		$file.Close()
 	}
 }
