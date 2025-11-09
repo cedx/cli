@@ -5,6 +5,7 @@
 		"MySqlConnector" = @{}
 	}
 	PSGallery = @{
+		Dapper = @{}
 		PSScriptAnalyzer = @{}
 	}
 }
