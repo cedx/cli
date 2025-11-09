@@ -50,13 +50,9 @@ function Set-MySqlEngine {
 
 	foreach ($tableObject in $tables) {
 		"Processing: $($tableObject.GetQualifiedName($false))"
-		[MySqlCommand]::new("SET foreign_key_checks = 0", $connection).ExecuteNonQuery() | Out-Null
-
-		$command = [MySqlCommand]::new("ALTER TABLE $($tableObject.GetQualifiedName($true)) ENGINE = $Engine", $connection)
-		$result = Invoke-NonQuery $command
-		if ($result.IsFailure) { Write-Error ($result.Message ? $result.Message : "An error occurred.") }
-
-		[MySqlCommand]::new("SET foreign_key_checks = 1", $connection).ExecuteNonQuery() | Out-Null
+		Invoke-DapperNonQuery $connection -Command "SET foreign_key_checks = 0" | Out-Null
+		Invoke-DapperNonQuery $connection -Command "ALTER TABLE $($tableObject.GetQualifiedName($true)) ENGINE = $Engine" | Out-Null
+		Invoke-DapperNonQuery $connection -Command "SET foreign_key_checks = 1" | Out-Null
 	}
 
 	Close-DapperConnection $connection

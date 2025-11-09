@@ -2,7 +2,6 @@ using namespace MySqlConnector
 using namespace System.Diagnostics.CodeAnalysis
 using module ./MySql/Get-MySqlSchema.psm1
 using module ./MySql/Get-MySqlTable.psm1
-using module ./MySql/Invoke-NonQuery.psm1
 using module ./MySql/New-MySqlConnection.psm1
 using module ./MySql/Schema.psm1
 using module ./MySql/Table.psm1
@@ -40,9 +39,7 @@ function Optimize-MySqlTable {
 
 	foreach ($tableObject in $tables) {
 		"Optimizing: $($tableObject.GetQualifiedName($false))"
-		$command = [MySqlCommand]::new("OPTIMIZE TABLE $($tableObject.GetQualifiedName($true))", $connection)
-		$result = Invoke-NonQuery $command
-		if ($result.IsFailure) { Write-Error ($result.Message ? $result.Message : "An error occurred.") }
+		Invoke-DapperNonQuery $connection -Command "OPTIMIZE TABLE $($tableObject.GetQualifiedName($true))" | Out-Null
 	}
 
 	Close-DapperConnection $connection
