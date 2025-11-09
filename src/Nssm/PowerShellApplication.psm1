@@ -34,7 +34,7 @@ class PowerShellApplication: Application {
 	.OUTPUTS
 		The entry point of this application.
 	#>
-	[string] GetEntryPoint() {
+	[string] EntryPoint() {
 		if ($this.EntryPoint) { return $this.EntryPoint }
 		throw [EntryPointNotFoundException] "Unable to resolve the application entry point."
 	}

@@ -73,7 +73,7 @@ class Application {
 	.OUTPUTS
 		The entry point of this application.
 	#>
-	[string] GetEntryPoint() {
+	[string] EntryPoint() {
 		throw [NotImplementedException]::new()
 	}
 

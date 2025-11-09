@@ -54,7 +54,7 @@ function New-NssmService {
 			Start = "SERVICE_AUTO_START"
 		}
 
-		nssm install $application.Id $application.Program().Path $application.GetEntryPoint() | Out-Null
+		nssm install $application.Id $application.Program().Path $application.EntryPoint() | Out-Null
 		foreach ($key in $properties.Keys) { nssm set $application.Id $key $properties.$key | Out-Null }
 		if ($Start) { Start-Service $application.Id }
 
