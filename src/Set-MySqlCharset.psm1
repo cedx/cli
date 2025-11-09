@@ -3,7 +3,6 @@ using namespace System.Diagnostics.CodeAnalysis
 using module ./MySql/Get-MySqlCollation.psm1
 using module ./MySql/Get-MySqlSchema.psm1
 using module ./MySql/Get-MySqlTable.psm1
-using module ./MySql/Invoke-NonQuery.psm1
 using module ./MySql/New-MySqlConnection.psm1
 using module ./MySql/Schema.psm1
 using module ./MySql/Table.psm1
