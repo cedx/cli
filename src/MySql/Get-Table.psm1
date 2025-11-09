@@ -28,7 +28,7 @@ function Get-Table {
 		WHERE TABLE_SCHEMA = @Name AND TABLE_TYPE = @Type
 		ORDER BY TABLE_NAME"
 
-	$records = Select-DapperObject $Connection -Command $sql -Parameters @{
+	$records = Invoke-DapperQuery $Connection -Command $sql -Parameters @{
 		Name = $Schema.Name
 		Type = [TableType]::BaseTable
 	}

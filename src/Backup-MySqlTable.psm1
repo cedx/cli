@@ -6,7 +6,7 @@ using namespace System.Web
 using module ./MySql/BackupFormat.psm1
 using module ./MySql/Get-Schema.psm1
 using module ./MySql/Get-Table.psm1
-using module ./MySql/New-Connection.psm1
+using module ./MySql/New-MySqlConnection.psm1
 using module ./MySql/Schema.psm1
 using module ./MySql/Table.psm1
 
@@ -54,7 +54,7 @@ function Backup-MySqlTable {
 	New-Item $Path -Force -ItemType Directory | Out-Null
 
 	try {
-		$connection = New-Connection $Uri -Open
+		$connection = New-MySqlConnection $Uri -Open
 		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-Schema $connection)
 		foreach ($schemaObject in $schemas) {
 			"Exporting: $($Table.Count -eq 1 ? "$($schemaObject.Name).$($Table[0])" : $schemaObject.Name)"

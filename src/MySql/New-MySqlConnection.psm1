@@ -3,7 +3,7 @@ using namespace System.Diagnostics.CodeAnalysis
 
 <#
 .SYNOPSIS
-	Creates a new database connection.
+	Creates a new MariaDB/MySQL database connection.
 .PARAMETER Uri
 	The connection URI used to open the database.
 .PARAMETER Open
@@ -11,7 +11,7 @@ using namespace System.Diagnostics.CodeAnalysis
 .OUTPUTS
 	The newly created connection.
 #>
-function New-Connection {
+function New-MySqlConnection {
 	[OutputType([MySqlConnection])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (

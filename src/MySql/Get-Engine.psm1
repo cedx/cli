@@ -15,6 +15,6 @@ function Get-Engine {
 		[MySqlConnection] $Connection
 	)
 
-	$records = Select-DapperObject $Connection -Command "SHOW ENGINES"
+	$records = Invoke-DapperQuery $Connection -Command "SHOW ENGINES"
 	$records.ForEach{ $_.Engine }
 }

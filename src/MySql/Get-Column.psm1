@@ -28,7 +28,7 @@ function Get-Column {
 		WHERE TABLE_SCHEMA = @Schema AND TABLE_NAME = @Name
 		ORDER BY ORDINAL_POSITION"
 
-	$records = Select-DapperObject $Connection -Command $sql -Parameters @{
+	$records = Invoke-DapperQuery $Connection -Command $sql -Parameters @{
 		Name = $Table.Name
 		Schema = $Table.Schema
 	}

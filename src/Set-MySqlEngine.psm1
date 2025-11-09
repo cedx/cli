@@ -4,7 +4,7 @@ using module ./MySql/Get-Engine.psm1
 using module ./MySql/Get-Schema.psm1
 using module ./MySql/Get-Table.psm1
 using module ./MySql/Invoke-NonQuery.psm1
-using module ./MySql/New-Connection.psm1
+using module ./MySql/New-MySqlConnection.psm1
 using module ./MySql/Schema.psm1
 using module ./MySql/Table.psm1
 
@@ -41,7 +41,7 @@ function Set-MySqlEngine {
 
 	$connection = $null
 	try {
-		$connection = New-Connection $Uri -Open
+		$connection = New-MySqlConnection $Uri -Open
 		$engines = Get-Engine $connection
 		if ($Engine -notin $engines) { throw [ArgumentOutOfRangeException] "Engine" }
 

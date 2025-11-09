@@ -4,7 +4,7 @@ using module ./MySql/Get-Collation.psm1
 using module ./MySql/Get-Schema.psm1
 using module ./MySql/Get-Table.psm1
 using module ./MySql/Invoke-NonQuery.psm1
-using module ./MySql/New-Connection.psm1
+using module ./MySql/New-MySqlConnection.psm1
 using module ./MySql/Schema.psm1
 using module ./MySql/Table.psm1
 
@@ -41,7 +41,7 @@ function Set-MySqlCharset {
 
 	$connection = $null
 	try {
-		$connection = New-Connection $Uri -Open
+		$connection = New-MySqlConnection $Uri -Open
 		$collations = Get-Collation $connection
 		if ($Collation -notin $collations) { throw [ArgumentOutOfRangeException] "Collation" }
 

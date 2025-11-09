@@ -15,6 +15,6 @@ function Get-Collation {
 		[MySqlConnection] $Connection
 	)
 
-	$records = Select-DapperObject $Connection -Command "SHOW COLLATION"
+	$records = Invoke-DapperQuery $Connection -Command "SHOW COLLATION"
 	$records.ForEach{ $_.Collation }
 }

@@ -3,7 +3,7 @@ using namespace System.Diagnostics.CodeAnalysis
 using module ./MySql/Get-Schema.psm1
 using module ./MySql/Get-Table.psm1
 using module ./MySql/Invoke-NonQuery.psm1
-using module ./MySql/New-Connection.psm1
+using module ./MySql/New-MySqlConnection.psm1
 using module ./MySql/Schema.psm1
 using module ./MySql/Table.psm1
 
@@ -34,7 +34,7 @@ function Optimize-MySqlTable {
 
 	$connection = $null
 	try {
-		$connection = New-Connection $Uri -Open
+		$connection = New-MySqlConnection $Uri -Open
 		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-Schema $connection)
 		$tables = foreach ($schemaObject in $schemas) {
 			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-Table $connection $schemaObject)
