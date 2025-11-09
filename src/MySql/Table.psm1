@@ -48,7 +48,7 @@ class Table {
 	.OUTPUTS
 		The fully qualified name.
 	#>
-	[string] GetQualifiedName() {
+	[string] QualifiedName() {
 		return $this.GetQualifiedName($false)
 	}
 
