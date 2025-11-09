@@ -4,7 +4,7 @@ using namespace System.Diagnostics.CodeAnalysis
 using namespace System.IO
 using namespace System.Web
 using module ./MySql/BackupFormat.psm1
-using module ./MySql/Get-Schema.psm1
+using module ./MySql/Get-MySqlSchema.psm1
 using module ./MySql/Get-Table.psm1
 using module ./MySql/New-MySqlConnection.psm1
 using module ./MySql/Schema.psm1

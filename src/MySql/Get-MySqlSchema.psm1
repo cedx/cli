@@ -9,7 +9,7 @@ using module ./Schema.psm1
 .OUTPUTS
 	The schemas hosted by the database server.
 #>
-function Get-Schema {
+function Get-MySqlSchema {
 	[OutputType([Schema[]])]
 	param (
 		[Parameter(Mandatory, Position = 0)]

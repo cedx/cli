@@ -1,7 +1,7 @@
 using namespace MySqlConnector
 using namespace System.Diagnostics.CodeAnalysis
 using module ./MySql/Get-MySqlCollation.psm1
-using module ./MySql/Get-Schema.psm1
+using module ./MySql/Get-MySqlSchema.psm1
 using module ./MySql/Get-Table.psm1
 using module ./MySql/Invoke-NonQuery.psm1
 using module ./MySql/New-MySqlConnection.psm1
@@ -45,7 +45,7 @@ function Set-MySqlCharset {
 		$collations = Get-MySqlCollation $connection
 		if ($Collation -notin $collations) { throw [ArgumentOutOfRangeException] "Collation" }
 
-		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-Schema $connection)
+		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
 		$tables = foreach ($schemaObject in $schemas) {
 			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-Table $connection $schemaObject)
 		}
