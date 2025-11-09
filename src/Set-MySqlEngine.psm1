@@ -1,6 +1,6 @@
 using namespace MySqlConnector
 using namespace System.Diagnostics.CodeAnalysis
-using module ./MySql/Get-Engine.psm1
+using module ./MySql/Get-MySqlEngine.psm1
 using module ./MySql/Get-Schema.psm1
 using module ./MySql/Get-Table.psm1
 using module ./MySql/Invoke-NonQuery.psm1
@@ -42,7 +42,7 @@ function Set-MySqlEngine {
 	$connection = $null
 	try {
 		$connection = New-MySqlConnection $Uri -Open
-		$engines = Get-Engine $connection
+		$engines = Get-MySqlEngine $connection
 		if ($Engine -notin $engines) { throw [ArgumentOutOfRangeException] "Engine" }
 
 		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-Schema $connection)

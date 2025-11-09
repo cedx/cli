@@ -8,7 +8,7 @@ using namespace MySqlConnector
 .OUTPUTS
 	The list of all storage engines.
 #>
-function Get-Engine {
+function Get-MySqlEngine {
 	[OutputType([string[]])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
