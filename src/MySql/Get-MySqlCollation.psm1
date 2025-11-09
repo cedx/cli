@@ -8,7 +8,7 @@ using namespace MySqlConnector
 .OUTPUTS
 	The list of all collations.
 #>
-function Get-Collation {
+function Get-MySqlCollation {
 	[OutputType([string[]])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
