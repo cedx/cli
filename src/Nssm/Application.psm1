@@ -83,7 +83,7 @@ class Application {
 	.OUTPUTS
 		The name of the environment variable storing the application environment.
 	#>
-	[string] GetEnvironmentVariable() {
+	[string] EnvironmentVariable() {
 		throw [NotImplementedException]::new()
 	}
 

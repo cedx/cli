@@ -45,7 +45,7 @@ function New-NssmService {
 
 		$properties = [ordered]@{
 			AppDirectory = $application.Path
-			AppEnvironmentExtra = "$($application.GetEnvironmentVariable())=$($application.Environment)"
+			AppEnvironmentExtra = "$($application.EnvironmentVariable())=$($application.Environment)"
 			AppNoConsole = "1"
 			AppStderr = Join-Path $application.Path "var/Error.log"
 			AppStdout = Join-Path $application.Path "var/Output.log"

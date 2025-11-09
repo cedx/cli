@@ -45,7 +45,7 @@ class PowerShellApplication: Application {
 	.OUTPUTS
 		The name of the environment variable storing the application environment.
 	#>
-	[string] GetEnvironmentVariable() {
+	[string] EnvironmentVariable() {
 		return "PODE_ENVIRONMENT"
 	}
 

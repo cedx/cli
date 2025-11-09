@@ -53,7 +53,7 @@ class DotNetApplication: Application {
 	.OUTPUTS
 		The name of the environment variable storing the application environment.
 	#>
-	[string] GetEnvironmentVariable() {
+	[string] EnvironmentVariable() {
 		return "DOTNET_ENVIRONMENT"
 	}
 
