@@ -12,7 +12,7 @@ using module ./Table.psm1
 .OUTPUTS
 	The tables contained in the specified schema.
 #>
-function Get-Table {
+function Get-MySqlTable {
 	[OutputType([Table[]])]
 	param (
 		[Parameter(Mandatory, Position = 0)]

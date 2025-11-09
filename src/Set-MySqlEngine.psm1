@@ -2,7 +2,7 @@ using namespace MySqlConnector
 using namespace System.Diagnostics.CodeAnalysis
 using module ./MySql/Get-MySqlEngine.psm1
 using module ./MySql/Get-MySqlSchema.psm1
-using module ./MySql/Get-Table.psm1
+using module ./MySql/Get-MySqlTable.psm1
 using module ./MySql/Invoke-NonQuery.psm1
 using module ./MySql/New-MySqlConnection.psm1
 using module ./MySql/Schema.psm1
@@ -47,7 +47,7 @@ function Set-MySqlEngine {
 
 		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
 		$tables = foreach ($schemaObject in $schemas) {
-			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-Table $connection $schemaObject)
+			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-MySqlTable $connection $schemaObject)
 		}
 
 		foreach ($tableObject in $tables) {

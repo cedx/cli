@@ -5,7 +5,7 @@ using namespace System.IO
 using namespace System.Web
 using module ./MySql/BackupFormat.psm1
 using module ./MySql/Get-MySqlSchema.psm1
-using module ./MySql/Get-Table.psm1
+using module ./MySql/Get-MySqlTable.psm1
 using module ./MySql/New-MySqlConnection.psm1
 using module ./MySql/Schema.psm1
 using module ./MySql/Table.psm1
@@ -55,7 +55,7 @@ function Backup-MySqlTable {
 
 	try {
 		$connection = New-MySqlConnection $Uri -Open
-		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-Schema $connection)
+		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
 		foreach ($schemaObject in $schemas) {
 			"Exporting: $($Table.Count -eq 1 ? "$($schemaObject.Name).$($Table[0])" : $schemaObject.Name)"
 			if ($Format -eq [BackupFormat]::JsonLines) { Export-JsonLine $schemaObject $Path -Connection $connection -Table $Table }
@@ -98,7 +98,7 @@ function Export-JsonLine {
 		[string[]] $Table = @()
 	)
 
-	$tables = $Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $Schema.Name } } : (Get-Table $Connection $Schema)
+	$tables = $Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $Schema.Name } } : (Get-MySqlTable $Connection $Schema)
 	foreach ($tableObject in $tables) {
 		$command = [MySqlCommand]::new("SELECT * FROM $($tableObject.GetQualifiedName($true))", $Connection)
 		$file = [File]::CreateText("$Path/$($tableObject.GetQualifiedName()).$([BackupFormat]::JsonLines)")
