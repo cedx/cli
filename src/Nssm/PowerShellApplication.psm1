@@ -9,9 +9,9 @@ class PowerShellApplication: Application {
 
 	<#
 	.SYNOPSIS
-		The entry point of this application.
+		The path of the application entry point.
 	#>
-	hidden [string] $EntryPoint = ""
+	hidden [string] $EntryPath = ""
 
 	<#
 	.SYNOPSIS
@@ -24,7 +24,7 @@ class PowerShellApplication: Application {
 			$module = Import-PowerShellDataFile $file.FullName
 			if (-not $this.Description) { $this.Description = $module.Description }
 			if (-not $this.Name) { $this.Name = $file.BaseName }
-			if ($module.RootModule) { $this.EntryPoint = Join-Path $this.Path $module.RootModule -Resolve -ErrorAction Ignore }
+			if ($module.RootModule) { $this.EntryPath = Join-Path $this.Path $module.RootModule -Resolve -ErrorAction Ignore }
 		}
 	}
 
@@ -35,7 +35,7 @@ class PowerShellApplication: Application {
 		The entry point of this application.
 	#>
 	[string] EntryPoint() {
-		if ($this.EntryPoint) { return $this.EntryPoint }
+		if ($this.EntryPath) { return $this.EntryPath }
 		throw [EntryPointNotFoundException] "Unable to resolve the application entry point."
 	}
 

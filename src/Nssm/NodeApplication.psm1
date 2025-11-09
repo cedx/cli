@@ -9,9 +9,9 @@ class NodeApplication: Application {
 
 	<#
 	.SYNOPSIS
-		The entry point of this application.
+		The path of the application entry point.
 	#>
-	hidden [string] $EntryPoint = ""
+	hidden [string] $EntryPath = ""
 
 	<#
 	.SYNOPSIS
@@ -28,7 +28,7 @@ class NodeApplication: Application {
 			$keys = $package.bin?.Keys
 			if ($keys) {
 				$firstKey = $keys[0]
-				$this.EntryPoint = Join-Path $this.Path $package.bin.$firstKey -Resolve -ErrorAction Ignore
+				$this.EntryPath = Join-Path $this.Path $package.bin.$firstKey -Resolve -ErrorAction Ignore
 			}
 		}
 	}
@@ -40,7 +40,7 @@ class NodeApplication: Application {
 		The entry point of this application.
 	#>
 	[string] EntryPoint() {
-		if ($this.EntryPoint) { return $this.EntryPoint }
+		if ($this.EntryPath) { return $this.EntryPath }
 		throw [EntryPointNotFoundException] "Unable to resolve the application entry point."
 	}
 

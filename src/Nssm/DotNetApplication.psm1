@@ -9,9 +9,9 @@ class DotNetApplication: Application {
 
 	<#
 	.SYNOPSIS
-		The entry point of this application.
+		The path of the application entry point.
 	#>
-	hidden [string] $EntryPoint = ""
+	hidden [string] $EntryPath = ""
 
 	<#
 	.SYNOPSIS
@@ -32,7 +32,7 @@ class DotNetApplication: Application {
 
 			if (-not $project.AssemblyName) { $project.AssemblyName = $file.BaseName }
 			if (-not $project.OutDir) { $project.OutDir = "$($this.Path)/bin" }
-			$this.EntryPoint = Join-Path $project.OutDir "$($project.AssemblyName).dll" -Resolve -ErrorAction Ignore
+			$this.EntryPath = Join-Path $project.OutDir "$($project.AssemblyName).dll" -Resolve -ErrorAction Ignore
 		}
 	}
 
@@ -43,7 +43,7 @@ class DotNetApplication: Application {
 		The entry point of this application.
 	#>
 	[string] EntryPoint() {
-		if ($this.EntryPoint) { return $this.EntryPoint }
+		if ($this.EntryPath) { return $this.EntryPath }
 		throw [EntryPointNotFoundException] "Unable to resolve the application entry point."
 	}
 
