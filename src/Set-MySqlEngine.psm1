@@ -39,31 +39,25 @@ function Set-MySqlEngine {
 		[string[]] $Table = @()
 	)
 
-	$connection = $null
-	try {
-		$connection = New-MySqlConnection $Uri -Open
-		$engines = Get-MySqlEngine $connection
-		if ($Engine -notin $engines) { throw [ArgumentOutOfRangeException] "Engine" }
+	$connection = New-MySqlConnection $Uri -Open
+	$engines = Get-MySqlEngine $connection
+	if ($Engine -notin $engines) { throw [ArgumentOutOfRangeException] "Engine" }
 
-		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
-		$tables = foreach ($schemaObject in $schemas) {
-			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-MySqlTable $connection $schemaObject)
-		}
-
-		foreach ($tableObject in $tables) {
-			"Processing: $($tableObject.GetQualifiedName($false))"
-			[MySqlCommand]::new("SET foreign_key_checks = 0", $connection).ExecuteNonQuery() | Out-Null
-
-			$command = [MySqlCommand]::new("ALTER TABLE $($tableObject.GetQualifiedName($true)) ENGINE = $Engine", $connection)
-			$result = Invoke-NonQuery $command
-			if ($result.IsFailure) { Write-Error ($result.Message ? $result.Message : "An error occurred.") }
-
-			[MySqlCommand]::new("SET foreign_key_checks = 1", $connection).ExecuteNonQuery() | Out-Null
-		}
-
-		$connection.Close()
+	$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
+	$tables = foreach ($schemaObject in $schemas) {
+		$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-MySqlTable $connection $schemaObject)
 	}
-	finally {
-		${connection}?.Dispose()
+
+	foreach ($tableObject in $tables) {
+		"Processing: $($tableObject.GetQualifiedName($false))"
+		[MySqlCommand]::new("SET foreign_key_checks = 0", $connection).ExecuteNonQuery() | Out-Null
+
+		$command = [MySqlCommand]::new("ALTER TABLE $($tableObject.GetQualifiedName($true)) ENGINE = $Engine", $connection)
+		$result = Invoke-NonQuery $command
+		if ($result.IsFailure) { Write-Error ($result.Message ? $result.Message : "An error occurred.") }
+
+		[MySqlCommand]::new("SET foreign_key_checks = 1", $connection).ExecuteNonQuery() | Out-Null
 	}
+
+	Close-DapperConnection $connection
 }

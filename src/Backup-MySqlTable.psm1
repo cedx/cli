@@ -50,23 +50,17 @@ function Backup-MySqlTable {
 		Write-Warning "The ""JSON Lines"" format does not export INVISIBLE columns."
 	}
 
-	$connection = $null
+	$connection = New-MySqlConnection $Uri -Open
 	New-Item $Path -Force -ItemType Directory | Out-Null
 
-	try {
-		$connection = New-MySqlConnection $Uri -Open
-		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
-		foreach ($schemaObject in $schemas) {
-			"Exporting: $($Table.Count -eq 1 ? "$($schemaObject.Name).$($Table[0])" : $schemaObject.Name)"
-			if ($Format -eq [BackupFormat]::JsonLines) { Export-JsonLine $schemaObject $Path -Connection $connection -Table $Table }
-			else { Export-SqlDump $schemaObject $Path -Table $Table -Uri $Uri }
-		}
+	$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
+	foreach ($schemaObject in $schemas) {
+		"Exporting: $($Table.Count -eq 1 ? "$($schemaObject.Name).$($Table[0])" : $schemaObject.Name)"
+		if ($Format -eq [BackupFormat]::JsonLines) { Export-JsonLine $schemaObject $Path -Connection $connection -Table $Table }
+		else { Export-SqlDump $schemaObject $Path -Table $Table -Uri $Uri }
+	}
 
-		$connection.Close()
-	}
-	finally {
-		${connection}?.Dispose()
-	}
+	Close-DapperConnection $connection
 }
 
 <#

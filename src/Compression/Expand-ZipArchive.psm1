@@ -27,21 +27,17 @@ function Expand-ZipArchive {
 
 	if ($Skip -eq 0) { Expand-Archive $Path $DestinationPath -Force }
 	else {
-		$archive = $null
-		try {
-			$archive = [ZipFile]::OpenRead($Path)
-			foreach ($entry in $archive.Entries) {
-				$components = $entry.FullName -split "/"
-				$newPath = $components[$Skip..($components.Count - 1)] -join "/"
-				if (-not $newPath) { $newPath = "/" }
+		$archive = [ZipFile]::OpenRead($Path)
+		foreach ($entry in $archive.Entries) {
+			$components = $entry.FullName -split "/"
+			$newPath = $components[$Skip..($components.Count - 1)] -join "/"
+			if (-not $newPath) { $newPath = "/" }
 
-				$fullPath = Join-Path $DestinationPath $newPath
-				if ($newPath[-1] -eq "/") { New-Item $fullPath -Force -ItemType Directory | Out-Null }
-				else { [ZipFileExtensions]::ExtractToFile($entry, $fullPath, $true) }
-			}
+			$fullPath = Join-Path $DestinationPath $newPath
+			if ($newPath[-1] -eq "/") { New-Item $fullPath -Force -ItemType Directory | Out-Null }
+			else { [ZipFileExtensions]::ExtractToFile($entry, $fullPath, $true) }
 		}
-		finally {
-			${archive}?.Dispose()
-		}
+
+		$archive.Dispose()
 	}
 }

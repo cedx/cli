@@ -32,24 +32,18 @@ function Optimize-MySqlTable {
 		[string[]] $Table = @()
 	)
 
-	$connection = $null
-	try {
-		$connection = New-MySqlConnection $Uri -Open
-		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
-		$tables = foreach ($schemaObject in $schemas) {
-			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-MySqlTable $connection $schemaObject)
-		}
-
-		foreach ($tableObject in $tables) {
-			"Optimizing: $($tableObject.GetQualifiedName($false))"
-			$command = [MySqlCommand]::new("OPTIMIZE TABLE $($tableObject.GetQualifiedName($true))", $connection)
-			$result = Invoke-NonQuery $command
-			if ($result.IsFailure) { Write-Error ($result.Message ? $result.Message : "An error occurred.") }
-		}
-
-		$connection.Close()
+	$connection = New-MySqlConnection $Uri -Open
+	$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
+	$tables = foreach ($schemaObject in $schemas) {
+		$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-MySqlTable $connection $schemaObject)
 	}
-	finally {
-		${connection}?.Dispose()
+
+	foreach ($tableObject in $tables) {
+		"Optimizing: $($tableObject.GetQualifiedName($false))"
+		$command = [MySqlCommand]::new("OPTIMIZE TABLE $($tableObject.GetQualifiedName($true))", $connection)
+		$result = Invoke-NonQuery $command
+		if ($result.IsFailure) { Write-Error ($result.Message ? $result.Message : "An error occurred.") }
 	}
+
+	Close-DapperConnection $connection
 }

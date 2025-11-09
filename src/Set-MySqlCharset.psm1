@@ -39,32 +39,26 @@ function Set-MySqlCharset {
 		[string[]] $Table = @()
 	)
 
-	$connection = $null
-	try {
-		$connection = New-MySqlConnection $Uri -Open
-		$collations = Get-MySqlCollation $connection
-		if ($Collation -notin $collations) { throw [ArgumentOutOfRangeException] "Collation" }
+	$connection = New-MySqlConnection $Uri -Open
+	$collations = Get-MySqlCollation $connection
+	if ($Collation -notin $collations) { throw [ArgumentOutOfRangeException] "Collation" }
 
-		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
-		$tables = foreach ($schemaObject in $schemas) {
-			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-MySqlTable $connection $schemaObject)
-		}
-
-		foreach ($tableObject in $tables) {
-			"Processing: $($tableObject.GetQualifiedName($false))"
-			[MySqlCommand]::new("SET foreign_key_checks = 0", $connection).ExecuteNonQuery() | Out-Null
-
-			$charset = ($Collation -split "_")[0]
-			$command = [MySqlCommand]::new("ALTER TABLE $($tableObject.GetQualifiedName($true)) CONVERT TO CHARACTER SET $charset COLLATE $Collation", $connection)
-			$result = Invoke-NonQuery $command
-			if ($result.IsFailure) { Write-Error ($result.Message ? $result.Message : "An error occurred.") }
-
-			[MySqlCommand]::new("SET foreign_key_checks = 1", $connection).ExecuteNonQuery() | Out-Null
-		}
-
-		$connection.Close()
+	$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
+	$tables = foreach ($schemaObject in $schemas) {
+		$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-MySqlTable $connection $schemaObject)
 	}
-	finally {
-		${connection}?.Dispose()
+
+	foreach ($tableObject in $tables) {
+		"Processing: $($tableObject.GetQualifiedName($false))"
+		[MySqlCommand]::new("SET foreign_key_checks = 0", $connection).ExecuteNonQuery() | Out-Null
+
+		$charset = ($Collation -split "_")[0]
+		$command = [MySqlCommand]::new("ALTER TABLE $($tableObject.GetQualifiedName($true)) CONVERT TO CHARACTER SET $charset COLLATE $Collation", $connection)
+		$result = Invoke-NonQuery $command
+		if ($result.IsFailure) { Write-Error ($result.Message ? $result.Message : "An error occurred.") }
+
+		[MySqlCommand]::new("SET foreign_key_checks = 1", $connection).ExecuteNonQuery() | Out-Null
 	}
+
+	Close-DapperConnection $connection
 }
