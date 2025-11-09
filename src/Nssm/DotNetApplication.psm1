@@ -1,4 +1,3 @@
-using namespace System.IO
 using namespace System.Management.Automation
 using module ./Application.psm1
 

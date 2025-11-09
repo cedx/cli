@@ -1,5 +1,4 @@
 using namespace System.ComponentModel.DataAnnotations.Schema
-using namespace System.Data
 
 <#
 .SYNOPSIS
