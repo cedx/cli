@@ -12,7 +12,7 @@ using module ./Table.psm1
 .OUTPUTS
 	The columns contained in the specified table.
 #>
-function Get-Column {
+function Get-MySqlColumn {
 	[OutputType([Column[]])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
