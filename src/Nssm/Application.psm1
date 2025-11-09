@@ -93,7 +93,7 @@ class Application {
 	.OUTPUTS
 		The program used to run this application.
 	#>
-	[ApplicationInfo] GetProgram() {
+	[ApplicationInfo] Program() {
 		throw [NotImplementedException]::new()
 	}
 }

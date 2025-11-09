@@ -63,7 +63,7 @@ class DotNetApplication: Application {
 	.OUTPUTS
 		The program used to run this application.
 	#>
-	[ApplicationInfo] GetProgram() {
+	[ApplicationInfo] Program() {
 		return Get-Command "dotnet"
 	}
 }
