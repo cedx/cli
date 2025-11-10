@@ -22,7 +22,7 @@ function Get-MySqlSchema {
 		WHERE SCHEMA_NAME NOT IN ('information_schema', 'mysql', 'performance_schema', 'sys')
 		ORDER BY SCHEMA_NAME"
 
-	$records = Invoke-DapperQuery $Connection -Command $sql
+	$records = Invoke-SqlQuery $Connection -Command $sql
 	$records.ForEach{
 		[Schema]@{
 			Charset = $_.DEFAULT_CHARACTER_SET_NAME

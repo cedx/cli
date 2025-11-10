@@ -39,8 +39,8 @@ function Optimize-MySqlTable {
 
 	foreach ($tableObject in $tables) {
 		"Optimizing: $($tableObject.GetQualifiedName($false))"
-		Invoke-DapperNonQuery $connection -Command "OPTIMIZE TABLE $($tableObject.GetQualifiedName($true))" | Out-Null
+		Invoke-SqlNonQuery $connection -Command "OPTIMIZE TABLE $($tableObject.GetQualifiedName($true))" | Out-Null
 	}
 
-	Close-DapperConnection $connection
+	Close-SqlConnection $connection
 }

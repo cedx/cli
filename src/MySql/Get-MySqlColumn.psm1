@@ -28,7 +28,7 @@ function Get-MySqlColumn {
 		WHERE TABLE_SCHEMA = @Schema AND TABLE_NAME = @Name
 		ORDER BY ORDINAL_POSITION"
 
-	$records = Invoke-DapperQuery $Connection -Command $sql -Parameters @{
+	$records = Invoke-SqlQuery $Connection -Command $sql -Parameters @{
 		Name = $Table.Name
 		Schema = $Table.Schema
 	}

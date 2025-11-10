@@ -49,10 +49,10 @@ function Set-MySqlEngine {
 
 	foreach ($tableObject in $tables) {
 		"Processing: $($tableObject.GetQualifiedName($false))"
-		Invoke-DapperNonQuery $connection -Command "SET foreign_key_checks = 0" | Out-Null
-		Invoke-DapperNonQuery $connection -Command "ALTER TABLE $($tableObject.GetQualifiedName($true)) ENGINE = $Engine" | Out-Null
-		Invoke-DapperNonQuery $connection -Command "SET foreign_key_checks = 1" | Out-Null
+		Invoke-SqlNonQuery $connection -Command "SET foreign_key_checks = 0" | Out-Null
+		Invoke-SqlNonQuery $connection -Command "ALTER TABLE $($tableObject.GetQualifiedName($true)) ENGINE = $Engine" | Out-Null
+		Invoke-SqlNonQuery $connection -Command "SET foreign_key_checks = 1" | Out-Null
 	}
 
-	Close-DapperConnection $connection
+	Close-SqlConnection $connection
 }

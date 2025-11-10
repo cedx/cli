@@ -28,7 +28,7 @@ function Get-MySqlTable {
 		WHERE TABLE_SCHEMA = @Name AND TABLE_TYPE = @Type
 		ORDER BY TABLE_NAME"
 
-	$records = Invoke-DapperQuery $Connection -Command $sql -Parameters @{
+	$records = Invoke-SqlQuery $Connection -Command $sql -Parameters @{
 		Name = $Schema.Name
 		Type = [TableType]::BaseTable
 	}

@@ -60,7 +60,7 @@ function Backup-MySqlTable {
 		else { Export-SqlDump $schemaObject $Path -Table $Table -Uri $Uri }
 	}
 
-	Close-DapperConnection $connection
+	Close-SqlConnection $connection
 }
 
 <#
@@ -95,7 +95,7 @@ function Export-JsonLine {
 	$tables = $Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $Schema.Name } } : (Get-MySqlTable $Connection $Schema)
 	foreach ($tableObject in $tables) {
 		$file = [File]::CreateText("$Path/$($tableObject.QualifiedName()).$([BackupFormat]::JsonLines)")
-		$records = Invoke-DapperQuery $Connection -Command "SELECT * FROM $($tableObject.GetQualifiedName($true))"
+		$records = Invoke-SqlQuery $Connection -Command "SELECT * FROM $($tableObject.GetQualifiedName($true))"
 		$records.ForEach{ $file.WriteLine((ConvertTo-Json $_ -Compress)) }
 		$file.Close()
 	}
