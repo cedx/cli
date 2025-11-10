@@ -50,7 +50,7 @@ function Backup-MySqlTable {
 		Write-Warning "The ""JSON Lines"" format does not export INVISIBLE columns."
 	}
 
-	$connection = New-MySqlConnection $Uri -Open
+	$connection = New-MySqlConnection $Uri
 	New-Item $Path -Force -ItemType Directory | Out-Null
 
 	$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)

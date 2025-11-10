@@ -31,7 +31,7 @@ function Optimize-MySqlTable {
 		[string[]] $Table = @()
 	)
 
-	$connection = New-MySqlConnection $Uri -Open
+	$connection = New-MySqlConnection $Uri
 	$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
 	$tables = foreach ($schemaObject in $schemas) {
 		$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-MySqlTable $connection $schemaObject)

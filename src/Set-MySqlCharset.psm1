@@ -38,7 +38,7 @@ function Set-MySqlCharset {
 		[string[]] $Table = @()
 	)
 
-	$connection = New-MySqlConnection $Uri -Open
+	$connection = New-MySqlConnection $Uri
 	$collations = Get-MySqlCollation $connection
 	if ($Collation -notin $collations) { throw [ArgumentOutOfRangeException] "Collation" }
 

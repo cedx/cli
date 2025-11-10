@@ -38,7 +38,7 @@ function Set-MySqlEngine {
 		[string[]] $Table = @()
 	)
 
-	$connection = New-MySqlConnection $Uri -Open
+	$connection = New-MySqlConnection $Uri
 	$engines = Get-MySqlEngine $connection
 	if ($Engine -notin $engines) { throw [ArgumentOutOfRangeException] "Engine" }
 
