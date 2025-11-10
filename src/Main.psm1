@@ -6,7 +6,8 @@
 #>
 function Get-CliVersion {
 	[CmdletBinding()]
-	[OutputType([semver])] param ()
+	[OutputType([semver])]
+	param ()
 
 	$module = Import-PowerShellDataFile "$PSScriptRoot/../Cli.psd1"
 	[semver] $module.ModuleVersion
