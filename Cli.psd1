@@ -47,7 +47,7 @@
 	)
 
 	RequiredModules = @(
-		"Dapper"
+		"Sql"
 	)
 
 	PrivateData = @{
