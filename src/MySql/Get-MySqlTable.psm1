@@ -28,18 +28,8 @@ function Get-MySqlTable {
 		WHERE TABLE_SCHEMA = @Name AND TABLE_TYPE = @Type
 		ORDER BY TABLE_NAME"
 
-	$records = Invoke-SqlQuery $Connection -Command $sql -Parameters @{
+	Invoke-SqlQuery $Connection -As ([Table]) -Command $sql -Parameters @{
 		Name = $Schema.Name
 		Type = [TableType]::BaseTable
-	}
-
-	$records.ForEach{
-		[Table]@{
-			Collation = $_.TABLE_COLLATION
-			Engine = $_.ENGINE
-			Name = $_.TABLE_NAME
-			Schema = $_.TABLE_SCHEMA
-			Type = $_.TABLE_TYPE
-		}
 	}
 }

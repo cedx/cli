@@ -16,18 +16,9 @@ function Get-MySqlSchema {
 		[MySqlConnection] $Connection
 	)
 
-	$sql = "
+	Invoke-SqlQuery $Connection -As ([Schema]) -Command "
 		SELECT *
 		FROM information_schema.SCHEMATA
 		WHERE SCHEMA_NAME NOT IN ('information_schema', 'mysql', 'performance_schema', 'sys')
 		ORDER BY SCHEMA_NAME"
-
-	$records = Invoke-SqlQuery $Connection -Command $sql
-	$records.ForEach{
-		[Schema]@{
-			Charset = $_.DEFAULT_CHARACTER_SET_NAME
-			Collation = $_.DEFAULT_COLLATION_NAME
-			Name = $_.SCHEMA_NAME
-		}
-	}
 }
