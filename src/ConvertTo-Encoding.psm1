@@ -63,7 +63,9 @@ function ConvertTo-Encoding {
 		$sourceEncoding = [Encoding]::GetEncoding($Encoding -eq "Latin1" ? "UTF-8" : "Latin1")
 		$destinationEncoding = [Encoding]::GetEncoding($Encoding)
 
-		$files = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Get-ChildItem -LiteralPath $LiteralPath -Recurse:$Recurse) : (Get-ChildItem $Path -Recurse:$Recurse)
+		$parameters = @{ File = $true; Recurse = $Recurse }
+		$files = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Get-ChildItem -LiteralPath $LiteralPath @parameters) : (Get-ChildItem $Path @parameters)
+
 		foreach ($file in $files) {
 			if (Test-IsExcluded $file -Exclude $Exclude) { continue }
 
@@ -72,8 +74,10 @@ function ConvertTo-Encoding {
 			if ($isBinary) { continue }
 
 			$bytes = Get-Content $file.FullName -AsByteStream
+			if (-not $bytes) { continue }
+
 			$isText = $extension -and ($extension.Substring(1) -in $Script:TextExtensions)
-			if ((-not $isText) -and ([Array]::IndexOf($bytes, "\0", 0, [Math]::Min($bytes.Count, 8000)) -gt 0)) { continue }
+			if ((-not $isText) -and ([Array]::IndexOf[byte]($bytes, 0, 0, [Math]::Min($bytes.Count, 8000)) -gt 0)) { continue }
 
 			"Converting: $file"
 			Set-Content $file.FullName ([Encoding]::Convert($sourceEncoding, $destinationEncoding, $bytes)) -AsByteStream
