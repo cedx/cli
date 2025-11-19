@@ -52,5 +52,5 @@ function Install-Php {
 		New-ItemProperty $key TypesSupported -Force -PropertyType DWord -Value 7 | Out-Null
 	}
 
-	& $Path/php.exe --version
+	& "$Path/php.exe" --version
 }

@@ -47,5 +47,5 @@ function Install-Node {
 	}
 
 	$executable = $IsWindows ? "node.exe" : "bin/node"
-	& $Path/$executable --version
+	& "$Path/$executable" --version
 }

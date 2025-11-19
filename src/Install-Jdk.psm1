@@ -44,5 +44,5 @@ function Install-Jdk {
 	else { Expand-TarArchive $outputFile $Path -Skip 1 }
 
 	$executable = $IsWindows ? "java.exe" : "java"
-	& $Path/bin/$executable --version
+	& "$Path/bin/$executable" --version
 }

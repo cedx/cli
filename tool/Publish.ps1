@@ -11,7 +11,7 @@ $output = "var/$($module.BaseName)"
 New-Item $output -ItemType Directory | Out-Null
 Copy-Item $module $output
 Copy-Item *.md $output
-Copy-Item bin $output -Recurse
+Copy-Item lib $output -Recurse
 Copy-Item src $output -Recurse
 
 Compress-PSResource $output var
