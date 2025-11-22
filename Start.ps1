@@ -16,8 +16,8 @@ $scriptBlock = {
 	$PSNativeCommandUseErrorActionPreference = $true
 	Set-StrictMode -Version Latest
 
-	$psScriptRoot, $command, $parameters = $args
-	Import-Module "$psScriptRoot/Cli.psd1"
+	$scriptRoot, $command, $parameters = $args
+	Import-Module "$scriptRoot/Cli.psd1"
 	Invoke-Expression "$command $($parameters.ForEach{ $_.Contains(" ") ? "'$_'" : $_ })"
 }
 
