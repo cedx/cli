@@ -2,4 +2,4 @@
 Import-Module PSScriptAnalyzer
 Invoke-ScriptAnalyzer $PSScriptRoot -Recurse
 Invoke-ScriptAnalyzer src -Recurse
-Test-ModuleManifest "$PSScriptRoot/../Cli.psd1" | Out-Null
+Test-ModuleManifest Cli.psd1 | Out-Null
