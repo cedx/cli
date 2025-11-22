@@ -1,5 +1,5 @@
-. "$PSScriptRoot/Default.ps1"
-. "$PSScriptRoot/Install.ps1"
+& "$PSScriptRoot/Default.ps1"
+& "$PSScriptRoot/Install.ps1"
 
 "Publishing the module..."
 $module = Get-Item "Cli.psd1"
