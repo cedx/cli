@@ -8,7 +8,7 @@ param (
 	[string] $Command,
 
 	[Parameter(Position = 1, ValueFromRemainingArguments)]
-	$Arguments
+	[string[]] $Arguments
 )
 
 pwsh -Command @"
