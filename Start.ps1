@@ -8,14 +8,17 @@ param (
 	[string] $Command,
 
 	[Parameter(Position = 1, ValueFromRemainingArguments)]
-	[string[]] $Arguments
+	[string[]] $Parameters
 )
 
-pwsh -Command @"
-`$ErrorActionPreference = "Stop"
-`$PSNativeCommandUseErrorActionPreference = `$true
-Set-StrictMode -Version Latest
+$scriptBlock = {
+	$ErrorActionPreference = "Stop"
+	$PSNativeCommandUseErrorActionPreference = $true
+	Set-StrictMode -Version Latest
 
-Import-Module "$PSScriptRoot/Cli.psd1"
-$Command $($Arguments.ForEach{ $_.Contains(" ") ? """$_""" : $_ })
-"@
+	$psScriptRoot, $command, $parameters = $args
+	Import-Module "$psScriptRoot/Cli.psd1"
+	Invoke-Expression "$command $($parameters.ForEach{ $_.Contains(" ") ? "'$_'" : $_ })"
+}
+
+pwsh -Command $scriptBlock -args $PSScriptRoot, $Command, $Parameters
