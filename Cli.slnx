@@ -4,6 +4,7 @@
 		<File Path=".gitattributes" />
 		<File Path=".gitignore" />
 		<File Path="Cli.psd1" />
+		<File Path="PSModules.psd1" />
 	</Folder>
 	<Folder Name="/Documentation/">
 		<File Path="Authors.txt" />
@@ -11,7 +12,12 @@
 		<File Path="License.md" />
 		<File Path="ReadMe.md" />
 	</Folder>
-	<Folder Name="/Tools/">
+	<Folder Name="/Scripts/">
+		<File Path="Debug.ps1" />
+		<File Path="Invoke.ps1" />
+		<File Path="Start.ps1" />
+	</Folder>
+	<Folder Name="/Scripts/Tools/">
 		<File Path="tool/Assets.ps1" />
 		<File Path="tool/Clean.ps1" />
 		<File Path="tool/Default.ps1" />
@@ -19,5 +25,42 @@
 		<File Path="tool/Lint.ps1" />
 		<File Path="tool/Publish.ps1" />
 		<File Path="tool/Update.ps1" />
+	</Folder>
+	<Folder Name="/Sources/">
+		<File Path="src/Backup-MySqlTable.psm1" />
+		<File Path="src/ConvertTo-Encoding.psm1" />
+		<File Path="src/Install-Jdk.psm1" />
+		<File Path="src/Install-Node.psm1" />
+		<File Path="src/Install-Php.psm1" />
+		<File Path="src/Main.psm1" />
+		<File Path="src/New-NssmService.psm1" />
+		<File Path="src/Optimize-MySqlTable.psm1" />
+		<File Path="src/Remove-NssmService.psm1" />
+		<File Path="src/Restore-MySqlTable.psm1" />
+		<File Path="src/Set-MySqlCharset.psm1" />
+		<File Path="src/Set-MySqlEngine.psm1" />
+		<File Path="src/Test-Privilege.psm1" />
+	</Folder>
+	<Folder Name="/Sources/Compression/">
+		<File Path="src/Compression/Expand-TarArchive.psm1" />
+		<File Path="src/Compression/Expand-ZipArchive.psm1" />
+	</Folder>
+	<Folder Name="/Sources/MySql/">
+		<File Path="src/MySql/BackupFormat.psm1" />
+		<File Path="src/MySql/Column.psm1" />
+		<File Path="src/MySql/Get-MySqlCollation.psm1" />
+		<File Path="src/MySql/Get-MySqlColumn.psm1" />
+		<File Path="src/MySql/Get-MySqlEngine.psm1" />
+		<File Path="src/MySql/Get-MySqlSchema.psm1" />
+		<File Path="src/MySql/Get-MySqlTable.psm1" />
+		<File Path="src/MySql/New-MySqlConnection.psm1" />
+		<File Path="src/MySql/Schema.psm1" />
+		<File Path="src/MySql/Table.psm1" />
+	</Folder>
+	<Folder Name="/Sources/Nssm/">
+		<File Path="src/Nssm/Application.psm1" />
+		<File Path="src/Nssm/DotNetApplication.psm1" />
+		<File Path="src/Nssm/NodeApplication.psm1" />
+		<File Path="src/Nssm/PowerShellApplication.psm1" />
 	</Folder>
 </Solution>
