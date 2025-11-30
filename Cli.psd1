@@ -43,9 +43,9 @@
 	)
 
 	RequiredAssemblies = @(
-		"lib/Microsoft.Extensions.DependencyInjection.Abstractions.dll"
-		"lib/Microsoft.Extensions.Logging.Abstractions.dll"
-		"lib/MySqlConnector.dll"
+		"bin/Microsoft.Extensions.DependencyInjection.Abstractions.dll"
+		"bin/Microsoft.Extensions.Logging.Abstractions.dll"
+		"bin/MySqlConnector.dll"
 	)
 
 	RequiredModules = @(
