@@ -3,7 +3,7 @@ param (
 	[Parameter(Mandatory, Position = 0)]
 	[ArgumentCompleter({
 		param ($commandName, $parameterName, $wordToComplete)
-		(Get-Item "$PSScriptRoot/src/$wordToComplete*.psm1" -Exclude "Main.psm1").BaseName
+		(Import-PowerShellDataFile "$PSScriptRoot/Cli.psd1").FunctionsToExport -like "$wordToComplete*"
 	})]
 	[string] $Command,
 
