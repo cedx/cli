@@ -1,7 +1,7 @@
-﻿@{
+@{
 	ModuleVersion = "3.1.0"
 	PowerShellVersion = "7.5"
-	RootModule = "src/Main.psm1"
+	RootModule = "bin/Belin.Cli.dll"
 
 	Author = "Cédric Belin <cedx@outlook.com>"
 	CompanyName = "Cedric-Belin.fr"
@@ -10,13 +10,15 @@
 	GUID = "b489d27c-f48e-49b1-b1d4-c99752f2c828"
 
 	AliasesToExport = @()
-	CmdletsToExport = @()
 	VariablesToExport = @()
+
+	CmdletsToExport = @(
+		"Get-CliVersion"
+	)
 
 	FunctionsToExport = @(
 		"Backup-MySqlTable"
 		"ConvertTo-Encoding"
-		"Get-CliVersion"
 		"Install-Jdk"
 		"Install-Node"
 		"Install-Php"
@@ -43,6 +45,7 @@
 	)
 
 	RequiredAssemblies = @(
+		"bin/Dapper.dll"
 		"bin/Microsoft.Extensions.DependencyInjection.Abstractions.dll"
 		"bin/Microsoft.Extensions.Logging.Abstractions.dll"
 		"bin/MySqlConnector.dll"
