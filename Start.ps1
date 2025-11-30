@@ -3,7 +3,8 @@ param (
 	[Parameter(Mandatory, Position = 0)]
 	[ArgumentCompleter({
 		param ($commandName, $parameterName, $wordToComplete)
-		(Import-PowerShellDataFile "$PSScriptRoot/Cli.psd1").FunctionsToExport -like "$wordToComplete*"
+		$module = Import-PowerShellDataFile "$PSScriptRoot/Cli.psd1"
+		($module.CmdletsToExport + $module.FunctionsToExport) -like "$wordToComplete*"
 	})]
 	[string] $Command,
 
