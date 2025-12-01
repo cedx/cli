@@ -1,14 +1,12 @@
+using namespace Belin.Cli.MySql
 using namespace MySqlConnector
 using namespace System.Collections.Generic
 using namespace System.Diagnostics.CodeAnalysis
 using namespace System.IO
 using namespace System.Web
-using module ./MySql/BackupFormat.psm1
 using module ./MySql/Get-MySqlSchema.psm1
 using module ./MySql/Get-MySqlTable.psm1
 using module ./MySql/New-MySqlConnection.psm1
-using module ./MySql/Schema.psm1
-using module ./MySql/Table.psm1
 
 <#
 .SYNOPSIS
@@ -94,7 +92,7 @@ function Export-JsonLine {
 
 	$tables = $Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $Schema.Name } } : (Get-MySqlTable $Connection $Schema)
 	foreach ($tableObject in $tables) {
-		$file = [File]::CreateText("$Path/$($tableObject.QualifiedName()).$([BackupFormat]::JsonLines)")
+		$file = [File]::CreateText("$Path/$($tableObject.QualifiedName).$([BackupFormat]::JsonLines)")
 		$records = Invoke-SqlQuery $Connection -Command "SELECT * FROM $($tableObject.GetQualifiedName($true))"
 		$records.ForEach{ $file.WriteLine((ConvertTo-Json $_ -Compress)) }
 		$file.Close()
