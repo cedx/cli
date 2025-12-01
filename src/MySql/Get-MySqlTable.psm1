@@ -1,6 +1,5 @@
+using namespace Belin.Cli.MySql
 using namespace MySqlConnector
-using module ./Schema.psm1
-using module ./Table.psm1
 
 <#
 .SYNOPSIS
