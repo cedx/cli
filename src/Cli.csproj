@@ -18,13 +18,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Dapper" Version="2.*" />
 		<PackageReference Include="MySqlConnector" Version="2.*" />
 		<PackageReference Include="System.Management.Automation" Version="7.*" PrivateAssets="all" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Using Include="Dapper" />
 		<Using Include="System.Management.Automation" />
 	</ItemGroup>
 </Project>
