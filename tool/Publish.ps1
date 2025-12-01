@@ -6,9 +6,9 @@ else {
 
 "Publishing the module..."
 $module = Import-PowerShellDataFile "Cli.psd1"
-$version = "v$($module.ModuleVersion)"
-git tag $version
-git push origin $version
+$version = $module.ModuleVersion
+git tag "v$version"
+git push origin "v$version"
 
 $name = Split-Path "Cli.psd1" -LeafBase
 $output = "var/$name"
@@ -20,4 +20,4 @@ Copy-Item $module.RootModule $output/bin
 if ("RequiredAssemblies" -in $module.Keys) { Copy-Item $module.RequiredAssemblies $output/bin }
 
 Compress-PSResource $output var
-Publish-PSResource -ApiKey $Env:PSGALLERY_API_KEY -NupkgPath "var/$($module.BaseName).$version.nupkg"
+Publish-PSResource -ApiKey $Env:PSGALLERY_API_KEY -NupkgPath "var/$name.$version.nupkg"
