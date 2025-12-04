@@ -7,7 +7,7 @@ using System.Reflection;
 /// </summary>
 [Cmdlet(VerbsCommon.Get, "CliVersion")]
 [OutputType(typeof(string)), OutputType(typeof(Version))]
-public class GetCliVersion: Cmdlet {
+public class GetCliVersionCommand: Cmdlet {
 
 	/// <summary>
 	/// Value indicating whether to return a <see cref="Version"/> object.
