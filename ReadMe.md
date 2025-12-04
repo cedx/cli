@@ -1,6 +1,6 @@
 # Cédric Belin's CLI
 Command line interface of [Cédric Belin](https://cedric-belin.fr), full stack developer,
-implemented in [PowerShell](https://learn.microsoft.com/en-us/powershell).
+implemented in [C#](https://learn.microsoft.com/en-us/dotnet/csharp).
 
 ## Documentation
 - [User guide](https://github.com/cedx/cli/wiki)
