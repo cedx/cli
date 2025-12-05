@@ -12,6 +12,10 @@
 		<File Path="License.md" />
 		<File Path="ReadMe.md" />
 	</Folder>
+	<Folder Name="/Resources/">
+		<File Path="res/BinaryExtensions.json" />
+		<File Path="res/TextExtensions.json" />
+	</Folder>
 	<Folder Name="/Scripts/">
 		<File Path="Debug.ps1" />
 		<File Path="Invoke.ps1" />
