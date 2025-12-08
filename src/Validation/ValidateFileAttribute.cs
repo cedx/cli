@@ -15,8 +15,6 @@ internal class ValidateFileAttribute(string errorMessage): ValidateArgumentsAttr
 	/// <param name="engineIntrinsics">The engine APIs for the context under which the prerequisite is being evaluated.</param>
 	/// <exception cref="ValidationMetadataException">The validation failed.</exception>
   protected override void Validate(object arguments, EngineIntrinsics engineIntrinsics) {
-		var path = arguments as string;
-		var exists = new TestPathCommand { Path = [path], PathType = TestPathType.Leaf }.Invoke<bool>().Single();
-		if (!exists) throw new ValidationMetadataException(errorMessage);
+		if (!File.Exists(arguments as string)) throw new ValidationMetadataException(errorMessage);
   }
 }

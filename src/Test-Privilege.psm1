@@ -9,7 +9,8 @@ using namespace System.IO
 	`$true` if the current process is privileged, otherwise `$false`.
 #>
 function Test-Privilege {
-	[OutputType([bool])] param (
+	[OutputType([bool])]
+	param (
 		[Parameter(Position = 0)]
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified path is invalid.")]
 		[string] $Path

@@ -15,8 +15,7 @@ internal class ValidatePathAttribute(string errorMessage): ValidateArgumentsAttr
 	/// <param name="engineIntrinsics">The engine APIs for the context under which the prerequisite is being evaluated.</param>
 	/// <exception cref="ValidationMetadataException">The validation failed.</exception>
   protected override void Validate(object arguments, EngineIntrinsics engineIntrinsics) {
-		var paths = arguments as string[];
-		var isValid = new TestPathCommand { IsValid = true, LiteralPath = paths }.Invoke<bool>().Single();
+		var isValid = new TestPathCommand { IsValid = true, LiteralPath = arguments as string[] }.Invoke<bool>().Single();
 		if (!isValid) throw new ValidationMetadataException(errorMessage);
   }
 }
