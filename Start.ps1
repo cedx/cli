@@ -15,6 +15,7 @@ param (
 $scriptBlock = {
 	$ErrorActionPreference = "Stop"
 	$PSNativeCommandUseErrorActionPreference = $true
+	$VerbosePreference = "Continue"
 	Set-StrictMode -Version Latest
 
 	$scriptRoot, $command, $parameters = $args
