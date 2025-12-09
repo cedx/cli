@@ -15,12 +15,11 @@ param (
 $scriptBlock = {
 	$ErrorActionPreference = "Stop"
 	$PSNativeCommandUseErrorActionPreference = $true
-	$VerbosePreference = "Continue"
 	Set-StrictMode -Version Latest
 
 	$scriptRoot, $command, $parameters = $args
 	Import-Module "$scriptRoot/Cli.psd1"
-	Invoke-Expression "$command $($parameters.ForEach{ $_.Contains(" ") ? "'$_'" : $_ })"
+	Invoke-Expression "$command $($parameters.ForEach{ $_.Contains(" ") ? "'$_'" : $_ }) -Verbose"
 }
 
 pwsh -Command $scriptBlock -args $PSScriptRoot, $Command, $Parameters
