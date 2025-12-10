@@ -1,6 +1,5 @@
-using module ./Compression/Expand-TarArchive.psm1
-using module ./Compression/Expand-ZipArchive.psm1
-using module ./Test-Privilege.psm1
+using namespace Belin.Cli.Compression
+using namespace Belin.Cli.Validation
 
 <#
 .SYNOPSIS
