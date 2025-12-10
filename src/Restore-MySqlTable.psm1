@@ -39,7 +39,7 @@ function Restore-MySqlTable {
 		$files = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Get-ChildItem -LiteralPath $LiteralPath @parameters) : (Get-ChildItem $Path @parameters)
 
 		foreach ($file in $files) {
-			"Importing: $($file.BaseName)"
+			Write-Verbose "Importing: $($file.BaseName)"
 			$userName, $password = ($Uri.UserInfo -split ":").ForEach{ [Uri]::UnescapeDataString($_) }
 			$arguments = [List[string]] @(
 				"--default-character-set=$([HttpUtility]::ParseQueryString($Uri.Query)["charset"] ?? "utf8mb4")"

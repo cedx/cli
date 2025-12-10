@@ -39,7 +39,7 @@ function Remove-NssmService {
 		else {
 			Stop-Service $application.Id
 			Remove-Service $application.Id
-			Write-Output "The service ""$($application.Id)"" has been successfully removed."
+			Write-Verbose "The service ""$($application.Id)"" has been successfully removed."
 		}
 	}
 }
