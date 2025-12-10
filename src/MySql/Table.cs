@@ -29,7 +29,6 @@ public class Table {
 	/// <summary>
 	/// The fully qualified name.
 	/// </summary>
-	[NotMapped]
 	public string QualifiedName => GetQualifiedName(escape: false);
 
 	/// <summary>
