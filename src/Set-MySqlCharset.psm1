@@ -47,7 +47,7 @@ function Set-MySqlCharset {
 	}
 
 	foreach ($tableObject in $tables) {
-		"Processing: $($tableObject.GetQualifiedName($false))"
+		Write-Verbose "Processing: $($tableObject.GetQualifiedName($false))"
 		$charset = ($Collation -split "_")[0]
 		Invoke-SqlNonQuery $connection -Command "SET foreign_key_checks = 0" | Out-Null
 		Invoke-SqlNonQuery $connection -Command "ALTER TABLE $($tableObject.GetQualifiedName($true)) CONVERT TO CHARACTER SET $charset COLLATE $Collation" | Out-Null

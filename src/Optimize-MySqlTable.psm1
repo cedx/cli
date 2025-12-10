@@ -37,7 +37,7 @@ function Optimize-MySqlTable {
 	}
 
 	foreach ($tableObject in $tables) {
-		"Optimizing: $($tableObject.GetQualifiedName($false))"
+		Write-Verbose "Optimizing: $($tableObject.GetQualifiedName($false))"
 		Invoke-SqlNonQuery $connection -Command "OPTIMIZE TABLE $($tableObject.GetQualifiedName($true))" | Out-Null
 	}
 

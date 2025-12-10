@@ -1,6 +1,5 @@
-using module ./Compression/Expand-TarArchive.psm1
-using module ./Compression/Expand-ZipArchive.psm1
-using module ./Test-Privilege.psm1
+using namespace Belin.Cli.Compression
+using namespace Belin.Cli.Validation
 
 <#
 .SYNOPSIS
@@ -35,11 +34,11 @@ function Install-Jdk {
 	}
 
 	$file = "microsoft-jdk-$Version-$platform-x64.$extension"
-	"Downloading file ""$file""..."
+	Write-Verbose "Downloading file ""$file""..."
 	$outputFile = New-TemporaryFile
 	Invoke-WebRequest "https://aka.ms/download-jdk/$file" -OutFile $outputFile
 
-	"Extracting file ""$file"" into directory ""$Path""..."
+	Write-Verbose "Extracting file ""$file"" into directory ""$Path""..."
 	if ($extension -eq "zip") { Expand-ZipArchive $outputFile $Path -Skip 1 }
 	else { Expand-TarArchive $outputFile $Path -Skip 1 }
 

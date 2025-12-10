@@ -29,16 +29,16 @@ function Install-Node {
 		default { "linux", "tar.xz" }
 	}
 
-	"Fetching the list of Node.js releases..."
+	Write-Verbose "Fetching the list of Node.js releases..."
 	$response = Invoke-RestMethod "https://nodejs.org/dist/index.json"
 	$version = [version] $response[0].version.Substring(1)
 
 	$file = "node-v$version-$platform-x64.$extension"
-	"Downloading file ""$file""..."
+	Write-Verbose "Downloading file ""$file""..."
 	$outputFile = New-TemporaryFile
 	Invoke-WebRequest "https://nodejs.org/dist/v$version/$file" -OutFile $outputFile
 
-	"Extracting file ""$file"" into directory ""$Path""..."
+	Write-Verbose "Extracting file ""$file"" into directory ""$Path""..."
 	if ($extension -eq "zip") { Expand-ZipArchive $outputFile $Path -Skip 1 }
 	else { Expand-TarArchive $outputFile $Path -Skip 1 }
 
