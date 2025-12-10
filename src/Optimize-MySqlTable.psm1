@@ -3,7 +3,6 @@ using namespace MySqlConnector
 using namespace System.Diagnostics.CodeAnalysis
 using module ./MySql/Get-MySqlSchema.psm1
 using module ./MySql/Get-MySqlTable.psm1
-using module ./MySql/New-MySqlConnection.psm1
 
 <#
 .SYNOPSIS

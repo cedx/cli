@@ -1,4 +1,4 @@
-using module ./Test-Privilege.psm1
+using namespace Belin.Cli.Validation
 
 <#
 .SYNOPSIS

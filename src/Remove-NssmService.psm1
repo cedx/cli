@@ -1,8 +1,8 @@
+using namespace Belin.Cli.Validation
 using namespace System.Diagnostics.CodeAnalysis
 using module ./Nssm/DotNetApplication.psm1
 using module ./Nssm/NodeApplication.psm1
 using module ./Nssm/PowerShellApplication.psm1
-using module ./Test-Privilege.psm1
 
 <#
 .SYNOPSIS
