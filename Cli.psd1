@@ -14,6 +14,11 @@
 
 	CmdletsToExport = @(
 		"Get-CliVersion"
+		"Get-MySqlCollation"
+		"Get-MySqlColumn"
+		"Get-MySqlEngine"
+		"Get-MySqlSchema"
+		"Get-MySqlTable"
 	)
 
 	FunctionsToExport = @(
