@@ -1,18 +1,18 @@
+using namespace Belin.Cli.Nssm
 using namespace Belin.Cli.Validation
 using namespace System.Diagnostics.CodeAnalysis
-using module ./Nssm/DotNetApplication.psm1
-using module ./Nssm/NodeApplication.psm1
-using module ./Nssm/PowerShellApplication.psm1
 
 <#
 .SYNOPSIS
 	Unregisters a Windows service based on [NSSM](https://nssm.cc).
 .PARAMETER Path
 	The path to the root directory of the web application.
+.OUTPUTS
+	The log messages.
 #>
 function Remove-NssmService {
 	[CmdletBinding()]
-	[OutputType([void])]
+	[OutputType([string])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		[Parameter(Position = 0, ValueFromPipeline)]
@@ -39,7 +39,7 @@ function Remove-NssmService {
 		else {
 			Stop-Service $application.Id
 			Remove-Service $application.Id
-			Write-Verbose "The service ""$($application.Id)"" has been successfully removed."
+			"The service ""$($application.Id)"" has been successfully removed."
 		}
 	}
 }

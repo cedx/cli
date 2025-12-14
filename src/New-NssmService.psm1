@@ -1,9 +1,6 @@
+using namespace Belin.Cli.Nssm
 using namespace Belin.Cli.Validation
 using namespace System.Diagnostics.CodeAnalysis
-using module ./Nssm/Application.psm1
-using module ./Nssm/DotNetApplication.psm1
-using module ./Nssm/NodeApplication.psm1
-using module ./Nssm/PowerShellApplication.psm1
 
 <#
 .SYNOPSIS
@@ -12,10 +9,12 @@ using module ./Nssm/PowerShellApplication.psm1
 	The path to the root directory of the web application.
 .PARAMETER Start
 	Value indicating whether to start the service after its registration.
+.OUTPUTS
+	The log messages.
 #>
 function New-NssmService {
 	[CmdletBinding()]
-	[OutputType([void])]
+	[OutputType([string])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		[Parameter(Position = 0, ValueFromPipeline)]
@@ -59,6 +58,6 @@ function New-NssmService {
 		if ($Start) { Start-Service $application.Id }
 
 		$created = $Start ? "started" : "created"
-		Write-Verbose "The service ""$($application.Id)"" has been successfully $created."
+		"The service ""$($application.Id)"" has been successfully $created."
 	}
 }

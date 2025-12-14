@@ -1,9 +1,6 @@
 using namespace Belin.Cli.MySql
 using namespace MySqlConnector
 using namespace System.Diagnostics.CodeAnalysis
-using module ./MySql/Get-MySqlEngine.psm1
-using module ./MySql/Get-MySqlSchema.psm1
-using module ./MySql/Get-MySqlTable.psm1
 
 <#
 .SYNOPSIS
@@ -16,11 +13,12 @@ using module ./MySql/Get-MySqlTable.psm1
 	The schema name.
 .PARAMETER Table
 	The table name.
+.OUTPUTS
+	The log messages.
 #>
 function Set-MySqlEngine {
 	[CmdletBinding()]
-	[OutputType([void])]
-	[SuppressMessage("PSUseOutputTypeCorrectly", "")]
+	[OutputType([string])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		[Parameter(Mandatory, Position = 0)]
@@ -46,7 +44,7 @@ function Set-MySqlEngine {
 	}
 
 	foreach ($tableObject in $tables) {
-		Write-Verbose "Processing: $($tableObject.GetQualifiedName($false))"
+		"Processing: $($tableObject.GetQualifiedName($false))"
 		Invoke-SqlNonQuery $connection -Command "SET foreign_key_checks = 0" | Out-Null
 		Invoke-SqlNonQuery $connection -Command "ALTER TABLE $($tableObject.GetQualifiedName($true)) ENGINE = $Engine" | Out-Null
 		Invoke-SqlNonQuery $connection -Command "SET foreign_key_checks = 1" | Out-Null

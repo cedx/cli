@@ -13,11 +13,12 @@ using namespace System.Web
 	Value indicating whether to process the input path recursively.
 .INPUTS
 	A string that contains a path, but not a literal path.
+.OUTPUTS
+	The log messages.
 #>
 function Restore-MySqlTable {
 	[CmdletBinding(DefaultParameterSetName = "Path")]
-	[OutputType([void])]
-	[SuppressMessage("PSUseOutputTypeCorrectly", "")]
+	[OutputType([string])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
 		[uri] $Uri,
@@ -39,7 +40,7 @@ function Restore-MySqlTable {
 		$files = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Get-ChildItem -LiteralPath $LiteralPath @parameters) : (Get-ChildItem $Path @parameters)
 
 		foreach ($file in $files) {
-			Write-Verbose "Importing: $($file.BaseName)"
+			"Importing: $($file.BaseName)"
 			$userName, $password = ($Uri.UserInfo -split ":").ForEach{ [Uri]::UnescapeDataString($_) }
 			$arguments = [List[string]] @(
 				"--default-character-set=$([HttpUtility]::ParseQueryString($Uri.Query)["charset"] ?? "utf8mb4")"

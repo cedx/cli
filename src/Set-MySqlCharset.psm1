@@ -1,9 +1,6 @@
 using namespace Belin.Cli.MySql
 using namespace MySqlConnector
 using namespace System.Diagnostics.CodeAnalysis
-using module ./MySql/Get-MySqlCollation.psm1
-using module ./MySql/Get-MySqlSchema.psm1
-using module ./MySql/Get-MySqlTable.psm1
 
 <#
 .SYNOPSIS
@@ -16,11 +13,12 @@ using module ./MySql/Get-MySqlTable.psm1
 	The schema name.
 .PARAMETER Table
 	The table name.
+.OUTPUTS
+	The log messages.
 #>
 function Set-MySqlCharset {
 	[CmdletBinding()]
-	[OutputType([void])]
-	[SuppressMessage("PSUseOutputTypeCorrectly", "")]
+	[OutputType([string])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		[Parameter(Mandatory, Position = 0)]
@@ -46,7 +44,7 @@ function Set-MySqlCharset {
 	}
 
 	foreach ($tableObject in $tables) {
-		Write-Verbose "Processing: $($tableObject.GetQualifiedName($false))"
+		"Processing: $($tableObject.GetQualifiedName($false))"
 		$charset = ($Collation -split "_")[0]
 		Invoke-SqlNonQuery $connection -Command "SET foreign_key_checks = 0" | Out-Null
 		Invoke-SqlNonQuery $connection -Command "ALTER TABLE $($tableObject.GetQualifiedName($true)) CONVERT TO CHARACTER SET $charset COLLATE $Collation" | Out-Null

@@ -4,8 +4,6 @@ using namespace System.Collections.Generic
 using namespace System.Diagnostics.CodeAnalysis
 using namespace System.IO
 using namespace System.Web
-using module ./MySql/Get-MySqlSchema.psm1
-using module ./MySql/Get-MySqlTable.psm1
 
 <#
 .SYNOPSIS
@@ -20,11 +18,12 @@ using module ./MySql/Get-MySqlTable.psm1
 	The schema name.
 .PARAMETER Table
 	The table name.
+.OUTPUTS
+	The log messages.
 #>
 function Backup-MySqlTable {
 	[CmdletBinding()]
-	[OutputType([void])]
-	[SuppressMessage("PSUseOutputTypeCorrectly", "")]
+	[OutputType([string])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
 		[uri] $Uri,
@@ -52,7 +51,7 @@ function Backup-MySqlTable {
 
 	$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
 	foreach ($schemaObject in $schemas) {
-		Write-Verbose "Exporting: $($Table.Count -eq 1 ? "$($schemaObject.Name).$($Table[0])" : $schemaObject.Name)"
+		"Exporting: $($Table.Count -eq 1 ? "$($schemaObject.Name).$($Table[0])" : $schemaObject.Name)"
 		if ($Format -eq [BackupFormat]::JsonLines) { Export-JsonLine $schemaObject $Path -Connection $connection -Table $Table }
 		else { Export-SqlDump $schemaObject $Path -Table $Table -Uri $Uri }
 	}
