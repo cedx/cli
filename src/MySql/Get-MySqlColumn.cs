@@ -32,11 +32,9 @@ public class GetMySqlColumnCommand: Cmdlet {
 			ORDER BY ORDINAL_POSITION
 			""";
 
-		var columns = Connection.Query<Column>(sql, [
+		WriteObject(Connection.Query<Column>(sql, [
 			("Name", Table.Name),
 			("Schema", Table.Schema)
-		]);
-
-		foreach (var column in columns) WriteObject(column);
+		]), enumerateCollection: true);
 	}
 }

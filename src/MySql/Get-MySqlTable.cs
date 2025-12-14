@@ -32,11 +32,9 @@ public class GetMySqlTableCommand: Cmdlet {
 			ORDER BY TABLE_NAME
 			""";
 
-		var tables = Connection.Query<Table>(sql, [
+		WriteObject(Connection.Query<Table>(sql, [
 			("Name", Schema.Name),
 			("Type", TableType.BaseTable)
-		]);
-
-		foreach (var table in tables) WriteObject(table);
+		]), enumerateCollection: true);
 	}
 }

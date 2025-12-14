@@ -26,6 +26,6 @@ public class GetMySqlSchemaCommand: Cmdlet {
 			ORDER BY SCHEMA_NAME
 			""";
 
-		foreach (var schema in Connection.Query<Schema>(sql)) WriteObject(schema);
+		WriteObject(Connection.Query<Schema>(sql), enumerateCollection: true);
 	}
 }
