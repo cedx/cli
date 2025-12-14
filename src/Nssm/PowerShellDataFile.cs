@@ -14,17 +14,17 @@ public sealed class PowerShellDataFile(Hashtable hashtable):
 	/// <summary>
 	/// The description of the PowerShell module, if applicable.
 	/// </summary>
-	public string? Description => this["Description"] as string;
+	public string? Description => TryGetValue("Description", out var value) ? value as string : null;
 		
 	/// <summary>
 	/// The version of the PowerShell module, if applicable.
 	/// </summary>
-	public Version? ModuleVersion => this["ModuleVersion"] is string value ? Version.Parse(value) : null;
+	public Version? ModuleVersion => TryGetValue("ModuleVersion", out var value) && value is string version ? Version.Parse(version) : null;
 
 	/// <summary>
 	/// The primary or root file of the PowerShell module, if applicable.
 	/// </summary>
-	public string? RootModule => this["RootModule"] as string;
+	public string? RootModule => TryGetValue("RootModule", out var value) ? value as string : null;
 
 	/// <summary>
 	/// Reads the PowerShell data file located at the specified path.
