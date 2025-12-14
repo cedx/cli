@@ -34,9 +34,9 @@ public class PowerShellApplication: Application {
 	/// <param name="path">The path to the application root directory.</param>
 	public PowerShellApplication(string path): base(path) {
 		var file = Directory.EnumerateFiles(path, "*.psd1").Where(file => IOPath.GetFileNameWithoutExtension(file) != "PSModules").Single();
-		var module = PowerShellDataFile.Read(file);
-		if (Description.Length == 0 && module.Description is not null) Description = module.Description;
-		if (Name.Length == 0) Name = IOPath.GetFileNameWithoutExtension(file);
-		if (module.RootModule is not null) entryPath = IOPath.Join(path, module.RootModule);
+		var dataFile = PowerShellDataFile.Read(file);
+		if (string.IsNullOrEmpty(Manifest.Description) && dataFile.Description is string description) Manifest.Description = description;
+		if (string.IsNullOrEmpty(Manifest.Name)) Manifest.Name = IOPath.GetFileNameWithoutExtension(file);
+		if (dataFile.RootModule is string rootModule) entryPath = IOPath.Join(path, rootModule);
 	}
 }
