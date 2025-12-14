@@ -1,7 +1,7 @@
 # Changelog
 
 ## Version [3.2.0](https://github.com/cedx/cli/compare/v3.1.0...v3.2.0)
-- Ported the `MySql` cmdlets to [C#](https://learn.microsoft.com/en-us/dotnet/csharp).
+- Ported the cmdlets of the `Compression`, `MySql` and `Validation` modules to [C#](https://learn.microsoft.com/en-us/dotnet/csharp).
 
 ## Version [3.1.0](https://github.com/cedx/cli/compare/v3.0.0...v3.1.0)
 - Added the `ConvertTo-Encoding` cmdlet.
