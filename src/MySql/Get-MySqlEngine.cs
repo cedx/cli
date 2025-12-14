@@ -6,7 +6,7 @@ using System.Data;
 /// <summary>
 /// Gets the list of all storage engines.
 /// </summary>
-[Cmdlet(VerbsCommon.Get, "MySqlEngine"), OutputType(typeof(string[]))]
+[Cmdlet(VerbsCommon.Get, "MySqlEngine"), OutputType(typeof(string))]
 public class GetMySqlEngineCommand: Cmdlet {
 
 	/// <summary>
@@ -19,6 +19,6 @@ public class GetMySqlEngineCommand: Cmdlet {
 	/// Performs execution of this command.
 	/// </summary>
 	protected override void ProcessRecord() {
-		WriteObject(Connection.Query("SHOW ENGINES").Select(row => row.Engine).ToArray());
+		foreach (var record in Connection.Query("SHOW ENGINES")) WriteObject(record.Engine);
 	}
 }

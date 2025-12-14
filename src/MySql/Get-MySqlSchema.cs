@@ -6,7 +6,7 @@ using System.Data;
 /// <summary>
 /// Gets the list of schemas hosted by a database server.
 /// </summary>
-[Cmdlet(VerbsCommon.Get, "MySqlSchema"), OutputType(typeof(Schema[]))]
+[Cmdlet(VerbsCommon.Get, "MySqlSchema"), OutputType(typeof(Schema))]
 public class GetMySqlSchemaCommand: Cmdlet {
 
 	/// <summary>
@@ -26,6 +26,6 @@ public class GetMySqlSchemaCommand: Cmdlet {
 			ORDER BY SCHEMA_NAME
 			""";
 
-		WriteObject(Connection.Query<Schema>(sql).ToArray());
+		foreach (var schema in Connection.Query<Schema>(sql)) WriteObject(schema);
 	}
 }

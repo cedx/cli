@@ -6,7 +6,7 @@ using System.Data;
 /// <summary>
 /// Gets the list of tables contained in the specified schema.
 /// </summary>
-[Cmdlet(VerbsCommon.Get, "MySqlTable"), OutputType(typeof(Table[]))]
+[Cmdlet(VerbsCommon.Get, "MySqlTable"), OutputType(typeof(Table))]
 public class GetMySqlTableCommand: Cmdlet {
 
 	/// <summary>
@@ -32,9 +32,11 @@ public class GetMySqlTableCommand: Cmdlet {
 			ORDER BY TABLE_NAME
 			""";
 
-		WriteObject(Connection.Query<Table>(sql, [
+		var tables = Connection.Query<Table>(sql, [
 			("Name", Schema.Name),
 			("Type", TableType.BaseTable)
-		]).ToArray());
+		]);
+
+		foreach (var table in tables) WriteObject(table);
 	}
 }

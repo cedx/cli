@@ -6,7 +6,7 @@ using System.Data;
 /// <summary>
 /// Gets the list of columns contained in the specified table.
 /// </summary>
-[Cmdlet(VerbsCommon.Get, "MySqlColumn"), OutputType(typeof(Column[]))]
+[Cmdlet(VerbsCommon.Get, "MySqlColumn"), OutputType(typeof(Column))]
 public class GetMySqlColumnCommand: Cmdlet {
 
 	/// <summary>
@@ -32,9 +32,11 @@ public class GetMySqlColumnCommand: Cmdlet {
 			ORDER BY ORDINAL_POSITION
 			""";
 
-		WriteObject(Connection.Query<Column>(sql, [
+		var columns = Connection.Query<Column>(sql, [
 			("Name", Table.Name),
 			("Schema", Table.Schema)
-		]).ToArray());
+		]);
+
+		foreach (var column in columns) WriteObject(column);
 	}
 }
