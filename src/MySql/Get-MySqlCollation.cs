@@ -6,7 +6,7 @@ using System.Data;
 /// <summary>
 /// Gets the list of all collations.
 /// </summary>
-[Cmdlet(VerbsCommon.Get, "MySqlCollation"), OutputType(typeof(string[]))]
+[Cmdlet(VerbsCommon.Get, "MySqlCollation"), OutputType(typeof(string))]
 public class GetMySqlCollationCommand: Cmdlet {
 		
 	/// <summary>
@@ -19,6 +19,6 @@ public class GetMySqlCollationCommand: Cmdlet {
 	/// Performs execution of this command.
 	/// </summary>
 	protected override void ProcessRecord() {
-		WriteObject(Connection.Query("SHOW COLLATION").Select(row => row.Collation).ToArray());
+		foreach (var record in Connection.Query("SHOW COLLATION")) WriteObject(record.Collation);
 	}
 }
