@@ -18,7 +18,6 @@ public class GetMySqlEngineCommand: Cmdlet {
 	/// <summary>
 	/// Performs execution of this command.
 	/// </summary>
-	protected override void ProcessRecord() {
-		foreach (var record in Connection.Query("SHOW ENGINES")) WriteObject(record.Engine);
-	}
+	protected override void ProcessRecord() =>
+		WriteObject(Connection.Query("SHOW ENGINES").Select(record => record.Engine), enumerateCollection: true);
 }

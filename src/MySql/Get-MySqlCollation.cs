@@ -18,7 +18,6 @@ public class GetMySqlCollationCommand: Cmdlet {
 	/// <summary>
 	/// Performs execution of this command.
 	/// </summary>
-	protected override void ProcessRecord() {
-		foreach (var record in Connection.Query("SHOW COLLATION")) WriteObject(record.Collation);
-	}
+	protected override void ProcessRecord() =>
+		WriteObject(Connection.Query("SHOW COLLATION").Select(record => record.Collation), enumerateCollection: true);
 }
