@@ -34,11 +34,11 @@ function Install-Jdk {
 	}
 
 	$file = "microsoft-jdk-$Version-$platform-x64.$extension"
-	Write-Verbose "Downloading file ""$file""..."
+	"Downloading file ""$file""..."
 	$outputFile = New-TemporaryFile
 	Invoke-WebRequest "https://aka.ms/download-jdk/$file" -OutFile $outputFile
 
-	Write-Verbose "Extracting file ""$file"" into directory ""$Path""..."
+	"Extracting file ""$file"" into directory ""$Path""..."
 	if ($extension -eq "zip") { Expand-ZipArchive $outputFile $Path -Skip 1 }
 	else { Expand-TarArchive $outputFile $Path -Skip 1 }
 

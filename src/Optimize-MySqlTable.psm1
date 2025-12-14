@@ -1,8 +1,6 @@
 using namespace Belin.Cli.MySql
 using namespace MySqlConnector
 using namespace System.Diagnostics.CodeAnalysis
-using module ./MySql/Get-MySqlSchema.psm1
-using module ./MySql/Get-MySqlTable.psm1
 
 <#
 .SYNOPSIS
@@ -13,11 +11,12 @@ using module ./MySql/Get-MySqlTable.psm1
 	The schema name.
 .PARAMETER Table
 	The table name.
+.OUTPUTS
+	The log messages.
 #>
 function Optimize-MySqlTable {
 	[CmdletBinding()]
-	[OutputType([void])]
-	[SuppressMessage("PSUseOutputTypeCorrectly", "")]
+	[OutputType([string])]
 	param (
 		[Parameter(Mandatory, Position = 0)]
 		[uri] $Uri,
@@ -36,7 +35,7 @@ function Optimize-MySqlTable {
 	}
 
 	foreach ($tableObject in $tables) {
-		Write-Verbose "Optimizing: $($tableObject.GetQualifiedName($false))"
+		"Optimizing: $($tableObject.GetQualifiedName($false))"
 		Invoke-SqlNonQuery $connection -Command "OPTIMIZE TABLE $($tableObject.GetQualifiedName($true))" | Out-Null
 	}
 
