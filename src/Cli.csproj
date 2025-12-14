@@ -4,7 +4,7 @@
 		<Copyright>© Cédric Belin</Copyright>
 		<Description>Command line interface of Cédric Belin, full stack developer.</Description>
 		<Product>Cédric Belin's CLI</Product>
-		<Version>3.1.0</Version>
+		<Version>3.2.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup>
