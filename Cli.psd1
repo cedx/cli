@@ -13,12 +13,16 @@
 	VariablesToExport = @()
 
 	CmdletsToExport = @(
+		"Expand-TarArchive"
+		"Expand-ZipArchive"
 		"Get-CliVersion"
 		"Get-MySqlCollation"
 		"Get-MySqlColumn"
 		"Get-MySqlEngine"
 		"Get-MySqlSchema"
 		"Get-MySqlTable"
+		"New-MySqlConnection"
+		"Test-Privilege"
 	)
 
 	FunctionsToExport = @(
