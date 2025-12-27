@@ -4,10 +4,6 @@ using namespace Belin.Cli.Validation
 <#
 .SYNOPSIS
 	Downloads and installs the latest OpenJDK release.
-.PARAMETER Path
-	The path to the output directory.
-.PARAMETER Version
-	The major version of the Java development kit.
 .OUTPUTS
 	The output from the `java --version` command.
 #>
@@ -15,10 +11,12 @@ function Install-Jdk {
 	[CmdletBinding()]
 	[OutputType([string])]
 	param (
+		# The path to the output directory.
 		[Parameter(Position = 0)]
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified output path is invalid.")]
 		[string] $Path = $IsWindows ? "C:\Program Files\OpenJDK" : "/opt/openjdk",
 
+		# The major version of the Java development kit.
 		[ValidateSet(11, 17, 21, 25)]
 		[int] $Version = 25
 	)

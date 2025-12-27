@@ -5,14 +5,6 @@ using namespace System.Diagnostics.CodeAnalysis
 <#
 .SYNOPSIS
 	Alters the character set of MariaDB/MySQL tables.
-.PARAMETER Uri
-	The connection URI.
-.PARAMETER Collation
-	The name of the new character set.
-.PARAMETER Schema
-	The schema name.
-.PARAMETER Table
-	The table name.
 .OUTPUTS
 	The log messages.
 #>
@@ -21,15 +13,19 @@ function Set-MySqlCharset {
 	[OutputType([string])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
+		# The connection URI.
 		[Parameter(Mandatory, Position = 0)]
 		[uri] $Uri,
 
+		# The name of the new character set.
 		[Parameter(Mandatory, Position = 1)]
 		[string] $Collation,
 
+		# The schema name.
 		[Parameter()]
 		[string[]] $Schema = @(),
 
+		# The table name.
 		[Parameter()]
 		[string[]] $Table = @()
 	)

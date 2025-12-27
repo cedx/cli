@@ -17,16 +17,6 @@ $TextExtensions = @()
 <#
 .SYNOPSIS
 	Converts the encoding of input files.
-.PARAMETER Path
-	The path to the files to convert.
-.PARAMETER LiteralPath
-	The path to the files to convert.
-.PARAMETER To
-	The destination encoding.
-.PARAMETER Exclude
-	The list of folders to exclude from the processing.
-.PARAMETER Recurse
-	Value indicating whether to process the input path recursively.
 .INPUTS
 	A string that contains a path, but not a literal path.
 .OUTPUTS
@@ -36,21 +26,26 @@ function ConvertTo-Encoding {
 	[CmdletBinding(DefaultParameterSetName = "Path")]
 	[OutputType([string])]
 	param (
+		# The path to the files to convert.
 		[Parameter(Mandatory, ParameterSetName = "Path", Position = 0, ValueFromPipeline)]
 		[SupportsWildcards()]
 		[string[]] $Path,
 
+		# The literal path to the files to convert.
 		[Parameter(Mandatory, ParameterSetName = "LiteralPath")]
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified literal path is invalid.")]
 		[string[]] $LiteralPath,
 
+		# The destination encoding.
 		[Parameter(Mandatory)]
 		[ValidateSet("Latin1", "UTF-8")]
 		[string] $Encoding,
 
+		# The list of folders to exclude from the processing.
 		[ValidateNotNull()]
 		[string[]] $Exclude = @(".git", "node_modules", "ps_modules", "vendor"),
 
+		# Value indicating whether to process the input path recursively.
 		[Parameter()]
 		[switch] $Recurse
 	)
@@ -89,19 +84,17 @@ function ConvertTo-Encoding {
 <#
 .SYNOPSIS
 	Checks if the specified file should be excluded from the processing.
-.PARAMETER File
-	The file to be checked.
-.PARAMETER Exclude
-	The list of folders to exclude from the processing.
 .OUTPUTS
 	`$true` if the specified file should be excluded from the processing, otherwise `$false`.
 #>
 function Test-IsExcluded {
 	[OutputType([bool])]
 	param (
+		# The file to be checked.
 		[Parameter(Mandatory, Position = 0, ValueFromPipeline)]
 		[FileInfo] $File,
 
+		# The list of folders to exclude from the processing.
 		[ValidateNotNull()]
 		[string[]] $Exclude = @(".git", "node_modules", "ps_modules", "vendor")
 	)

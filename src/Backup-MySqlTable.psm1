@@ -8,16 +8,6 @@ using namespace System.Web
 <#
 .SYNOPSIS
 	Backups a set of MariaDB/MySQL tables.
-.PARAMETER Uri
-	The connection URI.
-.PARAMETER Path
-	The path to the output directory.
-.PARAMETER Format
-	The format of the output files.
-.PARAMETER Schema
-	The schema name.
-.PARAMETER Table
-	The table name.
 .OUTPUTS
 	The log messages.
 #>
@@ -25,19 +15,24 @@ function Backup-MySqlTable {
 	[CmdletBinding()]
 	[OutputType([string])]
 	param (
+		# The connection URI.
 		[Parameter(Mandatory, Position = 0)]
 		[uri] $Uri,
 
+		# The path to the output directory.
 		[Parameter(Mandatory, Position = 1)]
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified output path is invalid.")]
 		[string] $Path,
 
+		# The format of the output files.
 		[ValidateSet("jsonl", "sql")]
 		[string] $Format = [BackupFormat]::SqlDump,
 
+		# The schema name.
 		[Parameter()]
 		[string[]] $Schema = @(),
 
+		# The table name.
 		[Parameter()]
 		[string[]] $Table = @()
 	)
@@ -62,28 +57,24 @@ function Backup-MySqlTable {
 <#
 .SYNOPSIS
 	Exports the specified schema to a set of JSON Lines files in the specified directory.
-.PARAMETER Schema
-	The database schema.
-.PARAMETER Path
-	The path to the output directory.
-.PARAMETER Connection
-	The connection to the data source.
-.PARAMETER Table
-	The table name.
 #>
 function Export-JsonLine {
 	[OutputType([void])]
 	param (
+		# The database schema.
 		[Parameter(Mandatory, Position = 0)]
 		[Schema] $Schema,
 
+		# The path to the output directory.
 		[Parameter(Mandatory, Position = 1)]
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified output path is invalid.")]
 		[string] $Path,
 
+		# The connection to the data source.
 		[Parameter(Mandatory)]
 		[MySqlConnection] $Connection,
 
+		# The table name.
 		[Parameter()]
 		[string[]] $Table = @()
 	)
@@ -100,28 +91,24 @@ function Export-JsonLine {
 <#
 .SYNOPSIS
 	Exports the specified schema to a SQL dump in the specified directory.
-.PARAMETER Schema
-	The database schema.
-.PARAMETER Path
-	The path to the output directory.
-.PARAMETER Uri
-	The connection URI.
-.PARAMETER Table
-	The table name.
 #>
 function Export-SqlDump {
 	[OutputType([void])]
 	param (
+		# The database schema.
 		[Parameter(Mandatory, Position = 0)]
 		[Schema] $Schema,
 
+		# The path to the output directory.
 		[Parameter(Mandatory, Position = 1)]
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified output path is invalid.")]
 		[string] $Path,
 
+		# The connection URI.
 		[Parameter(Mandatory)]
 		[uri] $Uri,
 
+		# The table name.
 		[Parameter()]
 		[string[]] $Table = @()
 	)

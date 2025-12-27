@@ -3,10 +3,6 @@ using namespace Belin.Cli.Validation
 <#
 .SYNOPSIS
 	Downloads and installs the latest PHP release.
-.PARAMETER Path
-	The path to the output directory.
-.PARAMETER RegisterEventSource
-	Value indicating whether to register the PHP interpreter with the event log.
 .OUTPUTS
 	The output from the `php --version` command.
 #>
@@ -14,10 +10,12 @@ function Install-Php {
 	[CmdletBinding()]
 	[OutputType([string])]
 	param (
+		# The path to the output directory.
 		[Parameter(Position = 0)]
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified output path is invalid.")]
 		[string] $Path = "C:\Program Files\PHP",
 
+		# Value indicating whether to register the PHP interpreter with the event log.
 		[Parameter()]
 		[switch] $RegisterEventSource
 	)

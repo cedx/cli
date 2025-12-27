@@ -5,14 +5,6 @@ using namespace System.Diagnostics.CodeAnalysis
 <#
 .SYNOPSIS
 	Alters the storage engine of MariaDB/MySQL tables.
-.PARAMETER Uri
-	The connection URI.
-.PARAMETER Engine
-	The name of the new storage engine.
-.PARAMETER Schema
-	The schema name.
-.PARAMETER Table
-	The table name.
 .OUTPUTS
 	The log messages.
 #>
@@ -21,15 +13,19 @@ function Set-MySqlEngine {
 	[OutputType([string])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
+		# The connection URI.
 		[Parameter(Mandatory, Position = 0)]
 		[uri] $Uri,
 
+		# The name of the new storage engine.
 		[Parameter(Mandatory, Position = 1)]
 		[string] $Engine,
 
+		# The schema name.
 		[Parameter()]
 		[string[]] $Schema = @(),
 
+		# The table name.
 		[Parameter()]
 		[string[]] $Table = @()
 	)

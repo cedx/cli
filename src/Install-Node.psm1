@@ -4,8 +4,6 @@ using namespace Belin.Cli.Validation
 <#
 .SYNOPSIS
 	Downloads and installs the latest Node.js release.
-.PARAMETER Path
-	The path to the output directory.
 .OUTPUTS
 	The output from the `node --version` command.
 #>
@@ -13,6 +11,7 @@ function Install-Node {
 	[CmdletBinding()]
 	[OutputType([string])]
 	param (
+		# The path to the output directory.
 		[Parameter(Position = 0)]
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified output path is invalid.")]
 		[string] $Path = $IsWindows ? "C:\Program Files\Node.js" : "/usr/local"

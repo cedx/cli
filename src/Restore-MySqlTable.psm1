@@ -5,12 +5,6 @@ using namespace System.Web
 <#
 .SYNOPSIS
 	Restores a set of MariaDB/MySQL tables.
-.PARAMETER Path
-	Specifies the path to an SQL dump.
-.PARAMETER LiteralPath
-	Specifies the literal path to an SQL dump.
-.PARAMETER Recurse
-	Value indicating whether to process the input path recursively.
 .INPUTS
 	A string that contains a path, but not a literal path.
 .OUTPUTS
@@ -20,17 +14,21 @@ function Restore-MySqlTable {
 	[CmdletBinding(DefaultParameterSetName = "Path")]
 	[OutputType([string])]
 	param (
+		# The connection URI.
 		[Parameter(Mandatory, Position = 0)]
 		[uri] $Uri,
 
+		# Specifies the path to an SQL dump.
 		[Parameter(Mandatory, ParameterSetName = "Path", Position = 1, ValueFromPipeline)]
 		[SupportsWildcards()]
 		[string[]] $Path,
 
+		# Specifies the literal path to an SQL dump.
 		[Parameter(Mandatory, ParameterSetName = "LiteralPath")]
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified literal path is invalid.")]
 		[string[]] $LiteralPath,
 
+		# Value indicating whether to process the input path recursively.
 		[Parameter()]
 		[switch] $Recurse
 	)

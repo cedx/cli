@@ -5,8 +5,6 @@ using namespace System.Diagnostics.CodeAnalysis
 <#
 .SYNOPSIS
 	Unregisters a Windows service based on [NSSM](https://nssm.cc).
-.PARAMETER Path
-	The path to the root directory of the web application.
 .OUTPUTS
 	The log messages.
 #>
@@ -15,6 +13,7 @@ function Remove-NssmService {
 	[OutputType([string])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
+		# The path to the root directory of the web application.
 		[Parameter(Position = 0, ValueFromPipeline)]
 		[ValidateScript({ Test-Path $_ -PathType Container }, ErrorMessage = "The specified directory does not exist.")]
 		[string] $Path = $PWD

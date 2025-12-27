@@ -5,12 +5,6 @@ using namespace System.Diagnostics.CodeAnalysis
 <#
 .SYNOPSIS
 	Optimizes a set of MariaDB/MySQL tables.
-.PARAMETER Uri
-	The connection URI.
-.PARAMETER Schema
-	The schema name.
-.PARAMETER Table
-	The table name.
 .OUTPUTS
 	The log messages.
 #>
@@ -18,12 +12,15 @@ function Optimize-MySqlTable {
 	[CmdletBinding()]
 	[OutputType([string])]
 	param (
+		# The connection URI.
 		[Parameter(Mandatory, Position = 0)]
 		[uri] $Uri,
 
+		# The schema name.
 		[Parameter()]
 		[string[]] $Schema = @(),
 
+		# The table name.
 		[Parameter()]
 		[string[]] $Table = @()
 	)

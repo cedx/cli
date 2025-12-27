@@ -5,10 +5,6 @@ using namespace System.Diagnostics.CodeAnalysis
 <#
 .SYNOPSIS
 	Registers a Windows service based on [NSSM](https://nssm.cc).
-.PARAMETER Path
-	The path to the root directory of the web application.
-.PARAMETER Start
-	Value indicating whether to start the service after its registration.
 .OUTPUTS
 	The log messages.
 #>
@@ -17,10 +13,12 @@ function New-NssmService {
 	[OutputType([string])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
+		# The path to the root directory of the web application.
 		[Parameter(Position = 0, ValueFromPipeline)]
 		[ValidateScript({ Test-Path $_ -PathType Container }, ErrorMessage = "The specified directory does not exist.")]
 		[string] $Path = $PWD,
 
+		# Value indicating whether to start the service after its registration.
 		[Parameter()]
 		[switch] $Start
 	)
