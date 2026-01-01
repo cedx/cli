@@ -37,8 +37,8 @@ function Install-Node {
 	Invoke-WebRequest "https://nodejs.org/dist/v$version/$file" -OutFile $outputFile
 
 	"Extracting file ""$file"" into directory ""$Path""..."
-	if ($extension -eq "zip") { Expand-ZipArchive $outputFile $Path -Skip 1 }
-	else { Expand-TarArchive $outputFile $Path -Skip 1 }
+	if ($extension -eq "zip") { Expand-ZipArchive $outputFile -DestinationPath $Path -Skip 1 }
+	else { Expand-TarArchive $outputFile -DestinationPath $Path -Skip 1 }
 
 	if (-not $IsWindows) {
 		foreach ($item in "CHANGELOG.md", "LICENSE", "README.md") { Remove-Item "$Path/$item" -ErrorAction Ignore }

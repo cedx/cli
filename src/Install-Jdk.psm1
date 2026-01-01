@@ -37,8 +37,8 @@ function Install-Jdk {
 	Invoke-WebRequest "https://aka.ms/download-jdk/$file" -OutFile $outputFile
 
 	"Extracting file ""$file"" into directory ""$Path""..."
-	if ($extension -eq "zip") { Expand-ZipArchive $outputFile $Path -Skip 1 }
-	else { Expand-TarArchive $outputFile $Path -Skip 1 }
+	if ($extension -eq "zip") { Expand-ZipArchive $outputFile -DestinationPath $Path -Skip 1 }
+	else { Expand-TarArchive $outputFile -DestinationPath $Path -Skip 1 }
 
 	$executable = $IsWindows ? "java.exe" : "java"
 	& "$Path/bin/$executable" --version
