@@ -5,16 +5,11 @@ using System.Collections.ObjectModel;
 using System.Management.Automation.Language;
 
 /// <summary>
-/// Represents a PowerShell data file.
+/// Represents a PowerShell data file (.psd1).
 /// </summary>
 /// <param name="hashtable">The values of the PowerShell data file.</param>
 public sealed class PowerShellDataFile(Hashtable hashtable):
 	ReadOnlyDictionary<string, object?>(hashtable.Cast<DictionaryEntry>().ToDictionary(entry => entry.Key.ToString() ?? "", entry => entry.Value)) {
-
-	/// <summary>
-	/// The description of the PowerShell module, if applicable.
-	/// </summary>
-	public string? Description => TryGetValue("Description", out var value) ? value as string : null;
 		
 	/// <summary>
 	/// The version of the PowerShell module, if applicable.
