@@ -1,7 +1,12 @@
 # Changelog
 
-## Version [3.2.0](https://github.com/cedx/cli/compare/v3.1.0...v3.2.0)
-- Ported the cmdlets of the `Compression`, `MySql` and `Validation` modules to [C#](https://learn.microsoft.com/en-us/dotnet/csharp).
+## Version [4.0.0](https://github.com/cedx/cli/compare/v3.1.0...v4.0.0)
+- Added the `-Filter` parameter to the `ConvertTo-Encoding` cmdlet.
+- Added the `-Config` parameter to the `Install-Node` cmdlet.
+- Dropped the support of [PowerShell](https://learn.microsoft.com/en-us/powershell) applications in the `New-NssmService` cmdlet.
+- Fixed the base URL of [PHP](https://www.php.net) releases in the `Install-Php` cmdlet.
+- Ported the cmdlets of `Compression`, `MySql` and `Validation` modules to [C#](https://learn.microsoft.com/en-us/dotnet/csharp).
+- Restored the handling of [NSSM](https://nssm.cc) services in the `Install-Node` cmdlet.
 
 ## Version [3.1.0](https://github.com/cedx/cli/compare/v3.0.0...v3.1.0)
 - Added the `ConvertTo-Encoding` cmdlet.
