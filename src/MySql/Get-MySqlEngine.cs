@@ -19,5 +19,5 @@ public class GetMySqlEngineCommand: Cmdlet {
 	/// Performs execution of this command.
 	/// </summary>
 	protected override void ProcessRecord() =>
-		WriteObject(Connection.Query("SHOW ENGINES").Select(record => record.Engine), enumerateCollection: true);
+		WriteObject(Connection.Query("SHOW ENGINES").Select((dynamic record) => record.Engine), enumerateCollection: true);
 }
