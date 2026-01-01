@@ -31,7 +31,7 @@ function Install-Php {
 	$file = "php-$version-nts-Win32-$($version -ge [version] "8.4.0" ? "vs17" : "vs16")-x64.zip"
 	"Downloading file ""$file""..."
 	$outputFile = New-TemporaryFile
-	Invoke-WebRequest "https://windows.php.net/downloads/releases/$file" -OutFile $outputFile
+	Invoke-WebRequest "https://downloads.php.net/~windows/releases/archives/$file" -OutFile $outputFile
 
 	"Stopping the IIS web server..."
 	Stop-Service W3SVC
