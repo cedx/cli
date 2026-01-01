@@ -49,6 +49,6 @@ public abstract class Application {
 		}
 
 		End:
-		if (string.IsNullOrWhiteSpace(Manifest.Id)) throw new EntryPointNotFoundException("Unable to locate the application manifest.");
+		if (Manifest.Id.Length == 0) throw new EntryPointNotFoundException("Unable to locate the application manifest.");
 	}
 }

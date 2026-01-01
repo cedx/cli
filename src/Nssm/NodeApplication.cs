@@ -36,8 +36,8 @@ public class NodeApplication: Application {
 	public NodeApplication(string path): base(path) {
 		var packagePath = Join(Path, "package.json");
 		if (File.Exists(packagePath) && JsonSerializer.Deserialize<NodePackage>(File.ReadAllText(packagePath), JsonSerializerOptions.Web) is NodePackage package) {
-			if (string.IsNullOrWhiteSpace(Manifest.Description)) Manifest.Description = package.Description;
-			if (string.IsNullOrWhiteSpace(Manifest.Name)) Manifest.Name = package.Name;
+			if (Manifest.Description.Length == 0) Manifest.Description = package.Description;
+			if (Manifest.Name.Length == 0) Manifest.Name = package.Name;
 			if (package.Bin is not null && package.Bin.Count > 0) entryPath = Join(Path, package.Bin.First().Value);
 		}
 	}
@@ -49,4 +49,8 @@ public class NodeApplication: Application {
 /// <param name="Name">The package name.</param>
 /// <param name="Description">The package description.</param>
 /// <param name="Bin">The dictionary of package commands.</param>
-public record NodePackage(string Name, string Description = "", IDictionary<string, string>? Bin = null);
+public record NodePackage(
+	string Name = "",
+	string Description = "",
+	IDictionary<string, string>? Bin = null
+);

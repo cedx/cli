@@ -15,22 +15,22 @@ public sealed class ApplicationManifest {
 	/// <summary>
 	/// The application description.
 	/// </summary>
-	public string? Description { get; set; }
+	public string Description { get; set; } = "";
 
 	/// <summary>
 	/// The application environment.
 	/// </summary>
-	public string? Environment { get; set; }
+	public string Environment { get; set; } = "";
 
 	/// <summary>
 	/// The application identifier.
 	/// </summary>
-	public string? Id { get; set; }
+	public string Id { get; set; } = "";
 
 	/// <summary>
 	/// The application name.
 	/// </summary>
-	public string? Name { get; set; }
+	public string Name { get; set; } = "";
 
 	/// <summary>
 	/// Reads the application manifest located at the specified path.
@@ -62,16 +62,15 @@ public sealed class ApplicationManifest {
 		var scriptBlockAst = Parser.ParseFile(path, out var tokens, out var errors);
 		if (errors.Length > 0) throw new FormatException(errors[0].Message);
 
-		var hashtable = scriptBlockAst.Find(ast => ast is HashtableAst, searchNestedScriptBlocks: false) is Ast ast
+		var manifest = scriptBlockAst.Find(ast => ast is HashtableAst, searchNestedScriptBlocks: false) is Ast ast
 			? (Hashtable) ast.SafeGetValue()
 			: throw new FormatException("The manifest could not be processed because it is not a valid PowerShell data file.");
 
-		var manifest = new Dictionary<string, object?>(hashtable.Cast<DictionaryEntry>().ToDictionary(entry => entry.Key.ToString() ?? "", entry => entry.Value));
 		return new() {
-			Description = manifest.TryGetValue("Description", out var description) ? description as string : null,
-			Environment = manifest.TryGetValue("Environment", out var environment) ? environment as string : null,
-			Id = manifest.TryGetValue("Id", out var id) ? id as string : null,
-			Name = manifest.TryGetValue("Name", out var name) ? name as string : null
+			Description = (string) (manifest["Description"] ?? ""),
+			Environment = (string) (manifest["Environment"] ?? ""),
+			Id = (string) (manifest["Id"] ?? ""),
+			Name = (string) (manifest["Name"] ?? "")
 		};
 	}
 
