@@ -1,5 +1,5 @@
 @{
-	ModuleVersion = "3.2.0"
+	ModuleVersion = "4.0.0"
 	PowerShellVersion = "7.5"
 	RootModule = "bin/Belin.Cli.dll"
 
@@ -68,7 +68,7 @@
 			LicenseUri = "https://github.com/cedx/cli/blob/main/License.md"
 			ProjectUri = "https://github.com/cedx/cli"
 			ReleaseNotes = "https://github.com/cedx/cli/releases"
-			Tags = "cli", "dotnet", "powershell"
+			Tags = "cli", "dotnet", "powershell", "tools"
 		}
 	}
 }
