@@ -1,5 +1,8 @@
 namespace Belin.Cli.Nssm;
 
+using System.Text.Json;
+using static System.IO.Path;
+
 /// <summary>
 /// Represents a Node.js application.
 /// </summary>
@@ -24,13 +27,26 @@ public class NodeApplication: Application {
 	/// <summary>
 	/// The path of the application entry point.
 	/// </summary>
-	private string entryPath = "";
+	private readonly string entryPath = "";
 
 	/// <summary>
 	/// Creates a new Node.js application.
 	/// </summary>
 	/// <param name="path">The path to the application root directory.</param>
 	public NodeApplication(string path): base(path) {
-		// TODO
+		var packagePath = Join(Path, "package.json");
+		if (File.Exists(packagePath) && JsonSerializer.Deserialize<NodePackage>(File.ReadAllText(packagePath), JsonSerializerOptions.Web) is NodePackage package) {
+			if (string.IsNullOrWhiteSpace(Manifest.Description)) Manifest.Description = package.Description;
+			if (string.IsNullOrWhiteSpace(Manifest.Name)) Manifest.Name = package.Name;
+			if (package.Bin is not null && package.Bin.Count > 0) entryPath = Join(Path, package.Bin.First().Value);
+		}
 	}
 }
+
+/// <summary>
+/// Represents the contents of a <c>package.json</c> file.
+/// </summary>
+/// <param name="Name">The package name.</param>
+/// <param name="Description">The package description.</param>
+/// <param name="Bin">The dictionary of package commands.</param>
+public record NodePackage(string Name, string Description = "", IDictionary<string, string>? Bin = null);
