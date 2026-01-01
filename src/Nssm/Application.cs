@@ -1,6 +1,6 @@
 namespace Belin.Cli.Nssm;
 
-using IOPath = System.IO.Path;
+using static System.IO.Path;
 
 /// <summary>
 /// Represents a web application.
@@ -38,13 +38,12 @@ public abstract class Application {
 	/// <param name="path">The path to the application root directory.</param>
 	/// <exception cref="EntryPointNotFoundException">The application manifest could not be located.</exception>
 	protected Application(string path) {
-		Path = IOPath.TrimEndingDirectorySeparator(IOPath.GetFullPath(path));
+		Path = TrimEndingDirectorySeparator(GetFullPath(path));
 
 		foreach (var folder in new[] { "src/Server", "src" }) {
-			foreach (var format in new[] { "json", "psd1", "xml" }) {
-				var file = IOPath.Join(Path, folder, $"appsettings.{format}");
-				if (!File.Exists(file)) continue;
-				if (ApplicationManifest.Read(file) is ApplicationManifest manifest) Manifest = manifest;
+			var files = new[] { "json", "psd1", "xml" }.Select(format => Join(Path, folder, $"appsettings.{format}")).Where(File.Exists);
+			foreach (var file in files) if (ApplicationManifest.Read(file) is ApplicationManifest manifest) {
+				Manifest = manifest;
 				goto End;
 			}
 		}

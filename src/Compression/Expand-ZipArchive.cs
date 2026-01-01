@@ -2,7 +2,7 @@ namespace Belin.Cli.Compression;
 
 using Belin.Cli.Validation;
 using System.IO.Compression;
-using IOPath = System.IO.Path;
+using static System.IO.Path;
 
 /// <summary>
 /// Extracts the specified ZIP archive into a given directory.
@@ -38,7 +38,7 @@ public class ExpandZipArchiveCommand: Cmdlet {
 			var path = string.Join('/', entry.FullName.Split('/').Skip(Skip));
 			if (path.Length == 0) path = "/";
 
-			var fullPath = IOPath.Join(DestinationPath, path);
+			var fullPath = Join(DestinationPath, path);
 			if (fullPath[^1] == '/') Directory.CreateDirectory(fullPath);
 			else entry.ExtractToFile(fullPath, overwrite: true);
 		}

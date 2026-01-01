@@ -1,5 +1,7 @@
 namespace Belin.Cli.Nssm;
 
+using System.Collections;
+using System.Management.Automation.Language;
 using System.Text.Json;
 using System.Xml;
 using System.Xml.Serialization;
@@ -13,25 +15,21 @@ public sealed class ApplicationManifest {
 	/// <summary>
 	/// The application description.
 	/// </summary>
-	[XmlElement]
 	public string? Description { get; set; }
 
 	/// <summary>
 	/// The application environment.
 	/// </summary>
-	[XmlElement]
 	public string? Environment { get; set; }
 
 	/// <summary>
 	/// The application identifier.
 	/// </summary>
-	[XmlElement]
 	public string? Id { get; set; }
 
 	/// <summary>
 	/// The application name.
 	/// </summary>
-	[XmlElement]
 	public string? Name { get; set; }
 
 	/// <summary>
@@ -59,8 +57,16 @@ public sealed class ApplicationManifest {
 	/// </summary>
 	/// <param name="path">The path to the PowerShell manifest.</param>
 	/// <returns>The application manifest corresponding to the specified PowerShell file.</returns>
+	/// <exception cref="FormatException">The PowerShell manifest could not be parsed.</exception>
 	public static ApplicationManifest? ReadPowerShellManifest(string path) {
-		var manifest = PowerShellDataFile.Read(path);
+		var scriptBlockAst = Parser.ParseFile(path, out var tokens, out var errors);
+		if (errors.Length > 0) throw new FormatException(errors[0].Message);
+
+		var hashtable = scriptBlockAst.Find(ast => ast is HashtableAst, searchNestedScriptBlocks: false) is Ast ast
+			? (Hashtable) ast.SafeGetValue()
+			: throw new FormatException("The manifest could not be processed because it is not a valid PowerShell data file.");
+
+		var manifest = new Dictionary<string, object?>(hashtable.Cast<DictionaryEntry>().ToDictionary(entry => entry.Key.ToString() ?? "", entry => entry.Value));
 		return new() {
 			Description = manifest.TryGetValue("Description", out var description) ? description as string : null,
 			Environment = manifest.TryGetValue("Environment", out var environment) ? environment as string : null,
