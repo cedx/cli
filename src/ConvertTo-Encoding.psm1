@@ -43,7 +43,11 @@ function ConvertTo-Encoding {
 
 		# The list of folders to exclude from the processing.
 		[ValidateNotNull()]
-		[string[]] $Exclude = @(".git", "node_modules", "ps_modules", "vendor"),
+		[string[]] $Exclude = @(".git", "node_modules", "vendor"),
+
+		# A pattern used to filter the list of files to be processed.
+		[Parameter()]
+		[string] $Filter = "",
 
 		# Value indicating whether to process the input path recursively.
 		[Parameter()]
@@ -60,6 +64,7 @@ function ConvertTo-Encoding {
 		$destinationEncoding = [Encoding]::GetEncoding($Encoding)
 
 		$parameters = @{ File = $true; Recurse = $Recurse }
+		if ($Filter) { $parameters.Filter = $Filter }
 		$files = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Get-ChildItem -LiteralPath $LiteralPath @parameters) : (Get-ChildItem $Path @parameters)
 
 		foreach ($file in $files) {
@@ -96,7 +101,7 @@ function Test-IsExcluded {
 
 		# The list of folders to exclude from the processing.
 		[ValidateNotNull()]
-		[string[]] $Exclude = @(".git", "node_modules", "ps_modules", "vendor")
+		[string[]] $Exclude = @(".git", "node_modules", "vendor")
 	)
 
 	process {
