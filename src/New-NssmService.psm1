@@ -35,26 +35,27 @@ function New-NssmService {
 			default { throw [NotSupportedException] "The application type could not be determined." }
 		}
 
-		if (Get-Service $application.Id -ErrorAction Ignore) {
-			throw [InvalidOperationException] "The service ""$($application.Id)"" already exists."
+		if (Get-Service $application.Manifest.Id -ErrorAction Ignore) {
+			throw [InvalidOperationException] "The service ""$($application.Manifest.Id)"" already exists."
 		}
 
 		$properties = [ordered]@{
 			AppDirectory = $application.Path
-			AppEnvironmentExtra = "$($application.EnvironmentVariable())=$($application.Environment)"
+			AppEnvironmentExtra = "$($application.EnvironmentVariable)=$($application.Manifest.Environment)"
 			AppNoConsole = "1"
 			AppStderr = Join-Path $application.Path "var/Error.log"
 			AppStdout = Join-Path $application.Path "var/Output.log"
-			Description = $application.Description
-			DisplayName = $application.Name
+			Description = $application.Manifest.Description
+			DisplayName = $application.Manifest.Name
 			Start = "SERVICE_AUTO_START"
 		}
 
-		nssm install $application.Id $application.Program().Path $application.EntryPoint() | Out-Null
-		foreach ($key in $properties.Keys) { nssm set $application.Id $key $properties.$key | Out-Null }
-		if ($Start) { Start-Service $application.Id }
+		$program = Get-Command $application.Program
+		nssm install $application.Manifest.Id $program.Path $application.EntryPoint | Out-Null
+		foreach ($key in $properties.Keys) { nssm set $application.Manifest.Id $key $properties.$key | Out-Null }
+		if ($Start) { Start-Service $application.Manifest.Id }
 
 		$created = $Start ? "started" : "created"
-		"The service ""$($application.Id)"" has been successfully $created."
+		"The service ""$($application.Manifest.Id)"" has been successfully $created."
 	}
 }
