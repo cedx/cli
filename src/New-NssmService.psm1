@@ -31,7 +31,7 @@ function New-NssmService {
 	process {
 		$application = switch ($true) {
 			((Test-Path "$Path/src/Server/*.cs") -or (Test-Path "$Path/src/*.cs")) { [DotNetApplication]::new($Path); break }
-			((Test-Path "$Path/src/Server/*.ts") -or (Test-Path "$Path/src/*.ts")) { [NodeApplication]::new($Path); break }
+			((Test-Path "$Path/src/Server/*.[jt]s") -or (Test-Path "$Path/src/*.[jt]s")) { [NodeApplication]::new($Path); break }
 			default { throw [NotSupportedException] "The application type could not be determined." }
 		}
 
