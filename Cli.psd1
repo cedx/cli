@@ -68,7 +68,7 @@
 			LicenseUri = "https://github.com/cedx/cli/blob/main/License.md"
 			ProjectUri = "https://github.com/cedx/cli"
 			ReleaseNotes = "https://github.com/cedx/cli/releases"
-			Tags = "cli", "dotnet", "powershell", "tools"
+			Tags = "cli", "dotnet", "powershell", "system", "tools"
 		}
 	}
 }

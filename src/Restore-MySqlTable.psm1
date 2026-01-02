@@ -28,6 +28,10 @@ function Restore-MySqlTable {
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified literal path is invalid.")]
 		[string[]] $LiteralPath,
 
+		# A pattern used to filter the list of files to be processed.
+		[Parameter()]
+		[string] $Filter = "*.sql",
+
 		# Value indicating whether to process the input path recursively.
 		[Parameter()]
 		[switch] $Recurse
@@ -35,6 +39,7 @@ function Restore-MySqlTable {
 
 	process {
 		$parameters = @{ File = $true; Recurse = $Recurse }
+		if ($Filter) { $parameters.Filter = $Filter }
 		$files = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Get-ChildItem -LiteralPath $LiteralPath @parameters) : (Get-ChildItem $Path @parameters)
 
 		foreach ($file in $files) {
