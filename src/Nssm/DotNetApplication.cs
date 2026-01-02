@@ -51,7 +51,7 @@ public class DotNetApplication: Application {
 
 			if (entryPoint.AssemblyName.Length == 0) entryPoint.AssemblyName = GetFileNameWithoutExtension(projectPath);
 			if (entryPoint.OutDir.Length == 0) entryPoint.OutDir = Join(Path, "bin");
-			entryPath = Join(entryPoint.OutDir, $"{entryPoint.AssemblyName}.dll");
+			entryPath = GetFullPath(Join(entryPoint.OutDir, $"{entryPoint.AssemblyName}.dll"));
 		}
 	}
 }

@@ -31,13 +31,13 @@ function Remove-NssmService {
 			default { throw [NotSupportedException] "The application type could not be determined." }
 		}
 
-		if (-not (Get-Service $application.Id -ErrorAction Ignore)) {
-			throw [InvalidOperationException] "The service ""$($application.Id)"" does not exist."
+		if (-not (Get-Service $application.Manifest.Id -ErrorAction Ignore)) {
+			throw [InvalidOperationException] "The service ""$($application.Manifest.Id)"" does not exist."
 		}
 		else {
-			Stop-Service $application.Id
-			Remove-Service $application.Id
-			"The service ""$($application.Id)"" has been successfully removed."
+			Stop-Service $application.Manifest.Id
+			Remove-Service $application.Manifest.Id
+			"The service ""$($application.Manifest.Id)"" has been successfully removed."
 		}
 	}
 }

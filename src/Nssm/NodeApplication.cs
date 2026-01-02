@@ -38,7 +38,7 @@ public class NodeApplication: Application {
 		if (File.Exists(packagePath) && JsonSerializer.Deserialize<NodePackage>(File.ReadAllText(packagePath), JsonSerializerOptions.Web) is NodePackage package) {
 			if (Manifest.Description.Length == 0) Manifest.Description = package.Description;
 			if (Manifest.Name.Length == 0) Manifest.Name = package.Name;
-			if (package.Bin is not null && package.Bin.Count > 0) entryPath = Join(Path, package.Bin.First().Value);
+			if (package.Bin is not null && package.Bin.Count > 0) entryPath = GetFullPath(Join(Path, package.Bin.First().Value));
 		}
 	}
 }
