@@ -1,5 +1,3 @@
-using namespace Belin.Cli.Validation
-
 <#
 .SYNOPSIS
 	Downloads and installs the latest PHP release.

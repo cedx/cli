@@ -1,6 +1,3 @@
-using namespace Belin.Cli.Compression
-using namespace Belin.Cli.Validation
-
 <#
 .SYNOPSIS
 	Downloads and installs the latest Node.js release.
