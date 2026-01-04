@@ -1,6 +1,5 @@
 namespace Belin.Cli.MySql;
 
-using Belin.Sql;
 using System.Data;
 
 /// <summary>

@@ -1,6 +1,5 @@
 namespace Belin.Cli.MySql;
 
-using Belin.Sql;
 using System.Data;
 
 /// <summary>
@@ -8,7 +7,7 @@ using System.Data;
 /// </summary>
 [Cmdlet(VerbsCommon.Get, "MySqlCollation"), OutputType(typeof(string))]
 public class GetMySqlCollationCommand: Cmdlet {
-		
+
 	/// <summary>
 	/// The connection to the data source.
 	/// </summary>
