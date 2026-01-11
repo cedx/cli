@@ -6,6 +6,16 @@ using static System.IO.Path;
 /// Represents a web application.
 /// </summary>
 public abstract class Application {
+	
+	/// <summary>
+	/// The list of application folders.
+	/// </summary>
+	private static readonly string[] folders = ["src/Server", "src"];
+
+	/// <summary>
+	/// The list of configuration formats.
+	/// </summary>
+	private static readonly string[] formats = ["json", "psd1", "xml"];
 
 	/// <summary>
 	/// The entry point of this application.
@@ -40,8 +50,8 @@ public abstract class Application {
 	protected Application(string path) {
 		Path = TrimEndingDirectorySeparator(GetFullPath(path));
 
-		foreach (var folder in new[] { "src/Server", "src" }) {
-			var files = new[] { "json", "psd1", "xml" }.Select(format => Join(Path, folder, $"appsettings.{format}")).Where(File.Exists);
+		foreach (var folder in folders) {
+			var files = formats.Select(format => Join(Path, folder, $"appsettings.{format}")).Where(File.Exists);
 			foreach (var file in files) if (ApplicationManifest.Read(file) is ApplicationManifest manifest) {
 				Manifest = manifest;
 				goto End;
