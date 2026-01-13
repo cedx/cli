@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [4.1.0](https://github.com/cedx/cli/compare/v4.0.0...v4.1.0)
+- Updated the package dependencies.
+
 ## Version [4.0.0](https://github.com/cedx/cli/compare/v3.1.0...v4.0.0)
 - Added the `-Filter` parameter to `ConvertTo-Encoding` and `Restore-MySqlTable` cmdlets.
 - Added the `-Config` parameter to `Install-Node` cmdlet.
