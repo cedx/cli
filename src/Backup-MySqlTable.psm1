@@ -35,11 +35,10 @@ function Backup-MySqlTable {
 
 	begin {
 		$connection = New-MySqlConnection $Uri
+		New-Item $Path -Force -ItemType Directory | Out-Null
 	}
 
 	process {
-		New-Item $Path -Force -ItemType Directory | Out-Null
-
 		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
 		foreach ($schemaObject in $schemas) {
 			"Exporting: $($Table.Count -eq 1 ? "$($schemaObject.Name).$($Table[0])" : $schemaObject.Name)"
