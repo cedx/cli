@@ -1,5 +1,9 @@
 # Changelog
 
+## Version [4.2.0](https://github.com/cedx/cli/compare/v4.1.0...v4.2.0)
+- Dropped the support of [JSON](https://www.json.org) format in the `Backup-MySqlTable` cmdlet.
+- Updated the package dependencies.
+
 ## Version [4.1.0](https://github.com/cedx/cli/compare/v4.0.0...v4.1.0)
 - Updated the package dependencies.
 
