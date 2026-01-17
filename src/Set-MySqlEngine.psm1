@@ -30,21 +30,27 @@ function Set-MySqlEngine {
 		[string[]] $Table = @()
 	)
 
-	$connection = New-MySqlConnection $Uri
-	$engines = Get-MySqlEngine $connection
-	if ($Engine -notin $engines) { throw [ArgumentOutOfRangeException] "Engine" }
-
-	$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
-	$tables = foreach ($schemaObject in $schemas) {
-		$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-MySqlTable $connection $schemaObject)
+	begin {
+		$connection = New-MySqlConnection $Uri
+		$engines = Get-MySqlEngine $connection
+		if ($Engine -notin $engines) { throw [ArgumentOutOfRangeException] "Engine" }
 	}
 
-	foreach ($tableObject in $tables) {
-		"Processing: $($tableObject.GetQualifiedName($false))"
-		Invoke-SqlNonQuery $connection -Command "SET foreign_key_checks = 0" | Out-Null
-		Invoke-SqlNonQuery $connection -Command "ALTER TABLE $($tableObject.GetQualifiedName($true)) ENGINE = $Engine" | Out-Null
-		Invoke-SqlNonQuery $connection -Command "SET foreign_key_checks = 1" | Out-Null
+	process {
+		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
+		$tables = foreach ($schemaObject in $schemas) {
+			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-MySqlTable $connection $schemaObject)
+		}
+
+		foreach ($tableObject in $tables) {
+			"Processing: $($tableObject.GetQualifiedName($false))"
+			Invoke-SqlNonQuery $connection -Command "SET foreign_key_checks = 0" | Out-Null
+			Invoke-SqlNonQuery $connection -Command "ALTER TABLE $($tableObject.GetQualifiedName($true)) ENGINE = $Engine" | Out-Null
+			Invoke-SqlNonQuery $connection -Command "SET foreign_key_checks = 1" | Out-Null
+		}
 	}
 
-	Close-SqlConnection $connection
+	clean {
+		Close-SqlConnection $connection
+	}
 }

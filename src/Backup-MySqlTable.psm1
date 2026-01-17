@@ -37,18 +37,18 @@ function Backup-MySqlTable {
 		[string[]] $Table = @()
 	)
 
-	if ($Format -eq [BackupFormat]::JsonLines) {
-		Write-Warning "The ""JSON Lines"" format does not export INVISIBLE columns."
+	begin {
+		$connection = New-MySqlConnection $Uri
 	}
 
-	$connection = New-MySqlConnection $Uri
-	New-Item $Path -Force -ItemType Directory | Out-Null
+	process {
+		New-Item $Path -Force -ItemType Directory | Out-Null
 
-	$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
-	foreach ($schemaObject in $schemas) {
-		"Exporting: $($Table.Count -eq 1 ? "$($schemaObject.Name).$($Table[0])" : $schemaObject.Name)"
-		if ($Format -eq [BackupFormat]::JsonLines) { Export-JsonLine $schemaObject $Path -Connection $connection -Table $Table }
-		else { Export-SqlDump $schemaObject $Path -Table $Table -Uri $Uri }
+		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
+		foreach ($schemaObject in $schemas) {
+			"Exporting: $($Table.Count -eq 1 ? "$($schemaObject.Name).$($Table[0])" : $schemaObject.Name)"
+			Export-SqlDump $schemaObject $Path -Table $Table -Uri $Uri
+		}
 	}
 
 	Close-SqlConnection $connection
@@ -113,7 +113,7 @@ function Export-SqlDump {
 		[string[]] $Table = @()
 	)
 
-	$file = "$($Table.Count -eq 1 ? "$($Schema.Name).$($Table[0])" : $Schema.Name).$([BackupFormat]::SqlDump)"
+	$file = "$($Table.Count -eq 1 ? "$($Schema.Name).$($Table[0])" : $Schema.Name).sql"
 	$userName, $password = ($Uri.UserInfo -split ":").ForEach{ [Uri]::UnescapeDataString($_) }
 	$arguments = [List[string]] @(
 		"--default-character-set=$([HttpUtility]::ParseQueryString($Uri.Query)["charset"] ?? "utf8mb4")"
