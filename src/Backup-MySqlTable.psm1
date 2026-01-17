@@ -1,5 +1,4 @@
 using namespace Belin.Cli.MySql
-using namespace MySqlConnector
 using namespace System.Collections.Generic
 using namespace System.Diagnostics.CodeAnalysis
 using namespace System.IO
