@@ -24,10 +24,6 @@ function Backup-MySqlTable {
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified output path is invalid.")]
 		[string] $Path,
 
-		# The format of the output files.
-		[ValidateSet("jsonl", "sql")]
-		[string] $Format = [BackupFormat]::SqlDump,
-
 		# The schema name.
 		[Parameter()]
 		[string[]] $Schema = @(),
@@ -51,40 +47,8 @@ function Backup-MySqlTable {
 		}
 	}
 
-	Close-SqlConnection $connection
-}
-
-<#
-.SYNOPSIS
-	Exports the specified schema to a set of JSON Lines files in the specified directory.
-#>
-function Export-JsonLine {
-	[OutputType([void])]
-	param (
-		# The database schema.
-		[Parameter(Mandatory, Position = 0)]
-		[Schema] $Schema,
-
-		# The path to the output directory.
-		[Parameter(Mandatory, Position = 1)]
-		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified output path is invalid.")]
-		[string] $Path,
-
-		# The connection to the data source.
-		[Parameter(Mandatory)]
-		[MySqlConnection] $Connection,
-
-		# The table name.
-		[Parameter()]
-		[string[]] $Table = @()
-	)
-
-	$tables = $Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $Schema.Name } } : (Get-MySqlTable $Connection $Schema)
-	foreach ($tableObject in $tables) {
-		$file = [File]::CreateText("$Path/$($tableObject.QualifiedName).$([BackupFormat]::JsonLines)")
-		$records = Invoke-SqlQuery $Connection -Command "SELECT * FROM $($tableObject.GetQualifiedName($true))" -Stream
-		$records.ForEach{ $file.WriteLine((ConvertTo-Json $_ -Compress)) }
-		$file.Close()
+	clean {
+		Close-SqlConnection $connection
 	}
 }
 
