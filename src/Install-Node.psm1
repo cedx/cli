@@ -51,7 +51,7 @@ function Install-Node {
 	else { Expand-TarArchive $outputFile -DestinationPath $Path -Skip 1 }
 
 	if (-not $IsWindows) {
-		Remove-Item "$Path/CHANGELOG.md", "$Path/LICENSE", "$Path/README.md" -ErrorAction Ignore
+		"CHANGELOG.md", "LICENSE", "README.md" | ForEach-Object { Join-Path $Path $_ } | Remove-Item -ErrorAction Ignore
 	}
 
 	if ($services) {
