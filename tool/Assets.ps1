@@ -1,6 +1,6 @@
 "Deploying the assets..."
-foreach ($item in "Binary", "Text") {
-	$file = "$($item.ToLowerInvariant())-extensions";
+"Binary", "Text" | ForEach-Object {
+	$file = "$($_.ToLower())-extensions";
 	$path = "sindresorhus/$file/main/$file.json";
-	Invoke-WebRequest "https://raw.githubusercontent.com/$path" -OutFile "res/${item}Extensions.json"
+	Invoke-WebRequest "https://raw.githubusercontent.com/$path" -OutFile "res/${_}Extensions.json"
 }

@@ -26,4 +26,4 @@ function Test-PSResourceUpdate {
 
 "Checking for outdated dependencies..."
 dotnet package list --outdated
-(Import-PowerShellDataFile PSModules.psd1).Keys | Get-InstalledPSResource | Test-PSResourceUpdate
+Import-PowerShellDataFile PSModules.psd1 | Select-Object -ExpandProperty Keys | Get-InstalledPSResource | Test-PSResourceUpdate
