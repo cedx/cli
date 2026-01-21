@@ -42,8 +42,8 @@ function New-NssmService {
 			AppDirectory = $application.Path
 			AppEnvironmentExtra = "$($application.EnvironmentVariable)=$($application.Manifest.Environment)"
 			AppNoConsole = "1"
-			AppStderr = Join-Path $application.Path "var/Error.log"
-			AppStdout = Join-Path $application.Path "var/Output.log"
+			AppStderr = Join-Path $application.Path var/Error.log
+			AppStdout = Join-Path $application.Path var/Output.log
 			Description = $application.Manifest.Description
 			DisplayName = $application.Manifest.Name
 			Start = "SERVICE_AUTO_START"
@@ -51,7 +51,7 @@ function New-NssmService {
 
 		$program = Get-Command $application.Program
 		nssm install $application.Manifest.Id $program.Path $application.EntryPoint | Out-Null
-		foreach ($key in $properties.Keys) { nssm set $application.Manifest.Id $key $properties.$key | Out-Null }
+		$properties | Select-Object -ExpandProperty Keys | ForEach-Object { nssm set $application.Manifest.Id $_ $properties.$_ | Out-Null }
 		if ($Start) { Start-Service $application.Manifest.Id }
 
 		$created = $Start ? "started" : "created"

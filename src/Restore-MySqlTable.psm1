@@ -42,12 +42,12 @@ function Restore-MySqlTable {
 		if ($Filter) { $parameters.Filter = $Filter }
 		$files = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Get-ChildItem -LiteralPath $LiteralPath @parameters) : (Get-ChildItem $Path @parameters)
 
-		foreach ($file in $files) {
-			"Importing: $($file.BaseName)"
-			$userName, $password = ($Uri.UserInfo -split ":").ForEach{ [Uri]::UnescapeDataString($_) }
+		$files | ForEach-Object {
+			"Importing: $($_.BaseName)"
+			$userName, $password = $Uri.UserInfo -split ":" | ForEach-Object { [Uri]::UnescapeDataString($_) }
 			$arguments = [List[string]] @(
 				"--default-character-set=$([HttpUtility]::ParseQueryString($Uri.Query)["charset"] ?? "utf8mb4")"
-				"--execute=USE $($file.BaseName); SOURCE $($file.FullName -replace "\\", "/");"
+				"--execute=USE $($_.BaseName); SOURCE $($_.FullName -replace "\", "/");"
 				"--host=$($Uri.Host)"
 				"--password=$password"
 				"--port=$($Uri.IsDefaultPort ? 3306 : $Uri.Port)"

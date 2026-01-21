@@ -29,14 +29,15 @@ function Optimize-MySqlTable {
 	}
 
 	process {
-		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
-		$tables = foreach ($schemaObject in $schemas) {
-			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-MySqlTable $connection $schemaObject)
+		$schemas = $Schema ? ($Schema | ForEach-Object { [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
+		$tables = $schemas | ForEach-Object {
+			$schemaObject = $_
+			$Table ? ($Table | ForEach-Object { [Table]@{ Name = $_; Schema = $schemaObject.Name } }) : (Get-MySqlTable $connection $schemaObject)
 		}
 
-		foreach ($tableObject in $tables) {
-			"Optimizing: $($tableObject.GetQualifiedName($false))"
-			Invoke-SqlNonQuery $connection -Command "OPTIMIZE TABLE $($tableObject.GetQualifiedName($true))" | Out-Null
+		$tables | ForEach-Object {
+			"Optimizing: $($_.GetQualifiedName($false))"
+			Invoke-SqlNonQuery $connection -Command "OPTIMIZE TABLE $($_.GetQualifiedName($true))" | Out-Null
 		}
 	}
 

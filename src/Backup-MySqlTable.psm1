@@ -38,10 +38,10 @@ function Backup-MySqlTable {
 	}
 
 	process {
-		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
-		foreach ($schemaObject in $schemas) {
-			"Exporting: $($Table.Count -eq 1 ? "$($schemaObject.Name).$($Table[0])" : $schemaObject.Name)"
-			Export-SqlDump $schemaObject $Path -Table $Table -Uri $Uri
+		$schemas = $Schema ? ($Schema | ForEach-Object { [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
+		$schemas | ForEach-Object {
+			"Exporting: $($Table.Count -eq 1 ? "$($_.Name).$($Table[0])" : $_.Name)"
+			Export-SqlDump $_ -Path $Path -Table $Table -Uri $Uri
 		}
 	}
 
@@ -76,7 +76,7 @@ function Export-SqlDump {
 	)
 
 	$file = "$($Table.Count -eq 1 ? "$($Schema.Name).$($Table[0])" : $Schema.Name).sql"
-	$userName, $password = ($Uri.UserInfo -split ":").ForEach{ [Uri]::UnescapeDataString($_) }
+	$userName, $password = $Uri.UserInfo -split ":" | ForEach-Object { [Uri]::UnescapeDataString($_) }
 	$arguments = [List[string]] @(
 		"--default-character-set=$([HttpUtility]::ParseQueryString($Uri.Query)["charset"] ?? "utf8mb4")"
 		"--host=$($Uri.Host)"

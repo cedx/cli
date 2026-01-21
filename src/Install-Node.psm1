@@ -21,6 +21,7 @@ function Install-Node {
 
 	$nssmConfig = $Config ? (Import-PowerShellDataFile $Config) : @{}
 	$services = $nssmConfig.Keys.Where{ $_ -eq [Environment]::MachineName }.ForEach{ $nssmConfig.$_ }
+
 	if (-not (Test-Privilege ($services ? "" : $Path))) {
 		throw [UnauthorizedAccessException] "You must run this command in an elevated prompt."
 	}
@@ -32,7 +33,7 @@ function Install-Node {
 	}
 
 	"Fetching the list of Node.js releases..."
-	$response = Invoke-RestMethod "https://nodejs.org/dist/index.json"
+	$response = Invoke-RestMethod https://nodejs.org/dist/index.json
 	$version = [version] $response[0].version.Substring(1)
 
 	$file = "node-v$version-$platform-x64.$extension"
@@ -50,7 +51,7 @@ function Install-Node {
 	else { Expand-TarArchive $outputFile -DestinationPath $Path -Skip 1 }
 
 	if (-not $IsWindows) {
-		foreach ($item in "CHANGELOG.md", "LICENSE", "README.md") { Remove-Item "$Path/$item" -ErrorAction Ignore }
+		Remove-Item "$Path/CHANGELOG.md", "$Path/LICENSE", "$Path/README.md" -ErrorAction Ignore
 	}
 
 	if ($services) {

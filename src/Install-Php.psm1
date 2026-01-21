@@ -22,8 +22,8 @@ function Install-Php {
 	if (-not (Test-Privilege $Path)) { throw [UnauthorizedAccessException] "You must run this command in an elevated prompt." }
 
 	"Fetching the list of PHP releases..."
-	$response = Invoke-RestMethod "https://www.php.net/releases/?json"
-	$property = ($response | Get-Member -MemberType NoteProperty | Sort-Object Name -Bottom 1).Name
+	$response = Invoke-RestMethod https://www.php.net/releases/?json
+	$property = $response | Get-Member -MemberType NoteProperty | Sort-Object Name -Bottom 1 | Select-Object -ExpandProperty Name
 	$version = [version] $response.$property.version
 
 	$file = "php-$version-nts-Win32-$($version -ge [version] "8.4.0" ? "vs17" : "vs16")-x64.zip"

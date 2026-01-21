@@ -55,8 +55,9 @@ function ConvertTo-Encoding {
 	)
 
 	begin {
-		if (-not $Script:BinaryExtensions) { $Script:BinaryExtensions = Get-Content "$PSScriptRoot/../res/BinaryExtensions.json" | ConvertFrom-Json }
-		if (-not $Script:TextExtensions) { $Script:TextExtensions = Get-Content "$PSScriptRoot/../res/TextExtensions.json" | ConvertFrom-Json }
+		$resources = Join-Path $PSScriptRoot ../res
+		if (-not $Script:BinaryExtensions) { $Script:BinaryExtensions = Get-Content "$resources/BinaryExtensions.json" | ConvertFrom-Json }
+		if (-not $Script:TextExtensions) { $Script:TextExtensions = Get-Content "$resources/TextExtensions.json" | ConvertFrom-Json }
 	}
 
 	process {
@@ -67,21 +68,19 @@ function ConvertTo-Encoding {
 		if ($Filter) { $parameters.Filter = $Filter }
 		$files = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Get-ChildItem -LiteralPath $LiteralPath @parameters) : (Get-ChildItem $Path @parameters)
 
-		foreach ($file in $files) {
-			if (Test-IsExcluded $file -Exclude $Exclude) { continue }
-
-			$extension = Split-Path $file.Name -Extension
+		$files | Where-Object { -not (Test-IsExcluded -Exclude $Exclude) } | ForEach-Object {
+			$extension = Split-Path $_.Name -Extension
 			$isBinary = $extension -and ($extension.Substring(1) -in $Script:BinaryExtensions)
-			if ($isBinary) { continue }
+			if ($isBinary) { return }
 
-			$bytes = Get-Content $file.FullName -AsByteStream
-			if (-not $bytes) { continue }
+			$bytes = Get-Content $_.FullName -AsByteStream
+			if (-not $bytes) { return }
 
 			$isText = $extension -and ($extension.Substring(1) -in $Script:TextExtensions)
-			if ((-not $isText) -and ([Array]::IndexOf[byte]($bytes, 0, 0, [Math]::Min($bytes.Count, 8000)) -gt 0)) { continue }
+			if ((-not $isText) -and ([Array]::IndexOf[byte]($bytes, 0, 0, [Math]::Min($bytes.Count, 8000)) -gt 0)) { return }
 
-			"Converting: $file"
-			Set-Content $file.FullName ([Encoding]::Convert($sourceEncoding, $destinationEncoding, $bytes)) -AsByteStream
+			"Converting: $_"
+			Set-Content $_.FullName ([Encoding]::Convert($sourceEncoding, $destinationEncoding, $bytes)) -AsByteStream
 		}
 	}
 }
@@ -105,7 +104,7 @@ function Test-IsExcluded {
 	)
 
 	process {
-		$directory = $file.Directory
+		$directory = $File.Directory
 		while ($directory) {
 			if ($directory.Name -in $Exclude) { return $true }
 			$directory = $directory.Parent

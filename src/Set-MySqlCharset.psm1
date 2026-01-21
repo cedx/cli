@@ -36,16 +36,17 @@ function Set-MySqlCharset {
 	}
 
 	process {
-		$schemas = $Schema ? @($Schema.ForEach{ [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
-		$tables = foreach ($schemaObject in $schemas) {
-			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-MySqlTable $connection $schemaObject)
+		$schemas = $Schema ? ($Schema | ForEach-Object { [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
+		$tables = $schemas | ForEach-Object {
+			$schemaObject = $_
+			$Table ? ($Table | ForEach-Object { [Table]@{ Name = $_; Schema = $schemaObject.Name } }) : (Get-MySqlTable $connection $schemaObject)
 		}
 
-		foreach ($tableObject in $tables) {
-			"Processing: $($tableObject.GetQualifiedName($false))"
+		$tables | ForEach-Object {
+			"Processing: $($_.GetQualifiedName($false))"
 			$charset = ($Collation -split "_")[0]
 			Invoke-SqlNonQuery $connection -Command "SET foreign_key_checks = 0" | Out-Null
-			Invoke-SqlNonQuery $connection -Command "ALTER TABLE $($tableObject.GetQualifiedName($true)) CONVERT TO CHARACTER SET $charset COLLATE $Collation" | Out-Null
+			Invoke-SqlNonQuery $connection -Command "ALTER TABLE $($_.GetQualifiedName($true)) CONVERT TO CHARACTER SET $charset COLLATE $Collation" | Out-Null
 			Invoke-SqlNonQuery $connection -Command "SET foreign_key_checks = 1" | Out-Null
 		}
 	}
