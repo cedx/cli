@@ -30,6 +30,7 @@
 		<File Path="tool/Install.ps1" />
 		<File Path="tool/Lint.ps1" />
 		<File Path="tool/Outdated.ps1" />
+		<File Path="tool/PSResource.psm1" />
 		<File Path="tool/Publish.ps1" />
 		<File Path="tool/Update.ps1" />
 		<File Path="tool/Version.ps1" />
