@@ -19,7 +19,9 @@ $scriptBlock = {
 
 	$scriptRoot, $command, $parameters = $args
 	Import-Module "$scriptRoot/Cli.psd1"
-	Invoke-Expression "$command $($parameters.ForEach{ $_.Contains(" ") ? "'$_'" : $_ })"
+
+	$argumentList = $parameters ?? @() | ForEach-Object { $_.Contains(" ") ? "'$_'" : $_ }
+	Invoke-Expression "$command $argumentList"
 }
 
 pwsh -Command $scriptBlock -args $PSScriptRoot, $Command, $Parameters
