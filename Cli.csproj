@@ -13,10 +13,16 @@
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<OutDir>../bin</OutDir>
+		<OutDir>bin</OutDir>
 		<RootNamespace>Belin.Cli</RootNamespace>
 		<TargetFramework>net9.0</TargetFramework>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="var\**" />
+		<EmbeddedResource Remove="var\**" />
+		<None Remove="var\**" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Belin.Sql" Version="3.*" />
