@@ -1,5 +1,4 @@
 using namespace Belin.Cli.MySql
-using namespace System.Diagnostics.CodeAnalysis
 
 <#
 .SYNOPSIS
