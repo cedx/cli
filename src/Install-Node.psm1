@@ -14,7 +14,6 @@ function Install-Node {
 		[string] $Path = $IsWindows ? "C:\Program Files\Node.js" : "/usr/local",
 
 		# The path to the NSSM configuration file.
-		[Parameter()]
 		[ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The specified NSSM configuration file does not exist.")]
 		[string] $Config = ""
 	)

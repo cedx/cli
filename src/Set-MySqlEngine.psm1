@@ -21,11 +21,9 @@ function Set-MySqlEngine {
 		[string] $Engine,
 
 		# The schema name.
-		[Parameter()]
 		[string[]] $Schema = @(),
 
 		# The table name.
-		[Parameter()]
 		[string[]] $Table = @()
 	)
 

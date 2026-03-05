@@ -15,11 +15,9 @@ function Optimize-MySqlTable {
 		[uri] $Uri,
 
 		# The schema name.
-		[Parameter()]
 		[string[]] $Schema = @(),
 
 		# The table name.
-		[Parameter()]
 		[string[]] $Table = @()
 	)
 

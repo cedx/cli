@@ -14,7 +14,6 @@ function Install-Php {
 		[string] $Path = "C:\Program Files\PHP",
 
 		# Value indicating whether to register the PHP interpreter with the event log.
-		[Parameter()]
 		[switch] $RegisterEventSource
 	)
 

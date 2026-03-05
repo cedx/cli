@@ -28,11 +28,9 @@ function Restore-MySqlTable {
 		[string[]] $LiteralPath,
 
 		# A pattern used to filter the list of files to be processed.
-		[Parameter()]
 		[string] $Filter = "*.sql",
 
 		# Value indicating whether to process the input path recursively.
-		[Parameter()]
 		[switch] $Recurse
 	)
 

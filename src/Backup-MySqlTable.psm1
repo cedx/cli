@@ -23,11 +23,9 @@ function Backup-MySqlTable {
 		[string] $Path,
 
 		# The schema name.
-		[Parameter()]
 		[string[]] $Schema = @(),
 
 		# The table name.
-		[Parameter()]
 		[string[]] $Table = @()
 	)
 
@@ -70,7 +68,6 @@ function Export-SqlDump {
 		[uri] $Uri,
 
 		# The table name.
-		[Parameter()]
 		[string[]] $Table = @()
 	)
 

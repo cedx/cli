@@ -18,7 +18,6 @@ function New-NssmService {
 		[string] $Path = $PWD,
 
 		# Value indicating whether to start the service after its registration.
-		[Parameter()]
 		[switch] $Start
 	)
 

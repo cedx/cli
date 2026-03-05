@@ -21,11 +21,9 @@ function Set-MySqlCharset {
 		[string] $Collation,
 
 		# The schema name.
-		[Parameter()]
 		[string[]] $Schema = @(),
 
 		# The table name.
-		[Parameter()]
 		[string[]] $Table = @()
 	)
 
