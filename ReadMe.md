@@ -3,7 +3,7 @@ Command line interface of [Cédric Belin](https://cedric-belin.fr), full stack d
 implemented in [C#](https://learn.microsoft.com/en-us/dotnet/csharp) and [PowerShell](https://learn.microsoft.com/en-us/powershell).
 
 ## Documentation
-- [User guide](https://github.com/cedx/cli/wiki)
+- [User guide](https://github.com/cedx/cli/tree/main/docs)
 - [Examples](https://github.com/cedx/cli/tree/main/example)
 
 ## Development
