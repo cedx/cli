@@ -61,7 +61,7 @@ function New-NssmService {
 		$properties | Select-Object -ExpandProperty Keys | ForEach-Object { & $nssm set $application.Manifest.Id $_ $properties.$_ | Out-Null }
 
 		if ($Credential) {
-			$password = ConvertFrom-SecureString $Credential.Password -AsPlainText
+			$password = $Credential.Password.Length ? (ConvertFrom-SecureString $Credential.Password -AsPlainText) : ""
 			& $nssm set $application.Manifest.Id ObjectName $Credential.UserName $password | Out-Null
 		}
 
