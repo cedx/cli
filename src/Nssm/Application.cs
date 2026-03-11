@@ -28,6 +28,11 @@ public abstract class Application {
 	public abstract string EnvironmentVariable { get; }
 
 	/// <summary>
+	/// Value indicating whether the application uses a 32-bit process.
+	/// </summary>
+	public abstract bool Is32Bit { get; }
+
+	/// <summary>
 	/// The application manifest.
 	/// </summary>
 	public ApplicationManifest Manifest { get; } = new();

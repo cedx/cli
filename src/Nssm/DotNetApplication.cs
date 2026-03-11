@@ -23,6 +23,11 @@ public class DotNetApplication: Application {
 	public override string EnvironmentVariable => "DOTNET_ENVIRONMENT";
 
 	/// <summary>
+	/// Value indicating whether the application uses a 32-bit process.
+	/// </summary>
+	public override bool Is32Bit { get; } = false;
+
+	/// <summary>
 	/// The program used to run this application.
 	/// </summary>
 	public override string Program => OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet";

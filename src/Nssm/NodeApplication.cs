@@ -20,6 +20,11 @@ public class NodeApplication: Application {
 	public override string EnvironmentVariable => "NODE_ENV";
 
 	/// <summary>
+	/// Value indicating whether the application uses a 32-bit process.
+	/// </summary>
+	public override bool Is32Bit => false;
+
+	/// <summary>
 	/// The program used to run this application.
 	/// </summary>
 	public override string Program => OperatingSystem.IsWindows() ? "node.exe" : "node";
