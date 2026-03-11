@@ -17,6 +17,10 @@ function New-NssmService {
 		[ValidateScript({ Test-Path $_ -PathType Container }, ErrorMessage = "The specified directory does not exist.")]
 		[string] $Path = $PWD,
 
+		# The account used by the service as the logon account.
+		[Credential()]
+		[pscredential] $Credential,
+
 		# Value indicating whether to start the service after its registration.
 		[switch] $Start
 	)
@@ -51,9 +55,14 @@ function New-NssmService {
 		$programPath = (Get-Command $application.Program).Path
 		if ($application.Is32Bit -and $IsWindows) { $programPath = $programPath -replace "\\Program Files\\", "\Program Files (x86)\" }
 
-		$nssm = Get-NssmPath
+		$nssm = (Get-Command nssm -ErrorAction Ignore) ?? (Get-NssmPath)
 		& $nssm install $application.Manifest.Id $programPath $application.EntryPoint | Out-Null
 		$properties | Select-Object -ExpandProperty Keys | ForEach-Object { & $nssm set $application.Manifest.Id $_ $properties.$_ | Out-Null }
+
+		if ($Credential) {
+			$password = ConvertFrom-SecureString $Credential.Password -AsPlainText
+			& $nssm set $application.Manifest.Id ObjectName $Credential.UserName $password | Out-Null
+		}
 
 		if ($Start) { Start-Service $application.Manifest.Id }
 		$created = $Start ? "started" : "created"
