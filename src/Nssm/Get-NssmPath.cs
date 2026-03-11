@@ -16,5 +16,5 @@ public class GetNssmPathCommand: Cmdlet {
 	/// Performs execution of this command.
 	/// </summary>
 	protected override void ProcessRecord() =>
-		WriteObject(Path.Join(Path.GetDirectoryName(GetType().Assembly.Location), $"nssm.{Architecture}.exe"));
+		WriteObject(Path.Join(Path.GetDirectoryName(GetType().Assembly.Location), $"../res/New-NssmService/nssm.{Architecture}.exe"));
 }

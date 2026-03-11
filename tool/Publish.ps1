@@ -12,10 +12,11 @@ git push origin "v$version"
 
 $name = Split-Path Cli.psd1 -LeafBase
 $output = "var/$name"
-New-Item $output/bin -ItemType Directory | Out-Null
+New-Item $output/bin, $output/src -ItemType Directory | Out-Null
 Copy-Item "$name.psd1" $output
 Copy-Item *.md $output
-Copy-Item src $output -Filter *.psm1 -Recurse
+Copy-Item res $output -Recurse
+Copy-Item src/*.psm1 $output/src
 Copy-Item $module.RootModule $output/bin
 $module.RequiredAssemblies | Copy-Item -Destination $output/bin
 
