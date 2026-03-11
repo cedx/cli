@@ -52,7 +52,7 @@ function ConvertTo-Encoding {
 	)
 
 	begin {
-		$resources = Join-Path $PSScriptRoot ../res
+		$resources = Join-Path $PSScriptRoot ../res/ConvertTo-Encoding
 		if (-not $Script:BinaryExtensions) { $Script:BinaryExtensions = Get-Content "$resources/BinaryExtensions.json" | ConvertFrom-Json }
 		if (-not $Script:TextExtensions) { $Script:TextExtensions = Get-Content "$resources/TextExtensions.json" | ConvertFrom-Json }
 	}
