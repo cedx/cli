@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [4.4.0](https://github.com/cedx/cli/compare/v4.3.0...v4.4.0)
+- Added the `-Credential` parameter to the `New-NssmService` cmdlet.
+
 ## Version [4.3.0](https://github.com/cedx/cli/compare/v4.2.1...v4.3.0)
 - Added support for 32-bit applications in the `New-NssmService` cmdlet.
 - Embedded the [NSSM](https://nssm.cc) executables into the module instead of relying on a pre-installed executable.
