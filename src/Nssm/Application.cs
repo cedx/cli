@@ -6,16 +6,16 @@ using static System.IO.Path;
 /// Represents a web application.
 /// </summary>
 public abstract class Application {
-	
-	/// <summary>
-	/// The list of application folders.
-	/// </summary>
-	private static readonly string[] folders = ["src/Server", "src"];
 
 	/// <summary>
 	/// The list of configuration formats.
 	/// </summary>
-	private static readonly string[] formats = ["json", "psd1", "xml"];
+	protected static readonly string[] formats = ["json", "psd1", "xml"];
+
+	/// <summary>
+	/// The list of folders in which to search for source files.
+	/// </summary>
+	protected static readonly string[] sourceFolders = ["src/Server", "src"];
 
 	/// <summary>
 	/// The entry point of this application.
@@ -26,7 +26,7 @@ public abstract class Application {
 	/// The name of the environment variable storing the application environment.
 	/// </summary>
 	public abstract string EnvironmentVariable { get; }
-	
+
 	/// <summary>
 	/// The application manifest.
 	/// </summary>
@@ -50,15 +50,14 @@ public abstract class Application {
 	protected Application(string path) {
 		Path = TrimEndingDirectorySeparator(GetFullPath(path));
 
-		foreach (var folder in folders) {
-			var files = formats.Select(format => Join(Path, folder, $"appsettings.{format}")).Where(File.Exists);
-			foreach (var file in files) if (ApplicationManifest.Read(file) is ApplicationManifest manifest) {
+		foreach (var sourceFolder in sourceFolders) {
+			var file = formats.Select(format => Join(Path, sourceFolder, $"appsettings.{format}")).SingleOrDefault(File.Exists);
+			if (file is not null && ApplicationManifest.Read(file) is ApplicationManifest manifest) {
 				Manifest = manifest;
-				goto End;
+				break;
 			}
 		}
 
-		End:
 		if (Manifest.Id.Length == 0) throw new EntryPointNotFoundException("Unable to locate the application manifest.");
 	}
 }
