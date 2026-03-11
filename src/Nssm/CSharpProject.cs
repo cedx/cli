@@ -19,13 +19,25 @@ public class CSharpProject {
 /// <summary>
 /// Represents a group of project properties.
 /// </summary>
-/// <param name="AssemblyName">The assembly name.</param>
-/// <param name="OutDir">The relative path of the project assemblies.</param>
-/// <param name="Product">The product name.</param>
-/// <param name="Description">The project description.</param>
-public record CSharpPropertyGroup(
-	string AssemblyName = "",
-	string OutDir = "",
-	string Product = "",
-	string Description = ""
-);
+public class CSharpPropertyGroup {
+
+	/// <summary>
+	/// The assembly name.
+	/// </summary>
+	public string AssemblyName { get; set; } = "";
+
+	/// <summary>
+	/// The project description.
+	/// </summary>
+	public string Description { get; set; } = "";
+
+	/// <summary>
+	/// The relative path of the project assemblies.
+	/// </summary>
+	public string OutDir { get; set; } = "";
+
+	/// <summary>
+	/// The project description.
+	/// </summary>
+	public string Product { get; set; } = "";
+}
