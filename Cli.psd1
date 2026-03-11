@@ -21,6 +21,7 @@
 		"Get-MySqlEngine"
 		"Get-MySqlSchema"
 		"Get-MySqlTable"
+		"Get-NssmPath"
 		"New-MySqlConnection"
 		"Test-Privilege"
 	)
