@@ -1,5 +1,6 @@
 using namespace Belin.Cli.Nssm
 using namespace System.Diagnostics.CodeAnalysis
+using namespace System.Management.Automation
 
 <#
 .SYNOPSIS
