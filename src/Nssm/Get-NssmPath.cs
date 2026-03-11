@@ -9,12 +9,14 @@ public class GetNssmPathCommand: Cmdlet {
 	/// <summary>
 	/// The process architecture.
 	/// </summary>
-	[Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true), ValidateSet("x64", "x86")]
-	public required string Architecture { get; set; }
+	[Parameter(Position = 0, ValueFromPipeline = true), ValidateSet("x64", "x86")]
+	public string Architecture { get; set; } = Environment.Is64BitOperatingSystem ? "x64" : "x86";
 
 	/// <summary>
 	/// Performs execution of this command.
 	/// </summary>
-	protected override void ProcessRecord() =>
-		WriteObject(Path.Join(Path.GetDirectoryName(GetType().Assembly.Location), $"../res/New-NssmService/nssm.{Architecture}.exe"));
+	protected override void ProcessRecord() {
+		var nssmPath = Path.Join(Path.GetDirectoryName(GetType().Assembly.Location), $"../res/New-NssmService/nssm.{Architecture}.exe");
+		WriteObject(Path.GetFullPath(nssmPath));
+	}
 }

@@ -37,6 +37,11 @@ public class CSharpPropertyGroup {
 	public string OutDir { get; set; } = "";
 
 	/// <summary>
+	/// The list of target platforms for assembly, separated by semicolons.
+	/// </summary>
+	public string Platforms { get; set; } = "";
+
+	/// <summary>
 	/// The project description.
 	/// </summary>
 	public string Product { get; set; } = "";

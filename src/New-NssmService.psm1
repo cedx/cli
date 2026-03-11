@@ -48,11 +48,14 @@ function New-NssmService {
 			Start = "SERVICE_AUTO_START"
 		}
 
-		$program = Get-Command $application.Program
-		nssm install $application.Manifest.Id $program.Path $application.EntryPoint | Out-Null
-		$properties | Select-Object -ExpandProperty Keys | ForEach-Object { nssm set $application.Manifest.Id $_ $properties.$_ | Out-Null }
-		if ($Start) { Start-Service $application.Manifest.Id }
+		$programPath = (Get-Command $application.Program).Path
+		if ($application.Is32Bit -and $IsWindows) { $programPath = $programPath -replace "\\Program Files\\", "\Program Files (x86)\" }
 
+		$nssm = Get-NssmPath
+		& $nssm install $application.Manifest.Id $programPath $application.EntryPoint | Out-Null
+		$properties | Select-Object -ExpandProperty Keys | ForEach-Object { & $nssm set $application.Manifest.Id $_ $properties.$_ | Out-Null }
+
+		if ($Start) { Start-Service $application.Manifest.Id }
 		$created = $Start ? "started" : "created"
 		"The service ""$($application.Manifest.Id)"" has been successfully $created."
 	}

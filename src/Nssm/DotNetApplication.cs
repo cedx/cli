@@ -44,19 +44,22 @@ public class DotNetApplication: Application {
 	public DotNetApplication(string path): base(path) {
 		foreach (var folder in sourceFolders.Select(sourceFolder => Join(Path, sourceFolder)).Where(Directory.Exists))
 			if (Directory.EnumerateFiles(folder, "*.csproj").SingleOrDefault() is string projectPath) {
-				var entryPoint = (AssemblyName: "", OutDir: "");
+				var entryPoint = (AssemblyName: "", Platforms: "", OutDir: "");
 				using var xmlReader = XmlReader.Create(projectPath);
 
 				if (new XmlSerializer(typeof(CSharpProject)).Deserialize(xmlReader) is CSharpProject project) foreach (var propertyGroup in project.PropertyGroups) {
 					if (Manifest.Description.Length == 0) Manifest.Description = propertyGroup.Description;
 					if (Manifest.Name.Length == 0) Manifest.Name = propertyGroup.Product;
 					if (entryPoint.AssemblyName.Length == 0) entryPoint.AssemblyName = propertyGroup.AssemblyName;
+					if (entryPoint.Platforms.Length == 0) entryPoint.Platforms = propertyGroup.Platforms;
 					if (entryPoint.OutDir.Length == 0 && propertyGroup.OutDir.Length > 0) entryPoint.OutDir = Join(GetDirectoryName(projectPath), propertyGroup.OutDir);
 				}
 
 				if (entryPoint.AssemblyName.Length == 0) entryPoint.AssemblyName = GetFileNameWithoutExtension(projectPath);
 				if (entryPoint.OutDir.Length == 0) entryPoint.OutDir = Join(Path, "bin");
+
 				entryPath = GetFullPath(Join(entryPoint.OutDir, $"{entryPoint.AssemblyName}.dll"));
+				Is32Bit = entryPoint.Platforms.Split(';').Contains("x86");
 				break;
 			}
 	}
