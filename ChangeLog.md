@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [4.2.1](https://github.com/cedx/cli/compare/v4.2.0...v4.2.1)
+- Fixed the XML deserialization of [C#](https://learn.microsoft.com/en-us/dotnet/csharp) projects in `New-NssmService` and `Remove-NssmService` cmdlets.
+
 ## Version [4.2.0](https://github.com/cedx/cli/compare/v4.1.0...v4.2.0)
 - Dropped the support of [JSON](https://www.json.org) format in the `Backup-MySqlTable` cmdlet.
 - Updated the package dependencies.
