@@ -10,7 +10,7 @@ Install-Jdk
 # Install OpenJDK to a custom location.
 Install-Jdk -Path "C:\Program Files\OpenJDK"
 
-# Installs a specific OpenJDK release instead of the latest version.
+# Installs a specific OpenJDK version instead of the latest release.
 Install-Jdk -Version 25
 ```
 
@@ -37,4 +37,4 @@ Install-Php -Path "C:\Program Files\PHP"
 ```
 
 > [!NOTE]
-> This command only supports the Windows platform.
+> The `Install-Php` command only supports the Windows platform.

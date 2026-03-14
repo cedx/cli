@@ -6,7 +6,7 @@ Install-Jdk
 # Install OpenJDK to a custom location.
 Install-Jdk -Path "C:\Program Files\OpenJDK"
 
-# Installs a specific OpenJDK release instead of the latest version.
+# Installs a specific OpenJDK version instead of the latest release.
 Install-Jdk -Version 25
 
 # Install Node.js to the default location.
