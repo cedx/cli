@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-	Downloads and installs the latest OpenJDK release.
+	Downloads and installs the Microsoft Build of OpenJDK.
 .OUTPUTS
 	The output from the `java --version` command.
 #>
