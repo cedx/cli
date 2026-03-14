@@ -6,7 +6,7 @@ You can verify if you're already good to go with the following command:
 
 ```shell
 pwsh --version
-# PowerShell 7.5.4
+# PowerShell 7.5.5
 ```
 
 ## Installing with PSResourceGet package manager

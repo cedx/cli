@@ -6,7 +6,7 @@
 	Author = "Cédric Belin <cedx@outlook.com>"
 	CompanyName = "Cedric-Belin.fr"
 	Copyright = "© Cédric Belin"
-	Description = "Command line interface of Cédric Belin, full stack developer."
+	Description = "A set of command-line tools for common administrative tasks, such as database management, service management and software installation."
 	GUID = "b489d27c-f48e-49b1-b1d4-c99752f2c828"
 
 	AliasesToExport = @()

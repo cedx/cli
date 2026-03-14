@@ -1,6 +1,6 @@
 # Cédric Belin's CLI
-Command line interface of [Cédric Belin](https://cedric-belin.fr), full stack developer,
-implemented in [C#](https://learn.microsoft.com/en-us/dotnet/csharp) and [PowerShell](https://learn.microsoft.com/en-us/powershell).
+A [PowerShell](https://learn.microsoft.com/en-us/powershell) module providing a set of command-line tools for common administrative tasks,
+such as database management, service management and software installation.
 
 ## Documentation
 - [User guide](https://github.com/cedx/cli/tree/main/docs)
