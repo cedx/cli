@@ -1,7 +1,7 @@
 # Software Installation
 
 ## Microsoft Build of OpenJDK
-Downloads and installs the [Microsoft Build of OpenJDK](https://www.microsoft.com/openjdk) into the specified folder:
+Download and install the [Microsoft Build of OpenJDK](https://www.microsoft.com/openjdk):
 
 ```powershell
 # Install OpenJDK to the default location.
@@ -15,7 +15,7 @@ Install-Jdk -Version 25
 ```
 
 ## Node.js
-Downloads and installs the latest [Node.js](https://nodejs.org) release into the specified folder:
+Download and install the latest [Node.js](https://nodejs.org) release:
 
 ```powershell
 # Install Node.js to the default location.
@@ -26,7 +26,7 @@ Install-Node -Path "C:\Program Files\Node.js"
 ```
 
 ## PHP
-Downloads and installs the latest [PHP](https://www.php.net) release into the specified folder:
+Download and install the latest [PHP](https://www.php.net) release:
 
 ```powershell
 # Install PHP to the default location.
