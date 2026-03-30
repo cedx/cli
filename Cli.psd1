@@ -41,17 +41,17 @@
 	)
 
 	NestedModules = @(
-		"src/Backup-MySqlTable.psm1"
-		"src/ConvertTo-Encoding.psm1"
-		"src/Install-Jdk.psm1"
-		"src/Install-Node.psm1"
-		"src/Install-Php.psm1"
-		"src/New-NssmService.psm1"
-		"src/Optimize-MySqlTable.psm1"
-		"src/Remove-NssmService.psm1"
-		"src/Restore-MySqlTable.psm1"
-		"src/Set-MySqlCharset.psm1"
-		"src/Set-MySqlEngine.psm1"
+		"src/Deployment/Install-Jdk.psm1"
+		"src/Deployment/Install-Node.psm1"
+		"src/Deployment/Install-Php.psm1"
+		"src/MySql/Backup-MySqlTable.psm1"
+		"src/MySql/Optimize-MySqlTable.psm1"
+		"src/MySql/Restore-MySqlTable.psm1"
+		"src/MySql/Set-MySqlCharset.psm1"
+		"src/MySql/Set-MySqlEngine.psm1"
+		"src/Nssm/New-NssmService.psm1"
+		"src/Nssm/Remove-NssmService.psm1"
+		"src/Text/ConvertTo-Encoding.psm1"
 	)
 
 	RequiredAssemblies = @(
