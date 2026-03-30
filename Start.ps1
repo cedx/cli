@@ -11,7 +11,7 @@ param (
 
 	# The parameters of the cmdlet to run.
 	[Parameter(Position = 1, ValueFromRemainingArguments)]
-	[string[]] $Parameters
+	[string[]] $Parameters = @()
 )
 
 $scriptBlock = {
@@ -22,8 +22,8 @@ $scriptBlock = {
 	$scriptRoot, $command, $parameters = $args
 	Import-Module "$scriptRoot/Cli.psd1"
 
-	$argumentList = $parameters ?? @() | ForEach-Object { $_.Contains(" ") ? "'$_'" : $_ }
-	Invoke-Expression "$command $argumentList"
+	$argumentList = $parameters | ForEach-Object { $_.Contains(" ") ? "'$_'" : $_ }
+	Invoke-Expression "$command $($argumentList -join " ")"
 }
 
 pwsh -Command $scriptBlock -args $PSScriptRoot, $Command, $Parameters
