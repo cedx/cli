@@ -52,6 +52,7 @@ function Backup-MySqlTable {
 	Exports the specified schema to a SQL dump in the specified directory.
 #>
 function Export-SqlDump {
+	[CmdletBinding()]
 	[OutputType([void])]
 	param (
 		# The database schema.
