@@ -1,3 +1,7 @@
+using module ../Compression/Expand-TarArchive.psm1
+using module ../Compression/Expand-ZipArchive.psm1
+using module ../Security/Test-Privilege.psm1
+
 <#
 .SYNOPSIS
 	Downloads and installs the Microsoft Build of OpenJDK.

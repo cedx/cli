@@ -1,3 +1,5 @@
+using module ../Security/Test-Privilege.psm1
+
 <#
 .SYNOPSIS
 	Downloads and installs the latest PHP release.
@@ -30,14 +32,18 @@ function Install-Php {
 	$outputFile = New-TemporaryFile
 	Invoke-WebRequest "https://downloads.php.net/~windows/releases/archives/$file" -OutFile $outputFile
 
-	"Stopping the IIS web server..."
-	Stop-Service W3SVC
+	if ([Environment]::IsPrivilegedProcess) {
+		"Stopping the IIS web server..."
+		Stop-Service W3SVC
+	}
 
 	"Extracting file ""$file"" into directory ""$Path""..."
 	Expand-Archive $outputFile $Path -Force
 
-	"Starting the IIS web server..."
-	Start-Service W3SVC
+	if ([Environment]::IsPrivilegedProcess) {
+		"Starting the IIS web server..."
+		Start-Service W3SVC
+	}
 
 	if ($RegisterEventSource) {
 		"Registering the PHP interpreter with the event log..."

@@ -42,7 +42,7 @@ function ConvertTo-Encoding {
 
 		# The list of folders to exclude from the processing.
 		[ValidateNotNull()]
-		[string[]] $Exclude = @(".git", "node_modules", "vendor"),
+		[string[]] $Exclude = @(".git", "node_modules", "ps_modules", "vendor"),
 
 		# A pattern used to filter the list of files to be processed.
 		[string] $Filter = "",
@@ -89,6 +89,7 @@ function ConvertTo-Encoding {
 	`$true` if the specified file should be excluded from the processing, otherwise `$false`.
 #>
 function Test-IsExcluded {
+	[CmdletBinding()]
 	[OutputType([bool])]
 	param (
 		# The file to be checked.
@@ -97,7 +98,7 @@ function Test-IsExcluded {
 
 		# The list of folders to exclude from the processing.
 		[ValidateNotNull()]
-		[string[]] $Exclude = @(".git", "node_modules", "vendor")
+		[string[]] $Exclude = @(".git", "node_modules", "ps_modules", "vendor")
 	)
 
 	process {

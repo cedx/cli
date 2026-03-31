@@ -1,6 +1,7 @@
 using namespace Belin.Cli.Nssm
 using namespace System.Diagnostics.CodeAnalysis
 using namespace System.Management.Automation
+using module ../Security/Test-Privilege.psm1
 
 <#
 .SYNOPSIS
