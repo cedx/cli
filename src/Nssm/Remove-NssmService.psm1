@@ -5,6 +5,8 @@ using module ../Security/Test-Privilege.psm1
 <#
 .SYNOPSIS
 	Unregisters a Windows service based on [NSSM](https://nssm.cc).
+.INPUTS
+	The path to the root directory of the web application.
 .OUTPUTS
 	The log messages.
 #>

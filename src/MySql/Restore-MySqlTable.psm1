@@ -5,7 +5,7 @@ using namespace System.Web
 .SYNOPSIS
 	Restores a set of MariaDB/MySQL tables.
 .INPUTS
-	A string that contains a path, but not a literal path.
+	The path to an SQL dump.
 .OUTPUTS
 	The log messages.
 #>

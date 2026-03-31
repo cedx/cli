@@ -2,10 +2,13 @@ using namespace Belin.Cli.Nssm
 using namespace System.Diagnostics.CodeAnalysis
 using namespace System.Management.Automation
 using module ../Security/Test-Privilege.psm1
+using module ./Get-NssmPath.psm1
 
 <#
 .SYNOPSIS
 	Registers a Windows service based on [NSSM](https://nssm.cc).
+.INPUTS
+	The path to the root directory of the web application.
 .OUTPUTS
 	The log messages.
 #>

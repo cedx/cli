@@ -85,6 +85,8 @@ function ConvertTo-Encoding {
 <#
 .SYNOPSIS
 	Checks if the specified file should be excluded from the processing.
+.INPUTS
+	The file to be checked.
 .OUTPUTS
 	`$true` if the specified file should be excluded from the processing, otherwise `$false`.
 #>
