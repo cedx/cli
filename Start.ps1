@@ -22,7 +22,7 @@ $scriptBlock = {
 	$scriptRoot, $command, $parameters = $args
 	Import-Module "$scriptRoot/Cli.psd1"
 
-	$argumentList = $parameters | ForEach-Object { $_.Contains(" ") ? "'$_'" : $_ }
+	$argumentList = $parameters.ForEach{ $_.Contains(" ") ? "'$_'" : $_ }
 	Invoke-Expression "$command $($argumentList -join " ")"
 }
 
