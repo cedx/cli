@@ -21,4 +21,4 @@ Copy-Item $module.RootModule $output/bin
 $module.RequiredAssemblies | Copy-Item -Destination $output/bin
 
 Compress-PSResource $output var
-Publish-PSResource -ApiKey $Env:PSGALLERY_API_KEY -NupkgPath "var/$name.$version.nupkg"
+Publish-PSResource -ApiKey $Env:PSGALLERY_API_KEY -NupkgPath "var/$name.$version.nupkg" -Repository PSGallery
