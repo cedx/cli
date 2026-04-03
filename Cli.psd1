@@ -1,5 +1,5 @@
 @{
-	ModuleVersion = "4.4.0"
+	ModuleVersion = "5.0.0"
 	PowerShellVersion = "7.6"
 	RootModule = "bin/Belin.Cli.dll"
 
@@ -10,22 +10,13 @@
 	GUID = "b489d27c-f48e-49b1-b1d4-c99752f2c828"
 
 	AliasesToExport = @()
+	CmdletsToExport = @()
 	VariablesToExport = @()
-
-	CmdletsToExport = @(
-		# "Get-CliVersion"
-		# "Get-MySqlCollation"
-		# "Get-MySqlColumn"
-		# "Get-MySqlEngine"
-		# "Get-MySqlSchema"
-		# "Get-MySqlTable"
-		# "Get-NssmPath"
-		# "New-MySqlConnection"
-	)
 
 	FunctionsToExport = @(
 		"Backup-MySqlTable"
 		"ConvertTo-Encoding"
+		"Get-CliVersion"
 		"Install-Jdk"
 		"Install-Node"
 		"Install-Php"
@@ -38,6 +29,7 @@
 	)
 
 	NestedModules = @(
+		"src/Get-CliVersion.psm1"
 		"src/Deployment/Install-Jdk.psm1"
 		"src/Deployment/Install-Node.psm1"
 		"src/Deployment/Install-Php.psm1"
