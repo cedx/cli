@@ -1,4 +1,4 @@
 @{
-	PSScriptAnalyzer = @{}
-	Sql = @{}
+	PSScriptAnalyzer = @{ repository = "PSGallery" }
+	Sql = @{ repository = "PSGallery" }
 }
