@@ -3,8 +3,6 @@ using namespace System.IO
 <#
 .SYNOPSIS
 	Checks whether the current process is privileged.
-.PARAMETER Path
-	The path to a directory used to verify if the process has sufficient permissions.
 .OUTPUTS
 	`$true` if the current process is privileged, otherwise `$false`.
 #>
