@@ -1,5 +1,7 @@
-using namespace Belin.Cli.MySql
+using module ./Get-MySqlSchema.psm1
+using module ./Get-MySqlTable.psm1
 using module ./New-MySqlConnection.psm1
+using module ./Schema.psm1
 
 <#
 .SYNOPSIS
@@ -27,10 +29,10 @@ function Optimize-MySqlTable {
 	}
 
 	process {
-		$schemas = $Schema ? ($Schema | ForEach-Object { [Schema]@{ Name = $_ } }) : (Get-MySqlSchema $connection)
+		$schemas = $Schema ? $Schema.ForEach{ [Schema]@{ Name = $_ } } : @(Get-MySqlSchema $connection)
 		$tables = $schemas | ForEach-Object {
 			$schemaObject = $_
-			$Table ? ($Table | ForEach-Object { [Table]@{ Name = $_; Schema = $schemaObject.Name } }) : (Get-MySqlTable $connection $schemaObject)
+			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-MySqlTable $connection $schemaObject)
 		}
 
 		$tables | ForEach-Object {

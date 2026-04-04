@@ -7,7 +7,7 @@ using namespace System.Diagnostics.CodeAnalysis
 #>
 function New-MySqlConnection {
 	[CmdletBinding()]
-	[OutputType([MySqlConnection])]
+	[OutputType([MySqlConnector.MySqlConnection])]
 	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
 	param (
 		# The connection URI used to open the database.

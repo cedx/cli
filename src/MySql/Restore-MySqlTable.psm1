@@ -41,7 +41,7 @@ function Restore-MySqlTable {
 
 		$files | ForEach-Object {
 			"Importing: $($_.BaseName)"
-			$userName, $password = $Uri.UserInfo -split ":" | ForEach-Object { [Uri]::UnescapeDataString($_) }
+			$userName, $password = ($Uri.UserInfo -split ":").ForEach{ [Uri]::UnescapeDataString($_) }
 			$arguments = [List[string]] @(
 				"--default-character-set=$([HttpUtility]::ParseQueryString($Uri.Query)["charset"] ?? "utf8mb4")"
 				"--execute=USE $($_.BaseName); SOURCE $($_.FullName -replace "\", "/");"

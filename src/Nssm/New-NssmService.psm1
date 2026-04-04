@@ -62,7 +62,7 @@ function New-NssmService {
 
 		$nssm = (Get-Command nssm -ErrorAction Ignore) ?? (Get-NssmPath)
 		& $nssm install $application.Manifest.Id $programPath $application.EntryPoint | Out-Null
-		$properties | Select-Object -ExpandProperty Keys | ForEach-Object { & $nssm set $application.Manifest.Id $_ $properties.$_ | Out-Null }
+		$properties.Keys | ForEach-Object { & $nssm set $application.Manifest.Id $_ $properties.$_ | Out-Null }
 
 		if ($Credential) {
 			$password = $Credential.Password.Length ? (ConvertFrom-SecureString $Credential.Password -AsPlainText) : ""
