@@ -1,4 +1,5 @@
 using namespace Belin.Cli.MySql
+using module ./New-MySqlConnection.psm1
 
 <#
 .SYNOPSIS

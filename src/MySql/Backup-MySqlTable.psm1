@@ -2,6 +2,7 @@ using namespace Belin.Cli.MySql
 using namespace System.Collections.Generic
 using namespace System.IO
 using namespace System.Web
+using module ./New-MySqlConnection.psm1
 
 <#
 .SYNOPSIS

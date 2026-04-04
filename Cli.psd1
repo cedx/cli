@@ -50,7 +50,7 @@
 	)
 
 	RequiredModules = @(
-		"Sql"
+		"Belin.Sql"
 	)
 
 	PrivateData = @{

@@ -1,5 +1,6 @@
 using namespace Belin.Cli.MySql
 using namespace System.Diagnostics.CodeAnalysis
+using module ./New-MySqlConnection.psm1
 
 <#
 .SYNOPSIS
