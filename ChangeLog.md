@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [5.0.0](https://github.com/cedx/cli/compare/v4.4.0...v5.0.0)
+- Breaking change: restored the [PowerShell](https://learn.microsoft.com/en-us/powershell) source code.
+
 ## Version [4.4.0](https://github.com/cedx/cli/compare/v4.3.0...v4.4.0)
 - Added the `-Credential` parameter to the `New-NssmService` cmdlet.
 
