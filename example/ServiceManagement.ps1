@@ -1,4 +1,4 @@
-Import-Module Cli
+Import-Module Belin.Cli
 
 # Create a new NSSM service for the web application located in the current working directory.
 New-NssmService

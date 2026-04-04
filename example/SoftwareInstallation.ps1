@@ -1,4 +1,4 @@
-Import-Module Cli
+Import-Module Belin.Cli
 
 # Install OpenJDK to the default location.
 Install-Jdk

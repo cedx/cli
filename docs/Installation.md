@@ -6,7 +6,7 @@ You can verify if you're already good to go with the following command:
 
 ```shell
 pwsh --version
-# PowerShell 7.5.5
+# PowerShell 7.6.0
 ```
 
 ## Installing with PSResourceGet package manager
@@ -15,12 +15,12 @@ pwsh --version
 From a command prompt, run:
 
 ```powershell
-Install-PSResource -Name Cli -Repository PSGallery
+Install-PSResource Belin.Cli -Repository PSGallery
 ```
 
 ### 2. Import it
 Now in your [PowerShell](https://learn.microsoft.com/en-us/powershell) code, you can use:
 
 ```powershell
-Import-Module -Name Cli
+Import-Module Belin.Cli
 ```

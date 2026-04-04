@@ -10,7 +10,7 @@ such as database management, service management and software installation.
 Install the latest version of **Cédric Belin's CLI** with [PSResourceGet](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.psresourceget/) package manager:
 
 ```shell
-Install-PSResource Cli
+Install-PSResource Belin.Cli
 ```
 
 For detailed instructions, see the [installation guide](Installation.md).
