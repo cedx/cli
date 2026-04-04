@@ -6,7 +6,7 @@ using namespace System.IO
 .OUTPUTS
 	`$true` if the current process is privileged, otherwise `$false`.
 #>
-function Test-Privilege {
+function Test-IsPrivileged {
 	[CmdletBinding()]
 	[OutputType([bool])]
 	param (

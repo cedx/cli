@@ -1,6 +1,6 @@
 using module ../Compression/Expand-TarArchive.psm1
 using module ../Compression/Expand-ZipArchive.psm1
-using module ../Security/Test-Privilege.psm1
+using module ../Security/Test-IsPrivileged.psm1
 
 <#
 .SYNOPSIS
@@ -22,7 +22,7 @@ function Install-Jdk {
 		[int] $Version = 25
 	)
 
-	if (-not (Test-Privilege $Path)) {
+	if (-not (Test-IsPrivileged $Path)) {
 		throw [UnauthorizedAccessException] "You must run this command in an elevated prompt."
 	}
 

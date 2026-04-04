@@ -1,6 +1,6 @@
 using module ../Compression/Expand-TarArchive.psm1
 using module ../Compression/Expand-ZipArchive.psm1
-using module ../Security/Test-Privilege.psm1
+using module ../Security/Test-IsPrivileged.psm1
 
 <#
 .SYNOPSIS
@@ -25,7 +25,7 @@ function Install-Node {
 	$nssmConfig = $Config ? (Import-PowerShellDataFile $Config) : @{}
 	$services = $nssmConfig.Keys.Where{ $_ -eq [Environment]::MachineName }.ForEach{ $nssmConfig.$_ }
 
-	if (-not (Test-Privilege ($services ? "" : $Path))) {
+	if (-not (Test-IsPrivileged ($services ? "" : $Path))) {
 		throw [UnauthorizedAccessException] "You must run this command in an elevated prompt."
 	}
 

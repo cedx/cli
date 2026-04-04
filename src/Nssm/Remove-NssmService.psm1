@@ -1,6 +1,6 @@
 using namespace Belin.Cli.Nssm
 using namespace System.Diagnostics.CodeAnalysis
-using module ../Security/Test-Privilege.psm1
+using module ../Security/Test-IsPrivileged.psm1
 
 <#
 .SYNOPSIS
@@ -23,7 +23,7 @@ function Remove-NssmService {
 
 	begin {
 		if (-not $IsWindows) { throw [PlatformNotSupportedException] "This command only supports the Windows platform." }
-		if (-not (Test-Privilege)) { throw [UnauthorizedAccessException] "You must run this command in an elevated prompt." }
+		if (-not (Test-IsPrivileged)) { throw [UnauthorizedAccessException] "You must run this command in an elevated prompt." }
 	}
 
 	process {
