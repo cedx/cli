@@ -4,7 +4,7 @@
 .INPUTS
 	The process architecture.
 .OUTPUTS
-	The path of the `nssm` program.
+	The absolute path of the `nssm` program.
 #>
 function Get-NssmPath {
 	[CmdletBinding()]

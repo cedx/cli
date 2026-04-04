@@ -1,5 +1,6 @@
 namespace Belin.Cli;
 
+using System.Management.Automation;
 using System.Reflection;
 
 /// <summary>

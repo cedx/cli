@@ -9,7 +9,7 @@ function Get-CliVersion {
 	[OutputType([string])]
 	[OutputType([version])]
 	param (
-		# Value indicating whether to return a `System.Version` object.
+		# Value indicating whether to return a `[version]` object.
 		[switch] $PassThru
 	)
 
