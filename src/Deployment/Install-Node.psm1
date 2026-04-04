@@ -23,7 +23,7 @@ function Install-Node {
 	)
 
 	$nssmConfig = $Config ? (Import-PowerShellDataFile $Config) : @{}
-	$services = $nssmConfig.Keys | Where-Object { $_ -eq [Environment]::MachineName } | ForEach-Object { $nssmConfig.$_ }
+	$services = $nssmConfig.Keys.Where{ $_ -eq [Environment]::MachineName }.ForEach{ $nssmConfig.$_ }
 
 	if (-not (Test-Privilege ($services ? "" : $Path))) {
 		throw [UnauthorizedAccessException] "You must run this command in an elevated prompt."

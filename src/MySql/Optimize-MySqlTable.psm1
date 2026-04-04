@@ -30,14 +30,13 @@ function Optimize-MySqlTable {
 
 	process {
 		$schemas = $Schema ? $Schema.ForEach{ [Schema]@{ Name = $_ } } : @(Get-MySqlSchema $connection)
-		$tables = $schemas | ForEach-Object {
-			$schemaObject = $_
-			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-MySqlTable $connection $schemaObject)
+		$tables = foreach ($schemaObject in $schemas) {
+			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : @(Get-MySqlTable $connection $schemaObject)
 		}
 
-		$tables | ForEach-Object {
-			"Optimizing: $($_.GetQualifiedName($false))"
-			Invoke-SqlNonQuery $connection -Command "OPTIMIZE TABLE $($_.GetQualifiedName($true))" | Out-Null
+		foreach ($tableObject in $tables) {
+			"Optimizing: $($tableObject.QualifiedName())"
+			Invoke-SqlNonQuery $connection -Command "OPTIMIZE TABLE $($tableObject.GetQualifiedName($true))" | Out-Null
 		}
 	}
 

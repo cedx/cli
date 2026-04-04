@@ -26,14 +26,14 @@ function Expand-ZipArchive {
 	if (-not $Skip) { Expand-Archive $Path $DestinationPath -Force }
 	else {
 		$archive = [ZipFile]::OpenRead($Path)
-		$archive.Entries | ForEach-Object {
-			$components = $_.FullName -split "/"
+		foreach ($entry in $archive.Entries) {
+			$components = $entry.FullName -split "/"
 			$newPath = $components[$Skip..($components.Count - 1)] -join "/"
 			if (-not $newPath) { $newPath = "/" }
 
 			$fullPath = Join-Path $DestinationPath $newPath
 			if ($newPath[-1] -eq "/") { New-Item $fullPath -Force -ItemType Directory | Out-Null }
-			else { [ZipFileExtensions]::ExtractToFile($_, $fullPath, $true) }
+			else { [ZipFileExtensions]::ExtractToFile($entry, $fullPath, $true) }
 		}
 
 		$archive.Dispose()

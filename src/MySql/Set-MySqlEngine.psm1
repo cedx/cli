@@ -39,15 +39,14 @@ function Set-MySqlEngine {
 
 	process {
 		$schemas = $Schema ? $Schema.ForEach{ [Schema]@{ Name = $_ } } : @(Get-MySqlSchema $connection)
-		$tables = $schemas | ForEach-Object {
-			$schemaObject = $_
-			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : (Get-MySqlTable $connection $schemaObject)
+		$tables = foreach ($schemaObject in $schemas) {
+			$Table ? $Table.ForEach{ [Table]@{ Name = $_; Schema = $schemaObject.Name } } : @(Get-MySqlTable $connection $schemaObject)
 		}
 
-		$tables | ForEach-Object {
-			"Processing: $($_.GetQualifiedName($false))"
+		foreach ($tableObject in $tables) {
+			"Processing: $($tableObject.QualifiedName())"
 			Invoke-SqlNonQuery $connection -Command "SET foreign_key_checks = 0" | Out-Null
-			Invoke-SqlNonQuery $connection -Command "ALTER TABLE $($_.GetQualifiedName($true)) ENGINE = $Engine" | Out-Null
+			Invoke-SqlNonQuery $connection -Command "ALTER TABLE $($tableObject.GetQualifiedName($true)) ENGINE = $Engine" | Out-Null
 			Invoke-SqlNonQuery $connection -Command "SET foreign_key_checks = 1" | Out-Null
 		}
 	}

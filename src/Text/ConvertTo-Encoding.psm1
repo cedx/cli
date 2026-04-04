@@ -65,7 +65,7 @@ function ConvertTo-Encoding {
 		if ($Filter) { $parameters.Filter = $Filter }
 		$files = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Get-ChildItem -LiteralPath $LiteralPath @parameters) : (Get-ChildItem $Path @parameters)
 
-		$files | Where-Object { -not (Test-IsExcluded -Exclude $Exclude) } | ForEach-Object {
+		$files.Where{ -not (Test-IsExcluded $_ -Exclude $Exclude) } | ForEach-Object { # TODO foreach
 			$extension = Split-Path $_.Name -Extension
 			$isBinary = $extension -and ($extension.Substring(1) -in $Script:BinaryExtensions)
 			if ($isBinary) { return }
