@@ -6,7 +6,8 @@ using module ../../src/Nssm/Get-NssmPath.psm1
 #>
 Describe "Get-NssmPath" {
 	It "should return the path of the ""nssm"" program according to the given process architecture" -ForEach "x64", "x86" {
-		$pattern = "*/res/Nssm/nssm.{0}.exe" -replace "/", ($IsWindows ? "\" : "/")
-		$_ | Get-NssmPath | Should -BeLikeExactly ($pattern -f $_)
+		$path = $_ | Get-NssmPath
+		$path | Should -BeLikeExactly ("*/res/Nssm/nssm.$_.exe" -replace "/", ($IsWindows ? "\" : "/"))
+		$path | Should -Exist
 	}
 }
