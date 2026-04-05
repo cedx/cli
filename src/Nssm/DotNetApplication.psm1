@@ -21,18 +21,21 @@ class DotNetApplication: Application {
 	#>
 	DotNetApplication([string] $Path): base($Path) {
 		if ($file = Get-Item "$($this.Path)/src/Server/*.csproj" -ErrorAction Ignore || Get-Item "$($this.Path)/src/*.csproj" -ErrorAction Ignore) {
-			$project = @{ AssemblyName = ""; OutDir = "" }
+			$entryPoint = @{ AssemblyName = ""; Platforms = ""; OutDir = "" }
 
 			foreach ($propertyGroup in ([xml] (Get-Content $file.FullName)).Project.PropertyGroup) {
-				if (-not $this.Description) { $this.Description = $propertyGroup.Description }
-				if (-not $this.Name) { $this.Name = $propertyGroup.Product }
-				if (-not $project.AssemblyName) { $project.AssemblyName = $propertyGroup.AssemblyName }
-				if ((-not $project.OutDir) -and $propertyGroup.OutDir) { $project.OutDir = "$($file.DirectoryName)/$($propertyGroup.OutDir)" }
+				if (-not $this.Manifest.Description) { $this.Manifest.Description = $propertyGroup.Description ?? "" }
+				if (-not $this.Manifest.Name) { $this.Manifest.Name = $propertyGroup.Product ?? "" }
+				if (-not $entryPoint.AssemblyName) { $entryPoint.AssemblyName = $propertyGroup.AssemblyName }
+				if (-not $entryPoint.Platforms) { $entryPoint.Platforms = $propertyGroup.Platforms ?? "" }
+				if ((-not $entryPoint.OutDir) -and $propertyGroup.OutDir) { $entryPoint.OutDir = Join-Path $file.DirectoryName $propertyGroup.OutDir }
 			}
 
-			if (-not $project.AssemblyName) { $project.AssemblyName = $file.BaseName }
-			if (-not $project.OutDir) { $project.OutDir = "$($this.Path)/bin" }
-			$this.EntryPath = Join-Path $project.OutDir "$($project.AssemblyName).dll" -Resolve -ErrorAction Ignore
+			if (-not $entryPoint.AssemblyName) { $entryPoint.AssemblyName = $file.BaseName }
+			if (-not $entryPoint.OutDir) { $entryPoint.OutDir = Join-Path $this.Path bin }
+
+			$this.EntryPath = Join-Path $entryPoint.OutDir "$($entryPoint.AssemblyName).dll" -Resolve -ErrorAction Ignore
+			if ($entryPoint.Platforms) { $this.Is32Bit = ($entryPoint.Platforms -split ";") -contains "x86" }
 		}
 	}
 

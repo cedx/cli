@@ -51,7 +51,7 @@ function New-NssmService {
 
 		$properties = [ordered]@{
 			AppDirectory = $application.Path
-			AppEnvironmentExtra = "$($application.EnvironmentVariable)=$($application.Manifest.Environment)"
+			AppEnvironmentExtra = "$($application.EnvironmentVariable())=$($application.Manifest.Environment)"
 			AppNoConsole = "1"
 			AppStderr = Join-Path $application.Path var/Error.log
 			AppStdout = Join-Path $application.Path var/Output.log
@@ -60,13 +60,13 @@ function New-NssmService {
 			Start = "SERVICE_AUTO_START"
 		}
 
-		$programPath = (Get-Command $application.Program).Path
+		$programPath = (Get-Command $application.Program()).Path
 		if ($IsWindows -and [Environment]::Is64BitOperatingSystem -and $application.Is32Bit) {
 			$programPath = $programPath -replace "\\Program Files\\", "\Program Files (x86)\"
 		}
 
 		$nssm = (Get-Command nssm -ErrorAction Ignore) ?? (Get-NssmPath)
-		& $nssm install $application.Manifest.Id $programPath $application.EntryPoint | Out-Null
+		& $nssm install $application.Manifest.Id $programPath $application.EntryPoint() | Out-Null
 		foreach ($key in $properties.Keys) { & $nssm set $application.Manifest.Id $key $properties.$key | Out-Null }
 
 		if ($Credential) {
