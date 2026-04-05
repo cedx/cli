@@ -28,18 +28,12 @@ function Get-ExecutableArchitecture {
 		$reader = [BinaryReader] $stream
 
 		try {
-			# Go to offset 0x3C to find the location of the PE header.
 			$stream.Seek(0x3C, [SeekOrigin]::Begin) | Out-Null
-			$offset = $reader.ReadInt32()
-
-			# Go to the PE header + 4 bytes to read the machine type.
-			$stream.Seek($offset + 4, [SeekOrigin]::Begin) | Out-Null
-			$machine = $reader.ReadUInt16()
-
-			switch ($machine) {
+			$stream.Seek($reader.ReadInt32() + 4, [SeekOrigin]::Begin) | Out-Null
+			switch ($reader.ReadUInt16()) {
 				0x014C { return [Architecture]::x86 }
 				0x8664 { return [Architecture]::x64 }
-				default { throw [NotSupportedException] "Unsupported machine type: 0x{0:X4}" -f $machine }
+				default { throw [NotSupportedException] "Unsupported machine type: 0x{0:X4}" -f $_ }
 			}
 		}
 		finally {

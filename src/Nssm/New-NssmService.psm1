@@ -61,7 +61,9 @@ function New-NssmService {
 		}
 
 		$programPath = (Get-Command $application.Program).Path
-		if ($application.Is32Bit -and $IsWindows) { $programPath = $programPath -replace "\\Program Files\\", "\Program Files (x86)\" }
+		if ($IsWindows -and [Environment]::Is64BitOperatingSystem -and $application.Is32Bit) {
+			$programPath = $programPath -replace "\\Program Files\\", "\Program Files (x86)\"
+		}
 
 		$nssm = (Get-Command nssm -ErrorAction Ignore) ?? (Get-NssmPath)
 		& $nssm install $application.Manifest.Id $programPath $application.EntryPoint | Out-Null

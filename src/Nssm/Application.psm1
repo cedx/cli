@@ -1,5 +1,4 @@
 using namespace System.IO
-using namespace System.Management.Automation
 using module ./ApplicationManifest.psm1
 
 <#
@@ -7,6 +6,12 @@ using module ./ApplicationManifest.psm1
 	Represents a web application.
 #>
 class Application {
+
+	<#
+	.SYNOPSIS
+		Value indicating whether the application uses a 32-bit process.
+	#>
+	[bool] $Is32Bit = -not [Environment]::Is64BitOperatingSystem
 
 	<#
 	.SYNOPSIS
@@ -64,21 +69,11 @@ class Application {
 
 	<#
 	.SYNOPSIS
-		Gets a value indicating whether the application uses a 32-bit process.
-	.OUTPUTS
-		Value indicating whether the application uses a 32-bit process.
-	#>
-	[bool] Is32Bit() {
-		throw [NotImplementedException]::new()
-	}
-
-	<#
-	.SYNOPSIS
 		Gets the program used to run this application.
 	.OUTPUTS
 		The program used to run this application.
 	#>
-	[ApplicationInfo] Program() {
+	[string] Program() {
 		throw [NotImplementedException]::new()
 	}
 }

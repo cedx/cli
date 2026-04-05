@@ -1,4 +1,3 @@
-using namespace System.Management.Automation
 using module ./Application.psm1
 
 <#
@@ -52,21 +51,11 @@ class PowerShellApplication: Application {
 
 	<#
 	.SYNOPSIS
-		Gets a value indicating whether the application uses a 32-bit process.
-	.OUTPUTS
-		Value indicating whether the application uses a 32-bit process.
-	#>
-	[bool] Is32Bit() {
-		return -not [Environment]::Is64BitOperatingSystem
-	}
-
-	<#
-	.SYNOPSIS
 		Gets the program used to run this application.
 	.OUTPUTS
 		The program used to run this application.
 	#>
-	[ApplicationInfo] Program() {
-		return Get-Command "pwsh"
+	[string] Program() {
+		return [OperatingSystem]::IsWindows() ? "pwsh.exe" : "pwsh"
 	}
 }

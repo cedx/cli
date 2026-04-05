@@ -1,4 +1,3 @@
-using namespace System.Management.Automation
 using module ./Application.psm1
 
 <#
@@ -23,14 +22,9 @@ class NodeApplication: Application {
 	NodeApplication([string] $Path): base($Path) {
 		if ($file = Get-Item "$($this.Path)/package.json" -ErrorAction Ignore) {
 			$package = Get-Content $file.FullName | ConvertFrom-Json -AsHashtable
-			if (-not $this.Description) { $this.Description = $package.description }
-			if (-not $this.Name) { $this.Name = $package.name }
-
-			$keys = $package.bin?.Keys
-			if ($keys) {
-				$firstKey = $keys[0]
-				$this.EntryPath = Join-Path $this.Path $package.bin.$firstKey -Resolve -ErrorAction Ignore
-			}
+			if (-not $this.Manifest.Description) { $this.Manifest.Description = $package.description ?? "" }
+			if (-not $this.Manifest.Name) { $this.Manifest.Name = $package.name }
+			if ($keys = $package.bin?.Keys) { $this.EntryPath = Join-Path $this.Path $package.bin.($keys[0]) -Resolve -ErrorAction Ignore }
 		}
 	}
 
@@ -57,21 +51,11 @@ class NodeApplication: Application {
 
 	<#
 	.SYNOPSIS
-		Gets a value indicating whether the application uses a 32-bit process.
-	.OUTPUTS
-		Value indicating whether the application uses a 32-bit process.
-	#>
-	[bool] Is32Bit() {
-		return -not [Environment]::Is64BitOperatingSystem
-	}
-
-	<#
-	.SYNOPSIS
 		Gets the program used to run this application.
 	.OUTPUTS
 		The program used to run this application.
 	#>
-	[ApplicationInfo] Program() {
-		return Get-Command "node"
+	[string] Program() {
+		return [OperatingSystem]::IsWindows() ? "node.exe" : "node"
 	}
 }
