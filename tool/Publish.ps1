@@ -5,8 +5,7 @@ else {
 }
 
 "Publishing the module..."
-$module = Import-PowerShellDataFile Cli.psd1
-$version = $module.ModuleVersion
+$version = (Import-PowerShellDataFile Cli.psd1).ModuleVersion
 git tag "v$version"
 git push origin "v$version"
 
