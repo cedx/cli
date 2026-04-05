@@ -1,8 +1,10 @@
-using namespace Belin.Cli.Nssm
 using namespace System.Diagnostics.CodeAnalysis
 using namespace System.Management.Automation
 using module ../Security/Test-IsPrivileged.psm1
+using module ./DotNetApplication.psm1
 using module ./Get-NssmPath.psm1
+using module ./NodeApplication.psm1
+using module ./PowerShellApplication.psm1
 
 <#
 .SYNOPSIS
@@ -38,7 +40,8 @@ function New-NssmService {
 	process {
 		$application = switch ($true) {
 			((Test-Path "$Path/src/Server/*.cs") -or (Test-Path "$Path/src/*.cs")) { [DotNetApplication] $Path; break }
-			((Test-Path "$Path/src/Server/*.ts") -or (Test-Path "$Path/src/*.ts")) { [NodeApplication] $Path; break }
+			((Test-Path "$Path/src/Server/*.[jt]s") -or (Test-Path "$Path/src/*.[jt]s")) { [NodeApplication] $Path; break }
+			((Test-Path "$Path/src/Server/*.ps?1") -or (Test-Path "$Path/src/*.ps?1")) { [PowerShellApplication] $Path; break }
 			default { throw [NotSupportedException] "The application type could not be determined." }
 		}
 
