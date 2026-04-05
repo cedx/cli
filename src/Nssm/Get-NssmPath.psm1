@@ -17,5 +17,7 @@ function Get-NssmPath {
 		[Architecture] $Architecture = [Environment]::Is64BitOperatingSystem ? [Architecture]::x64 : [Architecture]::x86
 	)
 
-	Join-Path $PSScriptRoot "../../res/Nssm/nssm.$Architecture.exe" -Resolve
+	process {
+		Join-Path $PSScriptRoot "../../res/Nssm/nssm.$Architecture.exe" -Resolve
+	}
 }

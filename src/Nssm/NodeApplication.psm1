@@ -1,3 +1,4 @@
+using namespace System.Diagnostics.CodeAnalysis
 using module ./Application.psm1
 
 <#
@@ -19,6 +20,7 @@ class NodeApplication: Application {
 	.PARAMETER Path
 		The path to the application root directory.
 	#>
+	[SuppressMessage("PSPossibleIncorrectUsageOfAssignmentOperator", "")]
 	NodeApplication([string] $Path): base($Path) {
 		if ($file = Get-Item "$($this.Path)/package.json" -ErrorAction Ignore) {
 			$package = Get-Content $file.FullName | ConvertFrom-Json -AsHashtable

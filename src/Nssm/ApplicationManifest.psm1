@@ -1,4 +1,3 @@
-using namespace System.Diagnostics.CodeAnalysis
 using namespace System.IO
 
 <#
@@ -43,7 +42,6 @@ class ApplicationManifest {
 	.OUTPUTS
 		The application manifest corresponding to the specified file.
 	#>
-	[SuppressMessage("PSUseDeclaredVarsMoreThanAssignments", "")]
 	static [ApplicationManifest] Read([string] $Path) {
 		$manifest = switch ((Split-Path $Path -Extension).ToLowerInvariant()) {
 			".config" { ([xml] (Get-Content $Path)).Configuration; break }
