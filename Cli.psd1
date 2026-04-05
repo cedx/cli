@@ -15,7 +15,6 @@
 	FunctionsToExport = @(
 		"Backup-MySqlTable"
 		"ConvertTo-Encoding"
-		"Get-CliVersion"
 		"Install-Jdk"
 		"Install-Node"
 		"Install-Php"
@@ -28,7 +27,6 @@
 	)
 
 	NestedModules = @(
-		"src/Get-CliVersion.psm1"
 		"src/Deployment/Install-Jdk.psm1"
 		"src/Deployment/Install-Node.psm1"
 		"src/Deployment/Install-Php.psm1"
