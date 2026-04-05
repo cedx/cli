@@ -1,0 +1,4 @@
+@{
+	Id = "MyApp"
+	Name = "My Application 1.0"
+}
