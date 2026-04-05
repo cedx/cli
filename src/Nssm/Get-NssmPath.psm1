@@ -1,3 +1,5 @@
+using module ../Diagnostics/Architecture.psm1
+
 <#
 .SYNOPSIS
 	Returns the path of the `nssm` program according to the specified process architecture.
@@ -12,8 +14,7 @@ function Get-NssmPath {
 	param (
 		# The process architecture.
 		[Parameter(Position = 0, ValueFromPipeline)]
-		[ValidateSet("x64", "x86")]
-		[string] $Architecture = [Environment]::Is64BitOperatingSystem ? "x64" : "x86"
+		[Architecture] $Architecture = [Environment]::Is64BitOperatingSystem ? [Architecture]::x64 : [Architecture]::x86
 	)
 
 	Join-Path $PSScriptRoot "../../res/Nssm/nssm.$Architecture.exe" -Resolve
