@@ -13,14 +13,14 @@ function Install-Php {
 		# The path to the output directory.
 		[Parameter(Position = 0)]
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified output path is invalid.")]
-		[string] $Path = "C:\Program Files\PHP",
+		[string] $DestinationPath = "C:\Program Files\PHP",
 
 		# Value indicating whether to register the PHP interpreter with the event log.
 		[switch] $RegisterEventSource
 	)
 
 	if (-not $IsWindows) { throw [PlatformNotSupportedException] "This command only supports the Windows platform." }
-	if (-not (Test-IsPrivileged $Path)) { throw [UnauthorizedAccessException] "You must run this command in an elevated prompt." }
+	if (-not (Test-IsPrivileged $DestinationPath)) { throw [UnauthorizedAccessException] "You must run this command in an elevated prompt." }
 
 	"Fetching the list of PHP releases..."
 	$response = Invoke-RestMethod "https://www.php.net/releases/?json"
@@ -37,8 +37,8 @@ function Install-Php {
 		Stop-Service W3SVC
 	}
 
-	"Extracting file ""$file"" into directory ""$Path""..."
-	Expand-Archive $outputFile $Path -Force
+	"Extracting file ""$file"" into directory ""$DestinationPath""..."
+	Expand-Archive $outputFile $DestinationPath -Force
 
 	if ([Environment]::IsPrivilegedProcess) {
 		"Starting the IIS web server..."
@@ -49,9 +49,9 @@ function Install-Php {
 		"Registering the PHP interpreter with the event log..."
 		$key = "HKLM:\SYSTEM\CurrentControlSet\Services\EventLog\Application\PHP-$version"
 		New-Item $key -Force | Out-Null
-		New-ItemProperty $key EventMessageFile -Force -PropertyType String -Value (Join-Path $Path "php$($version.Major).dll" -Resolve) | Out-Null
+		New-ItemProperty $key EventMessageFile -Force -PropertyType String -Value (Join-Path $DestinationPath "php$($version.Major).dll" -Resolve) | Out-Null
 		New-ItemProperty $key TypesSupported -Force -PropertyType DWord -Value 7 | Out-Null
 	}
 
-	& "$Path/php.exe" --version
+	& "$DestinationPath/php.exe" --version
 }

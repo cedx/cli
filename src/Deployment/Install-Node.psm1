@@ -15,7 +15,7 @@ function Install-Node {
 		# The path to the output directory.
 		[Parameter(Position = 0)]
 		[ValidateScript({ Test-Path $_ -IsValid }, ErrorMessage = "The specified output path is invalid.")]
-		[string] $Path = $IsWindows ? "C:\Program Files\Node.js" : "/usr/local",
+		[string] $DestinationPath = $IsWindows ? "C:\Program Files\Node.js" : "/usr/local",
 
 		# The path to the NSSM configuration file.
 		[ValidateScript({ Test-Path $_ -PathType Leaf }, ErrorMessage = "The specified NSSM configuration file does not exist.")]
@@ -25,7 +25,7 @@ function Install-Node {
 	$nssmConfig = $Config ? (Import-PowerShellDataFile $Config) : @{}
 	$services = $nssmConfig.Keys.Where{ $_ -eq [Environment]::MachineName }.ForEach{ $nssmConfig.$_ }
 
-	if (-not (Test-IsPrivileged ($services ? "" : $Path))) {
+	if (-not (Test-IsPrivileged ($services ? "" : $DestinationPath))) {
 		throw [UnauthorizedAccessException] "You must run this command in an elevated prompt."
 	}
 
@@ -49,12 +49,12 @@ function Install-Node {
 		$services | Stop-Service
 	}
 
-	"Extracting file ""$file"" into directory ""$Path""..."
-	if ($extension -eq "zip") { Expand-ZipArchive $outputFile -DestinationPath $Path -Skip 1 }
-	else { Expand-TarArchive $outputFile -DestinationPath $Path -Skip 1 }
+	"Extracting file ""$file"" into directory ""$DestinationPath""..."
+	if ($extension -eq "zip") { Expand-ZipArchive $outputFile -DestinationPath $DestinationPath -Skip 1 }
+	else { Expand-TarArchive $outputFile -DestinationPath $DestinationPath -Skip 1 }
 
 	if (-not $IsWindows) {
-		"CHANGELOG.md", "LICENSE", "README.md" | ForEach-Object { Join-Path $Path $_ } | Remove-Item -ErrorAction Ignore
+		"CHANGELOG.md", "LICENSE", "README.md" | ForEach-Object { Join-Path $DestinationPath $_ } | Remove-Item -ErrorAction Ignore
 	}
 
 	if ($services) {
@@ -63,5 +63,5 @@ function Install-Node {
 	}
 
 	$executable = $IsWindows ? "node.exe" : "bin/node"
-	& "$Path/$executable" --version
+	& "$DestinationPath/$executable" --version
 }
