@@ -1,3 +1,4 @@
+using namespace System.Diagnostics.CodeAnalysis
 using namespace System.Text
 using module ./Test-IsExcluded.psm1
 
@@ -24,6 +25,7 @@ $TextExtensions = @()
 function ConvertTo-Encoding {
 	[CmdletBinding(DefaultParameterSetName = "Path")]
 	[OutputType([string])]
+	[SuppressMessage("PSReviewUnusedParameter", "Exclude")]
 	param (
 		# The path to the files to convert.
 		[Parameter(Mandatory, ParameterSetName = "Path", Position = 0, ValueFromPipeline)]
@@ -63,21 +65,21 @@ function ConvertTo-Encoding {
 
 		$parameters = @{ File = $true; Recurse = $Recurse }
 		if ($Filter) { $parameters.Filter = $Filter }
-		$files = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Get-ChildItem -LiteralPath $LiteralPath @parameters) : (Get-ChildItem $Path @parameters)
 
-		$files.Where{ -not (Test-IsExcluded $_ -Exclude $Exclude) } | ForEach-Object { # TODO foreach
-			$extension = Split-Path $_.Name -Extension
+		$files = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Get-ChildItem -LiteralPath $LiteralPath @parameters) : (Get-ChildItem $Path @parameters)
+		foreach ($file in $files.Where{ -not (Test-IsExcluded $_ -Exclude $Exclude) }) {
+			$extension = Split-Path $file.Name -Extension
 			$isBinary = $extension -and ($extension.Substring(1) -in $Script:BinaryExtensions)
 			if ($isBinary) { return }
 
-			$bytes = Get-Content $_.FullName -AsByteStream
+			$bytes = Get-Content $file.FullName -AsByteStream
 			if (-not $bytes) { return }
 
 			$isText = $extension -and ($extension.Substring(1) -in $Script:TextExtensions)
 			if ((-not $isText) -and ([Array]::IndexOf[byte]($bytes, 0, 0, [Math]::Min($bytes.Count, 8000)) -gt 0)) { return }
 
-			"Converting: $_"
-			Set-Content $_.FullName ([Encoding]::Convert($sourceEncoding, $destinationEncoding, $bytes)) -AsByteStream
+			"Converting: $file"
+			Set-Content $file.FullName ([Encoding]::Convert($sourceEncoding, $destinationEncoding, $bytes)) -AsByteStream
 		}
 	}
 }
