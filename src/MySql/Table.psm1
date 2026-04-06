@@ -61,7 +61,7 @@ class Table {
 		The fully qualified name.
 	#>
 	[string] GetQualifiedName([bool] $Escape) {
-		$scriptBlock = $Escape ? { "``$($args[0])``" } : { $args[0] }
+		$scriptBlock = $Escape ? { param ($value) "``$value``" } : { param ($value) $value }
 		return "$(& $scriptBlock $this.Schema).$(& $scriptBlock $this.Name)"
 	}
 }
