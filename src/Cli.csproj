@@ -2,9 +2,9 @@
 	<PropertyGroup>
 		<Company>Cedric-Belin.fr</Company>
 		<Copyright>© Cédric Belin</Copyright>
-		<Description>A set of command-line tools for common administrative tasks, such as database management, service management and software installation.</Description>
+		<Description>A set of PowerShell cmdlets for common administrative tasks, such as database management, service management and software installation.</Description>
 		<Product>Cédric Belin's CLI</Product>
-		<Version>5.0.0</Version>
+		<Version>5.0.1</Version>
 	</PropertyGroup>
 
 	<PropertyGroup>
