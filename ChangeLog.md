@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [5.0.1](https://github.com/cedx/cli/compare/v5.0.0...v5.0.1)
+- Fixed the `ConvertTo-Encoding` cmdlet, which used to stop after processing the first text file.
+
 ## Version [5.0.0](https://github.com/cedx/cli/compare/v4.4.0...v5.0.0)
 - Breaking change: restored the [PowerShell](https://learn.microsoft.com/en-us/powershell) source code.
 - Breaking change: renamed the `-Path` parameter of the `Install` cmdlets to `-DestinationPath`.
