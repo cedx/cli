@@ -30,8 +30,8 @@ function Install-Node {
 	}
 
 	$platform, $extension = switch ($true) {
-		($IsMacOS) { "darwin", "tar.gz"; break }
-		($IsWindows) { "win", "zip"; break }
+		$IsMacOS { "darwin", "tar.gz"; break }
+		$IsWindows { "win", "zip"; break }
 		default { "linux", "tar.xz" }
 	}
 

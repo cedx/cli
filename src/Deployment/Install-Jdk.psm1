@@ -27,8 +27,8 @@ function Install-Jdk {
 	}
 
 	$platform, $extension = switch ($true) {
-		($IsMacOS) { "macOS", "tar.gz"; break }
-		($IsWindows) { "windows", "zip"; break }
+		$IsMacOS { "macOS", "tar.gz"; break }
+		$IsWindows { "windows", "zip"; break }
 		default { "linux", "tar.gz" }
 	}
 
