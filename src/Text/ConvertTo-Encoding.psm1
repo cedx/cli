@@ -70,13 +70,13 @@ function ConvertTo-Encoding {
 		foreach ($file in $files.Where{ -not (Test-IsExcluded $_ -Exclude $Exclude) }) {
 			$extension = Split-Path $file.Name -Extension
 			$isBinary = $extension -and ($extension.Substring(1) -in $Script:BinaryExtensions)
-			if ($isBinary) { return }
+			if ($isBinary) { continue }
 
 			$bytes = Get-Content $file.FullName -AsByteStream
-			if (-not $bytes) { return }
+			if (-not $bytes) { continue }
 
 			$isText = $extension -and ($extension.Substring(1) -in $Script:TextExtensions)
-			if ((-not $isText) -and ([Array]::IndexOf[byte]($bytes, 0, 0, [Math]::Min($bytes.Count, 8000)) -gt 0)) { return }
+			if ((-not $isText) -and ([Array]::IndexOf[byte]($bytes, 0, 0, [Math]::Min($bytes.Count, 8000)) -gt 0)) { continue }
 
 			"Converting: $file"
 			Set-Content $file.FullName ([Encoding]::Convert($sourceEncoding, $destinationEncoding, $bytes)) -AsByteStream
