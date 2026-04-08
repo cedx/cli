@@ -1,5 +1,5 @@
 # Cédric Belin's CLI
-A set of [PowerShell](https://learn.microsoft.com/en-us/powershell) cmdlets for common administrative tasks,
+[PowerShell](https://learn.microsoft.com/en-us/powershell) cmdlets for common administrative tasks,
 such as database management, service management and software installation.
 
 > This module is dedicated to personal/side projects.  
