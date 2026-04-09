@@ -6,13 +6,13 @@ using module ./Test-IsExcluded.psm1
 .SYNOPSIS
 	The list of binary file extensions.
 #>
-$BinaryExtensions = @()
+[string[]] $BinaryExtensions = @()
 
 <#
 .SYNOPSIS
 	The list of text file extensions.
 #>
-$TextExtensions = @()
+[string[]] $TextExtensions = @()
 
 <#
 .SYNOPSIS
