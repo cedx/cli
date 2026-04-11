@@ -1,4 +1,4 @@
-# Cédric Belin's CLI
+# Belin CLI
 A [PowerShell](https://learn.microsoft.com/en-us/powershell) module providing a set of command-line tools for common administrative tasks,
 such as database management, service management and software installation.
 
@@ -7,7 +7,7 @@ such as database management, service management and software installation.
 > **Use at your own risk!** No support will be provided.
 
 ## Quick start
-Install the latest version of **Cédric Belin's CLI** with [PSResourceGet](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.psresourceget/) package manager:
+Install the latest version of **Belin CLI** with [PSResourceGet](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.psresourceget/) package manager:
 
 ```shell
 Install-PSResource Belin.Cli

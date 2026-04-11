@@ -1,4 +1,4 @@
-# Cédric Belin's CLI
+# Belin CLI
 [PowerShell](https://learn.microsoft.com/en-us/powershell) cmdlets for common administrative tasks,
 such as database management, service management and software installation.
 
@@ -14,4 +14,4 @@ such as database management, service management and software installation.
 - [Submit an issue](https://github.com/cedx/cli/issues)
 
 ## License
-[Cédric Belin's CLI](https://github.com/cedx/cli) is distributed under the MIT License.
+[Belin CLI](https://github.com/cedx/cli) is distributed under the MIT License.
