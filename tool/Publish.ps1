@@ -15,7 +15,7 @@ New-Item $output/bin -ItemType Directory | Out-Null
 Copy-Item Cli.psd1 $output/Belin.Cli.psd1
 Copy-Item *.md $output
 Copy-Item res, src $output -Recurse
-Remove-Item $output/res/UnitTesting, $output/src/*.csproj, $output/src/obj -Recurse
+Remove-Item $output/res/UnitTesting, $output/src/*.cs*, $output/src/obj -Recurse
 $module.RequiredAssemblies | Copy-Item -Destination $output/bin
 
 $output = "var/PSGallery"
