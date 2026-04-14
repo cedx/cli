@@ -1,5 +1,5 @@
 using namespace System.Diagnostics.CodeAnalysis
-using module ../Security/Test-IsPrivileged.psm1
+using module ../Security/Test-IsPrivilegedProcess.psm1
 using module ./DotNetApplication.psm1
 using module ./NodeApplication.psm1
 using module ./PowerShellApplication.psm1
@@ -25,7 +25,7 @@ function Remove-NssmService {
 
 	begin {
 		if (-not $IsWindows) { throw [PlatformNotSupportedException] "This command only supports the Windows platform." }
-		if (-not (Test-IsPrivileged)) { throw [UnauthorizedAccessException] "You must run this command in an elevated prompt." }
+		if (-not (Test-IsPrivilegedProcess)) { throw [UnauthorizedAccessException] "You must run this command in an elevated prompt." }
 	}
 
 	process {

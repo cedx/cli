@@ -1,4 +1,4 @@
-using module ../Security/Test-IsPrivileged.psm1
+using module ../Security/Test-IsPrivilegedProcess.psm1
 
 <#
 .SYNOPSIS
@@ -20,7 +20,7 @@ function Install-Php {
 	)
 
 	if (-not $IsWindows) { throw [PlatformNotSupportedException] "This command only supports the Windows platform." }
-	if (-not (Test-IsPrivileged $DestinationPath)) { throw [UnauthorizedAccessException] "You must run this command in an elevated prompt." }
+	if (-not (Test-IsPrivilegedProcess $DestinationPath)) { throw [UnauthorizedAccessException] "You must run this command in an elevated prompt." }
 
 	"Fetching the list of PHP releases..."
 	$response = Invoke-RestMethod "https://www.php.net/releases/?json"
