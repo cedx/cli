@@ -17,7 +17,6 @@ param (
 $scriptBlock = {
 	$ErrorActionPreference = "Stop"
 	$PSNativeCommandUseErrorActionPreference = $true
-	Set-StrictMode -Version Latest
 
 	$scriptRoot, $command, $parameters = $args
 	Import-Module "$scriptRoot/Cli.psd1"
