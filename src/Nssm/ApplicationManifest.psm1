@@ -43,7 +43,7 @@ class ApplicationManifest {
 		The application manifest corresponding to the specified file.
 	#>
 	static [ApplicationManifest] Read([string] $Path) {
-		$manifest = switch ((Split-Path $Path -Extension).ToLowerInvariant()) {
+		$manifest = switch (Split-Path $Path -Extension) {
 			".config" { ([xml] (Get-Content $Path)).Configuration; break }
 			".json" { Get-Content $Path | ConvertFrom-Json; break }
 			".psd1" { Import-PowerShellDataFile $Path; break }
