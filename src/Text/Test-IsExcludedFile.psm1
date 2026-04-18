@@ -8,7 +8,7 @@ using namespace System.IO
 .OUTPUTS
 	`$true` if the specified file should be excluded from the processing, otherwise `$false`.
 #>
-function Test-IsExcluded {
+function Test-IsExcludedFile {
 	[CmdletBinding()]
 	[OutputType([bool])]
 	param (

@@ -1,6 +1,6 @@
 using namespace System.Diagnostics.CodeAnalysis
 using namespace System.Text
-using module ./Test-IsExcluded.psm1
+using module ./Test-IsExcludedFile.psm1
 
 <#
 .SYNOPSIS
@@ -67,7 +67,7 @@ function ConvertTo-Encoding {
 		if ($Filter) { $parameters.Filter = $Filter }
 
 		$files = $PSCmdlet.ParameterSetName -eq "LiteralPath" ? (Get-ChildItem -LiteralPath $LiteralPath @parameters) : (Get-ChildItem $Path @parameters)
-		foreach ($file in $files.Where{ -not (Test-IsExcluded $_ -Exclude $Exclude) }) {
+		foreach ($file in $files.Where{ -not (Test-IsExcludedFile $_ -Exclude $Exclude) }) {
 			$extension = Split-Path $file.Name -Extension
 			$isBinary = $extension -and ($extension.Substring(1) -in $Script:BinaryExtensions)
 			if ($isBinary) { continue }
