@@ -70,7 +70,7 @@ function New-NssmService {
 		foreach ($key in $properties.Keys) { & $nssm set $application.Manifest.Id $key $properties.$key | Out-Null }
 
 		if ($Credential) {
-			$password = $Credential.Password.Length ? (ConvertFrom-SecureString $Credential.Password -AsPlainText) : ""
+			$password = $Credential.Password.Length ? $Credential.GetNetworkCredential().Password : ""
 			& $nssm set $application.Manifest.Id ObjectName $Credential.UserName $password | Out-Null
 		}
 
