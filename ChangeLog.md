@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [5.0.1](https://github.com/cedx/cli/compare/v5.0.1...v5.1.0)
+- Updated the package dependencies.
+
 ## Version [5.0.1](https://github.com/cedx/cli/compare/v5.0.0...v5.0.1)
 - Fixed the `ConvertTo-Encoding` cmdlet, which used to stop after processing the first text file.
 
