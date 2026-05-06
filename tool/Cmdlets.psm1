@@ -27,8 +27,8 @@ function New-GitTag {
 		[string] $Name
 	)
 
-	# git tag $Name
-	# git push origin $Name
+	git tag $Name
+	git push origin $Name
 }
 
 <#

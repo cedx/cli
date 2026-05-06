@@ -41,13 +41,12 @@ function Set-MySqlEngine {
 
 		foreach ($tableObject in $tables) {
 			"Processing: $($tableObject.QualifiedName())"
-			$statements = @(
-				"SET foreign_key_checks = 0;"
-				"ALTER TABLE $($tableObject.GetQualifiedName($true)) ENGINE = $Engine;"
-				"SET foreign_key_checks = 1;"
-			)
+			$sql = "
+				SET foreign_key_checks = 0;
+				ALTER TABLE $($tableObject.GetQualifiedName($true)) ENGINE = $Engine;
+				SET foreign_key_checks = 1;"
 
-			Invoke-SqlNonQuery $connection -Command ($statements -join " ") | Out-Null
+			Invoke-SqlNonQuery $connection -Command $sql | Out-Null
 		}
 	}
 
