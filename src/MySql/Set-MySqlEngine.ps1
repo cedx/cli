@@ -1,8 +1,4 @@
 using namespace System.Diagnostics.CodeAnalysis
-using module ./Get-MySqlEngine.psm1
-using module ./Get-MySqlSchema.psm1
-using module ./Get-MySqlTable.psm1
-using module ./New-MySqlConnection.psm1
 using module ./Schema.psm1
 
 <#

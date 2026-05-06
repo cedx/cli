@@ -1,6 +1,7 @@
 @{
 	ModuleVersion = "5.1.0"
 	PowerShellVersion = "7.6"
+	RootModule = "src/Main.psm1"
 
 	Author = "Cédric Belin <cedx@outlook.com>"
 	CompanyName = "Cedric-Belin.fr"
@@ -24,20 +25,6 @@
 		"Restore-MySqlTable"
 		"Set-MySqlCharset"
 		"Set-MySqlEngine"
-	)
-
-	NestedModules = @(
-		"src/Deployment/Install-Jdk.psm1"
-		"src/Deployment/Install-Node.psm1"
-		"src/Deployment/Install-Php.psm1"
-		"src/MySql/Backup-MySqlTable.psm1"
-		"src/MySql/Optimize-MySqlTable.psm1"
-		"src/MySql/Restore-MySqlTable.psm1"
-		"src/MySql/Set-MySqlCharset.psm1"
-		"src/MySql/Set-MySqlEngine.psm1"
-		"src/Nssm/New-NssmService.psm1"
-		"src/Nssm/Remove-NssmService.psm1"
-		"src/Text/ConvertTo-Encoding.psm1"
 	)
 
 	RequiredAssemblies = @(

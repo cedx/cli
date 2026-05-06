@@ -1,5 +1,3 @@
-using module ../Security/Test-IsPrivilegedProcess.psm1
-
 <#
 .SYNOPSIS
 	Downloads and installs the latest PHP release.

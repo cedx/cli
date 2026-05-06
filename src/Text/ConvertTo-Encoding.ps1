@@ -1,6 +1,5 @@
 using namespace System.Diagnostics.CodeAnalysis
 using namespace System.Text
-using module ./Test-IsExcludedFile.psm1
 
 <#
 .SYNOPSIS

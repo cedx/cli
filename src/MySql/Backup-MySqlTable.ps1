@@ -1,8 +1,6 @@
 using namespace System.Collections.Generic
 using namespace System.IO
 using namespace System.Web
-using module ./Get-MySqlSchema.psm1
-using module ./New-MySqlConnection.psm1
 using module ./Schema.psm1
 
 <#

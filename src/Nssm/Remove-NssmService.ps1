@@ -1,5 +1,4 @@
 using namespace System.Diagnostics.CodeAnalysis
-using module ../Security/Test-IsPrivilegedProcess.psm1
 using module ./DotNetApplication.psm1
 using module ./NodeApplication.psm1
 using module ./PowerShellApplication.psm1

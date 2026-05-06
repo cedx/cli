@@ -1,8 +1,6 @@
 using namespace System.Diagnostics.CodeAnalysis
 using namespace System.Management.Automation
-using module ../Security/Test-IsPrivilegedProcess.psm1
 using module ./DotNetApplication.psm1
-using module ./Get-NssmPath.psm1
 using module ./NodeApplication.psm1
 using module ./PowerShellApplication.psm1
 
