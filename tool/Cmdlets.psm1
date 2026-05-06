@@ -1,3 +1,66 @@
+using namespace System.Diagnostics.CodeAnalysis
+
+<#
+.SYNOPSIS
+	Builds the .NET solution and all of its dependencies.
+#>
+function Build-DotNetSolution {
+	param (
+		# The configuration to use for generating the project.
+		[Parameter(Position = 0)]
+		[string] $Configuration
+	)
+
+	$argumentList = $Configuration ? "--configuration", $Configuration : @()
+	dotnet build @argumentList
+}
+
+<#
+.SYNOPSIS
+	Creates a new Git tag.
+#>
+function New-GitTag {
+	[SuppressMessage("PSUseShouldProcessForStateChangingFunctions", "")]
+	param (
+		# The tag name.
+		[Parameter(Mandatory, Position = 0)]
+		[string] $Name
+	)
+
+	# git tag $Name
+	# git push origin $Name
+}
+
+<#
+.SYNOPSIS
+	Publishes the project package to the PowerShell Gallery registry.
+#>
+function Publish-PSGalleryModule {
+	$root = Join-Path $PSScriptRoot .. -Resolve
+	$module = Import-PowerShellDataFile $root/Cli.psd1
+
+	$output = "$root/var/PSModule"
+	New-Item $output/bin -ItemType Directory | Out-Null
+	Copy-Item $root/Cli.psd1 $output/Belin.Cli.psd1
+	Copy-Item $root/*.md $output
+	Copy-Item $root/res, $root/src $output -Recurse
+	Remove-Item $output/src/*.csproj, $output/src/obj -Recurse
+	$module.RequiredAssemblies | Copy-Item -Destination $output/bin
+
+	$output = "$root/var/PSGallery"
+	New-Item $output -ItemType Directory | Out-Null
+	Compress-PSResource $root/var/PSModule $output
+	foreach ($package in Get-Item $output/*.nupkg) { Publish-PSResource -ApiKey $Env:PSGALLERY_API_KEY -NupkgPath $package -Repository PSGallery }
+}
+
+<#
+.SYNOPSIS
+	Checks whether an update is available for the NuGet packages.
+#>
+function Test-NuGetPackageUpdate {
+	dotnet package list --outdated
+}
+
 <#
 .SYNOPSIS
 	Checks whether an update is available for the specified PowerShell module.
