@@ -7,7 +7,7 @@ using module ../../src/Nssm/ApplicationManifest.psm1
 Describe "ApplicationManifest" {
 	Context "Read" {
 		It "should support the JSON manifests" -ForEach "json", "psd1", "xml" {
-			$manifest = [ApplicationManifest]::Read("$PSScriptRoot/../../res/UnitTesting/Manifest.$_")
+			$manifest = [ApplicationManifest]::Read("$PSScriptRoot/../../share/Manifest.$_")
 			$manifest.Description | Should -BeNullOrEmpty
 			$manifest.Environment | Should -BeNullOrEmpty
 			$manifest.Id | Should -BeExactly "MyApp"
