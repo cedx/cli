@@ -1,4 +1,4 @@
-Import-Module Belin.Cli
+using module Belin.Cli
 
 # Backup all databases, excluding the system ones (i.e. "information_schema", "mysql", "performance_schema" and "sys").
 Backup-MySqlTable -Uri "mysql://user:pass@localhost/db" -Path /path/to/backups

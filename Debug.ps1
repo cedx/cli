@@ -1,7 +1,8 @@
 #!/usr/bin/env pwsh
+using module ./Cli.psd1
+
 $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 
-Import-Module "$PSScriptRoot/Cli.psd1"
 try { <# Insert the command to be debugged here. #> }
 catch { Write-Error "$_`n$($_.ScriptStackTrace)" }

@@ -22,5 +22,5 @@ Install-PSResource Belin.Cli -Repository PSGallery
 Now in your [PowerShell](https://learn.microsoft.com/en-us/powershell) code, you can use:
 
 ```powershell
-Import-Module Belin.Cli
+using module Belin.Cli
 ```
