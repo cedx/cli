@@ -19,12 +19,11 @@ param (
 )
 
 $scriptBlock = {
+	param ([string] $scriptRoot, [string] $command, [string[]] $parameters)
 	$ErrorActionPreference = "Stop"
 	$PSNativeCommandUseErrorActionPreference = $true
 
-	$scriptRoot, $command, $parameters = $args
 	Import-Module "$scriptRoot/Cli.psd1"
-
 	$argumentList = $parameters.ForEach{ $_.Contains(" ") ? "'$_'" : $_ }
 	Invoke-Expression "$command $($argumentList -join " ")"
 }
