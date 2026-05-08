@@ -23,9 +23,9 @@ function Install-Php {
 	"Fetching the list of PHP releases..."
 	$response = Invoke-RestMethod "https://www.php.net/releases/?json"
 	$property = ($response | Get-Member -MemberType NoteProperty | Sort-Object Name -Bottom 1).Name
-	$version = [version] $response.$property.version
+	$version = [semver] $response.$property.version
 
-	$file = "php-$version-nts-Win32-$($version -ge [version] "8.4.0" ? "vs17" : "vs16")-x64.zip"
+	$file = "php-$version-nts-Win32-$($version -ge [semver] "8.4.0" ? "vs17" : "vs16")-x64.zip"
 	"Downloading file ""$file""..."
 	$outputFile = New-TemporaryFile
 	Invoke-WebRequest "https://downloads.php.net/~windows/releases/archives/$file" -OutFile $outputFile

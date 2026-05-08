@@ -33,7 +33,7 @@ function Install-Node {
 
 	"Fetching the list of Node.js releases..."
 	$response = Invoke-RestMethod https://nodejs.org/dist/index.json
-	$version = [version] $response[0].version.Substring(1)
+	$version = [semver] $response[0].version.Substring(1)
 
 	$file = "node-v$version-$platform-x64.$extension"
 	"Downloading file ""$file""..."
