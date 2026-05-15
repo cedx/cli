@@ -26,7 +26,7 @@ class NodeApplication: Application {
 			$package = Get-Content $file.FullName -Raw | ConvertFrom-Json -AsHashtable
 			if (-not $this.Manifest.Description) { $this.Manifest.Description = $package.description ?? "" }
 			if (-not $this.Manifest.Name) { $this.Manifest.Name = $package.name }
-			if ($keys = $package.bin?.Keys) { $this.EntryPath = Join-Path $this.Path $package.bin[$keys[0]] -Resolve -ErrorAction Ignore }
+			if ($keys = $package.bin?.Keys) { $this.EntryPath = Join-Path $file.DirectoryName $package.bin[$keys[0]] -Resolve -ErrorAction Ignore }
 		}
 	}
 

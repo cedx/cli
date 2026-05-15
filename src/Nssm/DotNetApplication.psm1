@@ -32,7 +32,7 @@ class DotNetApplication: Application {
 			}
 
 			if (-not $entryPoint.AssemblyName) { $entryPoint.AssemblyName = $file.BaseName }
-			if (-not $entryPoint.OutDir) { $entryPoint.OutDir = Join-Path $this.Path bin }
+			if (-not $entryPoint.OutDir) { $entryPoint.OutDir = Join-Path $file.DirectoryName bin }
 
 			$this.EntryPath = Join-Path $entryPoint.OutDir "$($entryPoint.AssemblyName).dll" -Resolve -ErrorAction Ignore
 			if ($entryPoint.Platforms) { $this.Is32Bit = ($entryPoint.Platforms -split ";") -contains "x86" }

@@ -24,7 +24,7 @@ class PowerShellApplication: Application {
 			$module = Import-PowerShellDataFile $file.FullName
 			if (-not $this.Manifest.Description) { $this.Manifest.Description = $module.Description ?? "" }
 			if (-not $this.Manifest.Name) { $this.Manifest.Name = $file.BaseName }
-			if ($module.RootModule) { $this.EntryPath = Join-Path $this.Path $module.RootModule -Resolve -ErrorAction Ignore }
+			if ($module.RootModule) { $this.EntryPath = Join-Path $file.DirectoryName $module.RootModule -Resolve -ErrorAction Ignore }
 		}
 	}
 
