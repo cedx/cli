@@ -23,7 +23,7 @@ class DotNetApplication: Application {
 		if ($file = Get-Item "$($this.Path)/src/Server/*.csproj" -ErrorAction Ignore || Get-Item "$($this.Path)/src/*.csproj" -ErrorAction Ignore) {
 			$entryPoint = @{ AssemblyName = ""; Platforms = ""; OutDir = "" }
 
-			foreach ($propertyGroup in ([xml] (Get-Content $file.FullName)).Project.PropertyGroup) {
+			foreach ($propertyGroup in ([xml] (Get-Content $file.FullName -Raw)).Project.PropertyGroup) {
 				if (-not $this.Manifest.Description) { $this.Manifest.Description = $propertyGroup.Description ?? "" }
 				if (-not $this.Manifest.Name) { $this.Manifest.Name = $propertyGroup.Product ?? "" }
 				if (-not $entryPoint.AssemblyName) { $entryPoint.AssemblyName = $propertyGroup.AssemblyName }

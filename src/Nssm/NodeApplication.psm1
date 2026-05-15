@@ -23,7 +23,7 @@ class NodeApplication: Application {
 	[SuppressMessage("PSPossibleIncorrectUsageOfAssignmentOperator", "")]
 	NodeApplication([string] $Path): base($Path) {
 		if ($file = Get-Item "$($this.Path)/package.json" -ErrorAction Ignore) {
-			$package = Get-Content $file.FullName | ConvertFrom-Json -AsHashtable
+			$package = Get-Content $file.FullName -Raw | ConvertFrom-Json -AsHashtable
 			if (-not $this.Manifest.Description) { $this.Manifest.Description = $package.description ?? "" }
 			if (-not $this.Manifest.Name) { $this.Manifest.Name = $package.name }
 			if ($keys = $package.bin?.Keys) { $this.EntryPath = Join-Path $this.Path $package.bin[$keys[0]] -Resolve -ErrorAction Ignore }

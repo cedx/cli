@@ -54,8 +54,8 @@ function ConvertTo-Encoding {
 
 	begin {
 		$resources = Join-Path $PSScriptRoot ../../res/Text
-		if (-not $Script:BinaryExtensions) { $Script:BinaryExtensions = Get-Content "$resources/BinaryExtensions.json" | ConvertFrom-Json }
-		if (-not $Script:TextExtensions) { $Script:TextExtensions = Get-Content "$resources/TextExtensions.json" | ConvertFrom-Json }
+		if (-not $Script:BinaryExtensions) { $Script:BinaryExtensions = Get-Content "$resources/BinaryExtensions.json" -Raw | ConvertFrom-Json }
+		if (-not $Script:TextExtensions) { $Script:TextExtensions = Get-Content "$resources/TextExtensions.json" -Raw | ConvertFrom-Json }
 	}
 
 	process {
