@@ -32,7 +32,7 @@ function Remove-NssmService {
 			((Test-Path "$Path/src/Server/*.cs") -or (Test-Path "$Path/src/*.cs")) { [DotNetApplication] $Path; break }
 			((Test-Path "$Path/src/Server/*.[jt]s") -or (Test-Path "$Path/src/*.[jt]s")) { [NodeApplication] $Path; break }
 			((Test-Path "$Path/src/Server/*.ps?1") -or (Test-Path "$Path/src/*.ps?1")) { [PowerShellApplication] $Path; break }
-			default { throw [NotSupportedException] "The application type could not be determined." }
+			default { throw [InvalidOperationException] "The application type could not be determined." }
 		}
 
 		if (-not (Get-Service $application.Manifest.Id -ErrorAction Ignore)) {
