@@ -44,10 +44,10 @@ class ApplicationManifest {
 	#>
 	static [ApplicationManifest] Read([string] $Path) {
 		$manifest = switch (Split-Path $Path -Extension) {
-			".config" { ([xml] (Get-Content $Path)).Configuration; break }
-			".json" { Get-Content $Path | ConvertFrom-Json; break }
+			".config" { ([xml] (Get-Content $Path -Raw)).Configuration; break }
+			".json" { Get-Content $Path -Raw | ConvertFrom-Json; break }
 			".psd1" { Import-PowerShellDataFile $Path; break }
-			".xml" { ([xml] (Get-Content $Path)).Configuration; break }
+			".xml" { ([xml] (Get-Content $Path -Raw)).Configuration; break }
 			default { throw [NotSupportedException] "The ""$_"" file format is not supported." }
 		}
 
