@@ -6,12 +6,12 @@ such as database management, service management and software installation.
 > **Use at your own risk!** No support will be provided.
 
 ## Documentation
-- [User guide](https://github.com/cedx/cli/tree/main/docs)
-- [Examples](https://github.com/cedx/cli/tree/main/example)
+- [User guide](https://github.com/CedX/Cli/tree/main/docs)
+- [Examples](https://github.com/CedX/Cli/tree/main/example)
 
 ## Development
-- [Git repository](https://github.com/cedx/cli)
-- [Submit an issue](https://github.com/cedx/cli/issues)
+- [Git repository](https://github.com/CedX/Cli)
+- [Submit an issue](https://github.com/CedX/Cli/issues)
 
 ## License
-[Belin CLI](https://github.com/cedx/cli) is distributed under the MIT License.
+[Belin CLI](https://github.com/CedX/Cli) is distributed under the MIT License.

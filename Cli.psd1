@@ -39,9 +39,9 @@
 
 	PrivateData = @{
 		PSData = @{
-			LicenseUri = "https://github.com/cedx/cli/blob/main/License.md"
-			ProjectUri = "https://github.com/cedx/cli"
-			ReleaseNotes = "https://github.com/cedx/cli/releases"
+			LicenseUri = "https://github.com/CedX/Cli/blob/main/License.md"
+			ProjectUri = "https://github.com/CedX/Cli"
+			ReleaseNotes = "https://github.com/CedX/Cli/releases"
 			Tags = "cli", "dotnet", "powershell", "system", "tools"
 		}
 	}
